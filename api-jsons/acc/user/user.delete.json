@@ -1,0 +1,25 @@
+{
+    "id":"acc.user.delete",
+    "name":"删除用户",
+    "description":"删除后台用户账号",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"user.delete",
+    "accessLevel": 1,
+    "request":[
+        {
+            "param":"uid",
+            "required":true,
+            "default":"",
+            "name":"用户ID",
+            "type":"Integer",
+            "description":"用户ID"
+        }
+    ],
+    "response":{
+        "data":{
+            "type":"Boolean",
+            "sample":true,
+            "description":"成功返回true，失败返回false"
+        }
+    }
+}

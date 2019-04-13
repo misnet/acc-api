@@ -1,0 +1,35 @@
+[
+
+    {
+        "name":"ACC系统API",
+        "summary":"提供了系统级的相关API",
+        "children": [
+            {
+                "name": "用户相关API",
+                "apiFiles": "acc/user/*.json",
+                "summary": "用户相关API"
+            },
+
+            {
+                "name": "角色相关API",
+                "apiFiles": "acc/role/*.json",
+                "summary": "角色相关API"
+            },
+            {
+                "name": "菜单相关API",
+                "apiFiles": "acc/menu/*.json",
+                "summary": "菜单相关API"
+            },
+            {
+                "name": "公共相关API",
+                "apiFiles": "acc/common/*.json",
+                "summary": "公共相关API"
+            },
+            {
+                "name": "APP相关API",
+                "apiFiles": "acc/app/*.json",
+                "summary": "APP相关API"
+            }
+        ]
+    }
+]

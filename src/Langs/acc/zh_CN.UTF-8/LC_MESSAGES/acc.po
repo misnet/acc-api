@@ -1,0 +1,280 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Kuga-Class\n"
+"POT-Creation-Date: 2017-12-28 18:30+0800\n"
+"PO-Revision-Date: 2017-12-28 18:30+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.4\n"
+"X-Poedit-Basepath: ../../..\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: t;_;nquery:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: Api/Common.php:47
+msgid "短信发送失败"
+msgstr ""
+
+#: Api/Console/Acc.php:33 Api/Console/Acc.php:62 Api/Console/Acc.php:94
+#: Api/Console/Acc.php:126
+msgid "指定的角色不存在"
+msgstr ""
+
+#: Api/Console/User.php:27
+msgid "这个用户是当前用户，不可删除"
+msgstr ""
+
+#: Api/Console/User.php:46
+msgid "找不到用户，可能已被删除"
+msgstr ""
+
+#: Api/Console/User.php:113 Api/Console/User.php:140
+msgid "账户或密码错误"
+msgstr ""
+
+#: Core/Acc/Model/RoleMenuModel.php:55 Core/Acc/Model/RoleModel.php:136
+#: Core/Acc/Model/RoleModel.php:148 Core/Acc/Model/RoleResModel.php:74
+#: Core/Acc/Model/RoleUserModel.php:70 Core/Acc/Model/RoleUserModel.php:82
+msgid "对不起，您无权限进行此操作"
+msgstr ""
+
+#: Core/Acc/Model/RoleModel.php:90
+msgid "角色已存在"
+msgstr ""
+
+#: Core/Acc/Model/RoleModel.php:95
+msgid "优先级必须是大于0的数字"
+msgstr ""
+
+#: Core/Acc/Model/RoleModel.php:100
+msgid "优先级必须唯一"
+msgstr ""
+
+#: Core/Acc/Model/RoleModel.php:106
+msgid "角色类型只能是超级角色或一般角色"
+msgstr ""
+
+#: Core/Acc/Model/RoleModel.php:113
+msgid "分配策略值有误"
+msgstr ""
+
+#: Core/Acc/Service/Acc.php:144
+msgid "要修改的角色不存在"
+msgstr ""
+
+#: Core/Acc/Service/Acc.php:227 Core/Acc/Service/Acc.php:373
+#: Core/Acc/Service/Acc.php:411 Core/Acc/Service/Acc.php:439
+msgid "没有指定角色，无法分配权限"
+msgstr ""
+
+#: Core/Acc/Service/Acc.php:376 Core/Acc/Service/Acc.php:414
+#: Core/Acc/Service/Acc.php:442
+msgid "没有指定权限资源，无法分配权限"
+msgstr ""
+
+#: Core/Acc/Service/Acc.php:491
+msgid "findRolesByTypeId()传入的参数不正确"
+msgstr ""
+
+#: Core/Api/AbstractApi.php:288
+#, fuzzy
+#| msgid "手机号不正确"
+msgid "国家区号不正确"
+msgstr "手机号不正确啊"
+
+#: Core/Api/AbstractApi.php:291
+msgid "手机号不正确"
+msgstr "手机号不正确啊"
+
+#: Core/Api/ApiService.php:165
+msgid "服务器开小差了，稍候片刻"
+msgstr ""
+
+#: Core/Api/ApiService.php:258
+msgid "无可用API方法"
+msgstr ""
+
+#: Core/Api/ApiService.php:261 Core/Api/ApiService.php:418
+msgid "API中 %action% 接口不存在"
+msgstr ""
+
+#: Core/Api/ApiService.php:289
+msgid "接口缺少参数 %param% "
+msgstr ""
+
+#: Core/Api/ApiService.php:397
+msgid "access_token 未传值"
+msgstr ""
+
+#: Core/Api/ApiService.php:425
+msgid "API中 %module% 模块不存在"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:100
+msgid "数据不存在"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:101
+msgid "Access Token无效"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:102
+msgid "Refresh Token无效"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:103
+msgid "参数缺失"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:104
+msgid "无效appkey或appsecret"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:105
+msgid "无效签名"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:106
+msgid "无效的接口"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:107
+msgid "非所有者"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:108
+msgid "手机号已注册过"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:109
+msgid "手机号码不正确"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:110
+msgid "密码错误"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:111
+msgid "短信验证码未发送过或已失效"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:112
+msgid "错误的短信验证码"
+msgstr ""
+
+#: Core/Base/ExceptionCodeTrait.php:113
+msgid "手机号未注册"
+msgstr ""
+
+#: Core/Base/StatsTrait.php:72
+msgid "统计计数范围只能在 -99,999,999 和 99,999,999之间"
+msgstr ""
+
+#: Core/File/Adapter/Aliyun.php:67
+msgid "aliyun oss config file not exists"
+msgstr ""
+
+#: Core/File/FileAdapter.php:41
+msgid "文件大小超过%filesize%"
+msgstr ""
+
+#: Core/File/FileAdapter.php:45
+msgid "不支持此类型文件上传"
+msgstr ""
+
+#: Core/Menu/MenuModel.php:95
+msgid "菜单名必须填写"
+msgstr ""
+
+#: Core/Menu/MenuModel.php:127
+msgid "父级菜单不能是自己"
+msgstr ""
+
+#: Core/Menu/MenuModel.php:132
+msgid "父级菜单不能是当前菜单的子菜单"
+msgstr ""
+
+#: Core/SecretGuard/Model/ItemModel.php:121
+#: Core/SecretGuard/Model/ItemModel.php:141
+msgid "您需要先生成密钥"
+msgstr ""
+
+#: Core/SecretGuard/Model/PublicKeyModel.php:61
+msgid "对不起，一个用户只能创建一对密钥"
+msgstr ""
+
+#: Core/Sms/Adapter/Aliyun.php:36
+msgid "阿里云的短信配置文件不存在"
+msgstr ""
+
+#: Core/Sms/Adapter/Tencent.php:35
+msgid "腾讯云的短信配置文件不存在"
+msgstr ""
+
+#: Core/SysParams/SysParamsModel.php:77
+msgid "配置名称不能为空"
+msgstr ""
+
+#: Core/SysParams/SysParamsModel.php:81
+msgid "配置KEY名称不能为空"
+msgstr ""
+
+#: Core/SysParams/SysParamsModel.php:85
+msgid "配置描述不能为空"
+msgstr ""
+
+#: Core/SysParams/SysParamsModel.php:89
+msgid "KEY已存在"
+msgstr ""
+
+#: Core/SysParams/SysParamsModel.php:93
+msgid "配置名称已存在"
+msgstr ""
+
+#: Core/SysParams/SysParamsModel.php:98
+msgid "值类型不正确"
+msgstr ""
+
+#: Core/User/UserModel.php:102
+msgid "用户名必须填写"
+msgstr ""
+
+#: Core/User/UserModel.php:106
+msgid "用户名已存在"
+msgstr ""
+
+#: Core/User/UserModel.php:111
+msgid "Email格式错误"
+msgstr ""
+
+#: Core/User/UserModel.php:116
+msgid "Email已存在"
+msgstr ""
+
+#: Core/User/UserModel.php:169
+msgid "密码至少要有%s%位"
+msgid_plural "密码至少要有%s%位"
+msgstr[0] ""
+
+#: Core/User/UserModel.php:186
+msgid "请设置好密码"
+msgstr ""
+
+#~ msgid "common"
+#~ msgstr "commonYes"
+
+#~ msgctxt "informal"
+#~ msgid "Hello"
+#~ msgstr "Salut"
+
+#~ msgctxt "evening"
+#~ msgid "Hello"
+#~ msgstr "Bonsoir"
+
+#~ msgid "Hello %name%"
+#~ msgstr "Salut %name%"

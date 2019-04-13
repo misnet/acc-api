@@ -1,0 +1,10 @@
+{
+    "id":"common.batchrequest",
+    "name":"接口批量操作",
+    "description":"批量执行多个API接口",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"common.batchRequest",
+    "accessLevel": 0,
+    "disableFilterParams":true,
+    "request":[]
+}

@@ -1,0 +1,25 @@
+{
+    "id":"acc.menu.delete",
+    "name":"删除菜单",
+    "description":"删除菜单，子菜单会被一起删除",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"menu.deleteMenu",
+    "accessLevel": 1,
+    "request":[
+        {
+            "param":"id",
+            "required":true,
+            "default":"",
+            "name":"菜单ID",
+            "type":"String",
+            "description":"以这个为依据来删除菜单"
+        }
+    ],
+    "response":{
+        "data":{
+            "type":"Boolean",
+            "sample":true,
+            "description":"成功返回true，失败返回false"
+        }
+    }
+}

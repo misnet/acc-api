@@ -1,0 +1,63 @@
+{
+    "id":"acc.role.listops",
+    "name":"列出权限操作",
+    "description":"根据角色id和资源编码列出权限操作",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"acc.listOperationList",
+    "accessLevel": 1,
+    "request":[
+        {
+            "param":"rid",
+            "required":true,
+            "default":"",
+            "type":"Integer",
+            "description":"角色ID"
+        },
+        {
+            "param":"res",
+            "required":true,
+            "default":"",
+            "type":"String",
+            "description":"资源代码"
+        }
+    ],
+    "response":{
+        "data":{
+            "type":"Object",
+            "description":"权限操作列表",
+            "responseItem":{
+                "code":{
+                    "type":"String",
+                    "description":"资源代码",
+                    "sample":"RES_ARTICLE"
+                },
+                "text":{
+                    "type":"String",
+                    "description":"资源名称",
+                    "sample":"文章"
+                },
+                "op":{
+                    "type":"Array",
+                    "responseItem":{
+                        "code":{
+                            "type":"String",
+                            "description":"操作代码",
+                            "sample":"OP_ADD"
+                        },
+                        "text": {
+                            "type": "String",
+                            "description": "操作名称",
+                            "sample":"新增"
+                        },
+                        "allow":{
+                            "type":"Integer",
+                            "description":"是否允许，1允许，0禁止",
+                            "sample":1
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}

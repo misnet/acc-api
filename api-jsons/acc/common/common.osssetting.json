@@ -1,0 +1,49 @@
+{
+    "id":"common.osssetting",
+    "name":"取得OSS的配置",
+    "description":"取得OSS的配置",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"common.ossSetting",
+    "accessLevel": 0,
+    "request":[],
+    "response":{
+        "data":{
+            "type":"Object",
+            "hasSampleFile":true,
+            "description":"",
+            "responseItem":{
+                "RequestId":{
+                    "type":"String",
+                    "description":"请求ID",
+                    "sample":"C1F6C4D1-5E82-49BB-98DC-D9D95B2727FE"
+                },
+                "Bucket":{
+                    "type":"Object",
+                    "description":"",
+                    "responseItem":{
+                        "name":{
+                            "type":"String",
+                            "description":"aliyun oss bucket 名称",
+                            "sample":"voc"
+                        },
+                        "endpoint":{
+                            "type":"String",
+                            "description":"aliyun oss bucket endpoint",
+                            "sample":"voc"
+                        },
+                        "hostUrl":{
+                            "type":"String",
+                            "description":"aliyun oss bucket 对应域名",
+                            "sample":"voc"
+                        },
+                        "region":{
+                            "type":"String",
+                            "description":"bucket所在地区",
+                            "sample":"cn-shenzhen"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,46 @@
+{
+  "id":"user.register",
+  "name":"用户注册",
+  "description":"用户主动自行注册",
+  "namespace":"Kuga\\Api\\Frontend",
+  "method":"user.register",
+  "accessLevel": 0,
+  "request":[
+    {
+      "param":"mobile",
+      "required":true,
+      "default":"",
+      "type":"String",
+      "description":"手机号"
+    },
+    {
+      "param":"password",
+      "required":true,
+      "default":"",
+      "type":"String",
+      "description":"密码",
+      "name":"密码"
+    },
+    {
+      "param":"verifyCode",
+      "required":true,
+      "default":"",
+      "type":"String",
+      "description":"手机号验证码"
+    },
+    {
+      "param":"seed",
+      "required":true,
+      "default":"",
+      "type":"String",
+      "description":"手机发送验证码后的回执码"
+    }
+  ],
+  "response":{
+    "data":{
+      "type":"Boolean",
+      "sample":true,
+      "description":"成功返回true，失败返回false"
+    }
+  }
+}

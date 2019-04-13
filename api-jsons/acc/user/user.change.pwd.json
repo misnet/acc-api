@@ -1,0 +1,24 @@
+{
+    "id":"acc.user.changepwd",
+    "name":"修改密码",
+    "description":"修改当前用户的密码",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"user.changePassword",
+    "accessLevel": 1,
+    "request":[
+        {
+            "param":"password",
+            "required":true,
+            "default":"",
+            "type":"String",
+            "description":"新密码"
+        }
+    ],
+    "response":{
+        "data":{
+            "type":"Boolean",
+            "sample":true,
+            "description":"成功返回true，失败返回false"
+        }
+    }
+}

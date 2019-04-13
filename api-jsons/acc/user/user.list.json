@@ -1,0 +1,101 @@
+{
+    "id":"acc.user.list",
+    "name":"获取用户列表",
+    "description":"后台用户账号列表",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"user.userList",
+    "accessLevel": 1,
+    "request":[
+        {
+            "param":"page",
+            "required":false,
+            "default":1,
+            "name":"页码",
+            "type":"Integer",
+            "description":"页码"
+        },
+        {
+            "param":"limit",
+            "required":false,
+            "default":10,
+            "type":"Integer",
+            "description":"每页显示条数",
+            "name":"每页显示条数"
+        },
+        {
+            "param":"appId",
+            "required":false,
+            "type":"Integer",
+            "description":"指定应用ID，未指定时，以当前appKey为准"
+        }
+    ],
+    "response":{
+        "data":{
+            "type":"Object",
+            "hasSampleFile":true,
+            "responseItem": {
+                "list":{
+                    "type":"Array",
+                    "responseItem":{
+                        "uid":{
+                            "type":"Integer",
+                            "sample":1,
+                            "description":"用户ID"
+                        },
+                        "username":{
+                            "type":"String",
+                            "sample":"Donny",
+                            "description":"用户名"
+                        },
+                        "createTime":{
+                            "type":"Integer",
+                            "sample":1405906107,
+                            "description":"创建时间"
+                        },
+                        "gender":{
+                            "type":"Integer",
+                            "sample":1,
+                            "description":"性别，1男，0女，2保密"
+                        },
+                        "mobile":{
+                            "type":"String",
+                            "sample":15800000000,
+                            "description":"手机号"
+                        },
+                        "email":{
+                            "type":"String",
+                            "sample":"test@test.com",
+                            "description":"Email"
+                        },
+                        "emailVerified": {
+                            "type": "Integer",
+                            "sample": 1,
+                            "description": "email是否验证过，0或1，1表示认证过，0表示未认证"
+                        },
+                        "mobileVerified": {
+                            "type": "Integer",
+                            "sample": 1,
+                            "description": "手机是否验证过，0或1，1表示认证过，0表示未认证"
+                        }
+                    },
+                    "description":"数据列表"
+                },
+                "total":{
+                    "type":"Integer",
+                    "description":"记录总数",
+                    "sample":10
+                },
+                "page":{
+                    "type":"Integer",
+                    "description":"当前页码",
+                    "sample":1
+                },
+                "limit":{
+                    "type":"Integer",
+                    "description":"每页条数",
+                    "sample":10
+                }
+            }
+        }
+    }
+}

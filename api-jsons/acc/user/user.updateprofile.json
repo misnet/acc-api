@@ -1,0 +1,45 @@
+{
+  "id":"acc.profile.update",
+  "name":"个人资料修改",
+  "description":"用户自行修改资料",
+  "namespace":"Kuga\\Api\\Acc",
+  "method":"user.updateProfile",
+  "accessLevel": 1,
+  "request":[
+    {
+      "param":"realname",
+      "required":false,
+      "default":"",
+      "type":"String",
+      "description":"姓名"
+    },
+    {
+      "param":"password",
+      "required":false,
+      "default":"",
+      "type":"String",
+      "description":"密码"
+    },
+    {
+      "param":"repassword",
+      "required":false,
+      "default":"",
+      "type":"String",
+      "description":"确认密码"
+    },
+    {
+      "param":"gender",
+      "required":false,
+      "default":0,
+      "type":"Integer",
+      "description":"性别，0保密，1男，2女"
+    }
+  ],
+  "response":{
+    "data":{
+      "type":"Boolean",
+      "sample":true,
+      "description":"成功返回true，失败返回false"
+    }
+  }
+}

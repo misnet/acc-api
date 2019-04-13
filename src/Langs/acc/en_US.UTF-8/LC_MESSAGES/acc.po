@@ -1,0 +1,561 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Kuga-Class\n"
+"POT-Creation-Date: 2019-04-13 14:28+0800\n"
+"PO-Revision-Date: 2019-04-13 15:38+0800\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Poedit-Basepath: ../../../..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: t;_;nquery:1,2\n"
+"X-Poedit-SearchPath-0: Langs\n"
+"X-Poedit-SearchPath-1: .\n"
+
+#: Api/Acc/Acc.php:35 Api/Acc/Acc.php:65 Api/Acc/Acc.php:97 Api/Acc/Acc.php:129
+msgid "指定的角色不存在"
+msgstr "The role does not exist"
+
+#: Api/Acc/User.php:29
+msgid "这个用户是当前用户，不可删除"
+msgstr "You can not delete yourself"
+
+#: Api/Acc/User.php:47
+msgid "用户不存在"
+msgstr "User does not exist"
+
+#: Api/Acc/User.php:50
+msgid "新密码和确认密码不一致"
+msgstr "The new password does not equal with the retype one"
+
+#: Api/Acc/User.php:58
+msgid "错误的性别值"
+msgstr "Incorrect gender value"
+
+#: Api/Acc/User.php:73
+msgid "找不到用户，可能已被删除"
+msgstr "The user does not exist, maybe be deleted"
+
+#: Api/Acc/User.php:114
+msgid "用户解绑应用失败"
+msgstr "Fail to unbind the application"
+
+#: Api/Acc/User.php:129 Api/Acc/User.php:178
+msgid "用户绑定应用失败"
+msgstr "Fail to bind the application"
+
+#: Api/Acc/User.php:194
+msgid "没设置新密码"
+msgstr "New password is required"
+
+#: Api/Acc/User.php:282 Api/Acc/User.php:310
+msgid "账户或密码错误"
+msgstr "Invalid username or password"
+
+#: Api/Common.php:51
+msgid "请入邮箱或手机号"
+msgstr "Please input your email or mobile number"
+
+#: Api/Common.php:64
+msgid "验证码发送失败"
+msgstr "Verification code failed to sent"
+
+#: Module/Acc/Model/AppModel.php:60
+msgid "请输入应用名称"
+msgstr "Please input the application name"
+
+#: Module/Acc/Model/MenuModel.php:94
+msgid "菜单名必须填写"
+msgstr "Menu name is required"
+
+#: Module/Acc/Model/MenuModel.php:99 Module/Acc/Model/RoleModel.php:96
+msgid "未指定应用"
+msgstr "Application is not figured out"
+
+#: Module/Acc/Model/MenuModel.php:132
+msgid "父级菜单不能是自己"
+msgstr "Parent menu must not be self"
+
+#: Module/Acc/Model/MenuModel.php:137
+msgid "父级菜单不能是当前菜单的子菜单"
+msgstr "Parent menu must not be child one of current menu"
+
+#: Module/Acc/Model/RoleMenuModel.php:55 Module/Acc/Model/RoleModel.php:151
+#: Module/Acc/Model/RoleModel.php:163 Module/Acc/Model/RoleResModel.php:74
+#: Module/Acc/Model/RoleUserModel.php:70 Module/Acc/Model/RoleUserModel.php:82
+msgid "对不起，您无权限进行此操作"
+msgstr "Sorry, you do not have permission to do this operation."
+
+#: Module/Acc/Model/RoleModel.php:100
+msgid "角色已存在"
+msgstr "The role does exist"
+
+#: Module/Acc/Model/RoleModel.php:105
+msgid "优先级必须是大于0的数字"
+msgstr "The priority level must be  a number of bigger than zero"
+
+#: Module/Acc/Model/RoleModel.php:110
+msgid "优先级必须唯一"
+msgstr "The priority number must be unique"
+
+#: Module/Acc/Model/RoleModel.php:116
+msgid "角色类型只能是超级角色或一般角色"
+msgstr "The role type must only  be the super role or the general role"
+
+#: Module/Acc/Model/RoleModel.php:123
+msgid "分配策略值有误"
+msgstr "Incorrect assign policy"
+
+#: Module/Acc/Model/RoleResModel.php:90 Module/Acc/Service/Acc.php:234
+#: Module/Acc/Service/Acc.php:380 Module/Acc/Service/Acc.php:418
+#: Module/Acc/Service/Acc.php:446
+msgid "没有指定角色，无法分配权限"
+msgstr "System can not assign privilege with a none role"
+
+#: Module/Acc/Model/RoleResModel.php:93 Module/Acc/Service/Acc.php:383
+#: Module/Acc/Service/Acc.php:421 Module/Acc/Service/Acc.php:449
+msgid "没有指定权限资源，无法分配权限"
+msgstr "System can not assign privilege with none resource"
+
+#: Module/Acc/Model/SysParamsModel.php:77
+msgid "配置名称不能为空"
+msgstr "The name of configure is required"
+
+#: Module/Acc/Model/SysParamsModel.php:81
+msgid "配置KEY名称不能为空"
+msgstr "The key of configure is required"
+
+#: Module/Acc/Model/SysParamsModel.php:85
+msgid "配置描述不能为空"
+msgstr "The description of configure is required"
+
+#: Module/Acc/Model/SysParamsModel.php:89
+msgid "KEY已存在"
+msgstr "The key of configure does exist"
+
+#: Module/Acc/Model/SysParamsModel.php:93
+msgid "配置名称已存在"
+msgstr "The name of configure is required"
+
+#: Module/Acc/Model/SysParamsModel.php:98
+msgid "值类型不正确"
+msgstr "Incorrect type of value"
+
+#: Module/Acc/Model/UserModel.php:133
+msgid "用户名必须填写"
+msgstr "Please type your username"
+
+#: Module/Acc/Model/UserModel.php:137
+msgid "用户名已存在"
+msgstr "The username already exists"
+
+#: Module/Acc/Model/UserModel.php:141
+msgid "手机号已存在"
+msgstr "Cellphone number already exists"
+
+#: Module/Acc/Model/UserModel.php:146
+msgid "Email格式错误"
+msgstr "Incorrect email format"
+
+#: Module/Acc/Model/UserModel.php:151
+msgid "Email已存在"
+msgstr "Email already exists"
+
+#: Module/Acc/Model/UserModel.php:222
+msgid "密码至少要有%s%位"
+msgid_plural "密码至少要有%s%位"
+msgstr[0] "Password length muse have at least %s%"
+msgstr[1] "Password length muse have at least %s%"
+
+#: Module/Acc/Model/UserModel.php:242
+msgid "请设置好密码"
+msgstr "Please type your password"
+
+#: Module/Acc/Service/Acc.php:151
+msgid "要修改的角色不存在"
+msgstr "The role  which be updated does not exist"
+
+#: Module/Acc/Service/Acc.php:498
+msgid "findRolesByTypeId()传入的参数不正确"
+msgstr "Incorrect parameter for findRolesByTypeId"
+
+#~ msgid "手机号不正确"
+#~ msgstr "Incorrect phone number"
+
+#~ msgid "API中 %action% 接口不存在"
+#~ msgstr " %action%  not exists in API Methods"
+
+#~ msgid "API中 %module% 模块不存在"
+#~ msgstr " %action%  not exists in API Modules"
+
+#~ msgid "数据不存在"
+#~ msgstr "Data does not exist"
+
+#~ msgid "Access Token无效"
+#~ msgstr "Invalid AccessToken"
+
+#, fuzzy
+#~| msgid "Access Token无效"
+#~ msgid "Refresh Token无效"
+#~ msgstr "Invalid AccessToken"
+
+#~ msgid "参数缺失"
+#~ msgstr "Parameter missing"
+
+#~ msgid "无效appkey或appsecret"
+#~ msgstr "Invalid appkey or invalid appsecret"
+
+#~ msgid "无效签名"
+#~ msgstr "Invalid sinature"
+
+#~ msgid "无效的接口"
+#~ msgstr "Invalid api endpoint"
+
+#~ msgid "密码错误"
+#~ msgstr "Error password"
+
+#~ msgid "未能识别会员，请确认已登录"
+#~ msgstr "Unrecognized user, please confirm login"
+
+#~ msgid "每个用户最多只能保存%len%个收货地址"
+#~ msgid_plural "每个用户最多只能保存%len%个收货地址"
+#~ msgstr[0] "You only can keep %len% address"
+#~ msgstr[1] "You only can keep %len% addresses"
+
+#~ msgid "标题不能重名"
+#~ msgstr "The title can not be duplicated"
+
+#~ msgid "请选择分类"
+#~ msgstr "Please select a category"
+
+#~ msgid "文章分类不存在"
+#~ msgstr "Article category does not exist"
+
+#~ msgid "选定的分类【%cateName%】下面还有子类，请选择子类"
+#~ msgstr "The selected category [%cateName%] below there are sub-categories, please select a sub-category"
+
+#~ msgid "隐藏"
+#~ msgstr "Hide"
+
+#~ msgid "公开"
+#~ msgstr "Public"
+
+#~ msgid "上架时间不能迟于下架时间"
+#~ msgstr "Shelf time can not be later than the off time"
+
+#~ msgid "有效开始时间不能迟于结束时间"
+#~ msgstr "Start time can not be later than the end time"
+
+#~ msgid "发行数量必须填写大于或等于0的数字"
+#~ msgstr "You must enter a number greater than or equal to 0"
+
+#~ msgid "乐器名称必须填写"
+#~ msgstr "The instrument name must be filled in"
+
+#~ msgid "支付值为空"
+#~ msgstr "The payout value is null"
+
+#~ msgid "会员账户为空，无法支付"
+#~ msgstr "The member account is empty and can not be paid"
+
+#~ msgid "账户余额不足，无法支付"
+#~ msgstr "Insufficient account balance, unable to pay"
+
+#~ msgid "积分不足，无法支付"
+#~ msgstr "Insufficient points to pay"
+
+#~ msgid "卡号已存在"
+#~ msgstr "Membership card number already exists"
+
+#~ msgid "【邮箱】的格式不正确"
+#~ msgstr "The format of the email is incorrect"
+
+#~ msgid "手机号码格式不正确"
+#~ msgstr "The cellphone number is not in the correct format"
+
+#~ msgid "【加入日期】格式是年年年年月月日日如%date%"
+#~ msgstr "[Join Date] format is the date of the month, such as% date%"
+
+#~ msgid "会员卡号请填写"
+#~ msgstr "Please fill in the membership card number"
+
+#~ msgid "请填写登陆密码"
+#~ msgstr "Please fill in the login password"
+
+#~ msgid "密码最少要 %s% 位"
+#~ msgid_plural "密码最少要 %s% 位"
+#~ msgstr[0] "Password length must be at least %s%"
+#~ msgstr[1] "Password length must be at least %s%"
+
+#~ msgid "该会员等级正在使用中，不可删除"
+#~ msgstr "This member rank is in use and can not be deleted"
+
+#~ msgid "默认折扣值范围为0至10"
+#~ msgstr "The default discount value ranges from 0 to 10"
+
+#~ msgid "未指定训练课程"
+#~ msgstr "No training course specified"
+
+#~ msgid "训练课程不存在"
+#~ msgstr "The training course does not exist"
+
+#~ msgid "训练课程已下架"
+#~ msgstr "The training course  has been removed"
+
+#~ msgid "未指定训练用户"
+#~ msgstr "No training user specified"
+
+#~ msgid "请勿重复添加课程"
+#~ msgstr "The training course has added before."
+
+#~ msgid "同一手机号码下放短信过多，请稍候重试"
+#~ msgstr "Too many message sent to the same phone number. Please try again later"
+
+#~ msgid "运营商账户异常"
+#~ msgstr "SMS Account Exception"
+
+#~ msgid "手机号码格式错误"
+#~ msgstr "Error cellphone number format"
+
+#~ msgid "运营商余额不足"
+#~ msgstr "Insufficient SMS balance"
+
+#~ msgid "短信无法发送"
+#~ msgstr "SMS  can’t be sent"
+
+#~ msgid "未登录的用户"
+#~ msgstr "Please sign in first"
+
+#~ msgid "未指定关注的会员"
+#~ msgstr "Please select a followed user"
+
+#~ msgid "参数有误"
+#~ msgstr "Parameter error"
+
+#~ msgid "请填写呢称"
+#~ msgstr "Please type your nickname"
+
+#~ msgid "地址不存在"
+#~ msgstr "The address does not exist"
+
+#~ msgid "未指定用户"
+#~ msgstr "Please select a user"
+
+#~ msgid "未登录"
+#~ msgstr "Please sign in first"
+
+#~ msgid "新旧密码一样"
+#~ msgstr "The new password same as the old password"
+
+#~ msgid "会员数据不存在"
+#~ msgstr "The user data does not exist"
+
+#~ msgid "请输入正确的旧密码"
+#~ msgstr "Incorrect old password"
+
+#~ msgid "旧手机号要先验证"
+#~ msgstr "The old cellphone number has to verify first"
+
+#~ msgid "请指定省份"
+#~ msgstr "Please specify a province"
+
+#~ msgid "参数type不正确"
+#~ msgstr "Parameter “type” is incorrect"
+
+#~ msgid "数据未发送"
+#~ msgstr "Data not sent"
+
+#~ msgid "未指定id,无法正常回传"
+#~ msgstr "Id not specified, not a normal return"
+
+#~ msgid "未指定要删除的课程"
+#~ msgstr "The course you want to remove is not specified"
+
+#~ msgid "未找到要删除的课程"
+#~ msgstr "The course you want to remove does not exist"
+
+#~ msgid "未指定要置顶的课程"
+#~ msgstr "The course you want to top is not specified"
+
+#~ msgid "未找到要置顶的课程"
+#~ msgstr "The course you want to top does not exist"
+
+#~ msgid "会员未登录"
+#~ msgstr "You "
+
+#~ msgid "数量必须为正数"
+#~ msgstr "Quanty must bigger than 0"
+
+#~ msgid "数据错误，这款产品不存在"
+#~ msgstr "The product not exist "
+
+#~ msgid "库存只有%qty%件"
+#~ msgid_plural "库存只有%qty%件"
+#~ msgstr[0] "Only %qty% left in stock"
+#~ msgstr[1] "Only %qty% left in stock"
+
+#~ msgid "已取消"
+#~ msgstr "Cancelled"
+
+#~ msgid "已关闭"
+#~ msgstr "Closed"
+
+#~ msgid "已付款"
+#~ msgstr "Payed"
+
+#~ msgid "会员不存在，请确认输入正确的会员帐号"
+#~ msgstr "The Account not exist, please input the correct account"
+
+#~ msgid "会员不存在，请确认输入正确的手机号"
+#~ msgstr "The user does not exist, please type the correct cellphone"
+
+#~ msgid "会员不存在，数据错误"
+#~ msgstr "The user does not exist, data error"
+
+#~ msgid "无适合的登陆适配器"
+#~ msgstr "No suitable signin adapter"
+
+#~ msgid "请输入用户名和密码"
+#~ msgstr "Please type your username and password"
+
+#~ msgid "错误的用户名或密码"
+#~ msgstr "Wrong Username or password"
+
+#~ msgid "成功放入购物车"
+#~ msgstr "Added to cart"
+
+#~ msgid "放入购物车失败"
+#~ msgstr "Add to cart failed"
+
+#~ msgid "手机号确认验证码"
+#~ msgstr "Phone verification code"
+
+#~ msgid "该手机号已请求验证达到10次，不可以再验证"
+#~ msgstr "The phone number has been requested to verify 10 times, can not be verified"
+
+#~ msgid "成功发送验证码到手机"
+#~ msgstr "The verification code has sent to your phone"
+
+#~ msgid "请确认输入了验证码"
+#~ msgstr "please make sure you've entered a verification code"
+
+#~ msgid "请确认有新的手机号"
+#~ msgstr "Please confirm the new cellphone number"
+
+#~ msgid "验证码不正确"
+#~ msgstr "Incorrect verification code"
+
+#~ msgid "用户资料不存在"
+#~ msgstr "User data does not exist"
+
+#~ msgid "手机号码修改成功"
+#~ msgstr "Phone number modified successfully"
+
+#~ msgid "手机号码修改失败"
+#~ msgstr "Phone number modification failed"
+
+#~ msgid "请确认输入了旧密码"
+#~ msgstr "Please make sure the old password is typed"
+
+#~ msgid "请确认输入了新密码"
+#~ msgstr "Please make sure the new password is typed"
+
+#~ msgid "旧密码不正确"
+#~ msgstr "The old password is incorrect"
+
+#~ msgid "密码修改成功"
+#~ msgstr "Password reset complete"
+
+#~ msgid "密码修改失败"
+#~ msgstr "Password modification failed"
+
+#~ msgid "您已退出系统"
+#~ msgstr "You have signed out the system"
+
+#~ msgid "登陆成功"
+#~ msgstr "Login success"
+
+#~ msgid "手机验证码不正确"
+#~ msgstr "Incorrect verification code"
+
+#~ msgid "非法使用"
+#~ msgstr "Illegal use"
+
+#~ msgid "您已注册了会员，不需要重复注册"
+#~ msgstr "You have registered a account, you don't need to register again"
+
+#~ msgid "注册会员成功"
+#~ msgstr "Successful registered a account"
+
+#~ msgid "会员注册失败"
+#~ msgstr "Account registration failure"
+
+#~ msgid "会员没登陆"
+#~ msgstr "Not logined"
+
+#~ msgid "成功取得会员信息"
+#~ msgstr "Successful get member information"
+
+#~ msgid "请输入姓名"
+#~ msgstr "Please type your name"
+
+#~ msgid "资料修改成功"
+#~ msgstr "Profile modified successfully"
+
+#~ msgid "资料修改失败"
+#~ msgstr "Profile modified failed"
+
+#~ msgid "成功下单，请等候工作人员发货"
+#~ msgstr "The order is created, Please wait for delivery staff"
+
+#~ msgid "未指定省份"
+#~ msgstr "No province specified"
+
+#~ msgid "参数错误"
+#~ msgstr "Parameter error"
+
+#~ msgid "手机验证码未发送过，请先获取验证码"
+#~ msgstr "Phone verification code has not been sent. Please get a verification code first"
+
+#~ msgid "手机号不正确或已注册过"
+#~ msgstr "Phone number is incorrect or has been registered"
+
+#~ msgid "付款方式暂只支持微信支付"
+#~ msgstr "Payment only support WeChat payment"
+
+#~ msgid "订单未支付"
+#~ msgstr "The order is not paid"
+
+#~ msgid "订单状态不正确"
+#~ msgstr "The order status is incorrect"
+
+#~ msgid "等待用户授权"
+#~ msgstr "Waiting for user authorization"
+
+#~ msgid "订单不存在"
+#~ msgstr "The order does not exist"
+
+#~ msgid "订单状态不是未付款"
+#~ msgstr "The order status is not nonpayment"
+
+#~ msgid "商品不存在"
+#~ msgstr "The product does not exist"
+
+#~ msgid "common"
+#~ msgstr "commonYes"
+
+#~ msgctxt "informal"
+#~ msgid "Hello"
+#~ msgstr "Salut"
+
+#~ msgctxt "evening"
+#~ msgid "Hello"
+#~ msgstr "Bonsoir"
+
+#~ msgid "Hello %name%"
+#~ msgstr "Salut %name%"

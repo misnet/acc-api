@@ -1,0 +1,31 @@
+{
+    "id":"acc.role.assignmenu",
+    "name":"角色分配菜单",
+    "description":"指定菜单ID列表，分配给指定的角色",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"acc.assignMenusToRole",
+    "accessLevel": 1,
+    "request":[
+        {
+            "param":"rid",
+            "required":true,
+            "default":"",
+            "type":"Integer",
+            "description":"角色ID"
+        },
+        {
+            "param":"menuIds",
+            "required":false,
+            "default":"",
+            "type":"String",
+            "description":"多个菜单以逗号分隔"
+        }
+    ],
+    "response":{
+        "data":{
+            "type":"Boolean",
+            "sample":true,
+            "description":"成功返回true，失败返回false"
+        }
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "id":"acc.app.create",
+    "name":"创建应用",
+    "description":"创建应用",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"app.create",
+    "accessLevel": 1,
+    "request":[
+        {
+            "param":"name",
+            "required":true,
+            "default":"",
+            "type":"String",
+            "description":"应用名称"
+        },
+        {
+            "param":"disabled",
+            "required":false,
+            "default":0,
+            "type":"Integer",
+            "description":"禁用，1禁用，0启用"
+        },
+        {
+            "param":"shortDesc",
+            "required":false,
+            "default":"",
+            "type":"String",
+            "description":"描述"
+        }
+    ],
+    "response":{
+        "data":{
+            "type":"Boolean",
+            "sample":true,
+            "description":"成功返回true，失败返回false"
+        }
+    }
+}

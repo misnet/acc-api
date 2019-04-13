@@ -1,0 +1,24 @@
+{
+    "id":"acc.role.delete",
+    "name":"删除角色",
+    "description":"根据角色ID删除指定角色",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"acc.deleteRole",
+    "accessLevel": 2,
+    "request":[
+        {
+            "param":"id",
+            "required":true,
+            "default":"",
+            "type":"Integer",
+            "description":"角色ID"
+        }
+    ],
+    "response":{
+        "data":{
+            "type":"Boolean",
+            "sample":true,
+            "description":"成功返回true，失败返回false"
+        }
+    }
+}

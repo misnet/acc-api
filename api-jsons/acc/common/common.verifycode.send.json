@@ -1,0 +1,16 @@
+{
+    "id":"common.verifycode.send",
+    "name":"短信验证码",
+    "description":"发送短信验证码",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"common.sendVerifyCode",
+    "accessLevel": 0,
+    "disableFilterParams":true,
+    "request":[{
+        "param":"receive",
+        "required":true,
+        "default":"",
+        "type":"String",
+        "description":"手机号或邮箱"
+    }]
+}

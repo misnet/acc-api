@@ -1,0 +1,41 @@
+{
+  "id":"common.region.list",
+  "name":"地区列表",
+  "description":"根据上一级地区ID取得地区列表",
+  "namespace":"Kuga\\Api\\Acc",
+  "method":"common.getRegionList",
+  "accessLevel": 0,
+  "request":[
+    {
+      "param":"parentId",
+      "required":false,
+      "default":"0",
+      "type":"Integer",
+      "description":"上一级地区ID"
+    }
+  ],
+  "response":{
+    "data":{
+      "type":"Array",
+
+      "description":"地区列表",
+      "responseItem": {
+        "id":{
+          "type":"Integer",
+          "sample":1,
+          "description":"地区ID"
+        },
+        "name":{
+          "type":"String",
+          "sample":"福建省",
+          "description":"地区名称"
+        },
+        "parentId":{
+          "type":"Integer",
+          "sample":"1",
+          "description":"上一级地区ID"
+        }
+      }
+    }
+  }
+}

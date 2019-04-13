@@ -1,0 +1,31 @@
+{
+    "id":"acc.role.unassignuser",
+    "name":"取消角色分配用户",
+    "description":"指定角色，取消分配指定的用户",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"acc.unassignRoleToUsers",
+    "accessLevel": 1,
+    "request":[
+        {
+            "param":"rid",
+            "required":true,
+            "default":"",
+            "type":"Integer",
+            "description":"角色ID"
+        },
+        {
+            "param":"uid",
+            "required":false,
+            "default":"",
+            "type":"String",
+            "description":"多个用户ID以逗号分隔"
+        }
+    ],
+    "response":{
+        "data":{
+            "type":"Boolean",
+            "sample":true,
+            "description":"成功返回true，失败返回false"
+        }
+    }
+}
