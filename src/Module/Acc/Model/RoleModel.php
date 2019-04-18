@@ -95,9 +95,25 @@ class RoleModel extends AbstractModel
             'model'=>$this,
             'message'=>$this->translator->_('未指定应用')
         ]));
+//        $where = 'appId=:appId: and name=:name:';
+//        $bind = ['appId'=>$this->appId,'name'=>$this->name];
+//        if($this->id){
+//            $where.=' and id!=:id:';
+//            $bind['id'] = $this->id;
+//        }
+//        $sameNameNum = self::count([
+//            $where,
+//            $bind
+//        ]);
+//        if($sameNameNum>0){
+//            $validator->appendMessage(
+//                new Validation\Message($this->translator->_('角色已存在'))
+//            );
+//        }
+
         $validator->add(
-            'name', new Uniqueness(
-            ['model' => $this, 'message' => $this->translator->_('角色已存在')]
+            ['name','appId'], new Uniqueness(
+            ['model' => new RoleModel(), 'message' => $this->translator->_('角色已存在')]
         )
         );
         $validator->add(
@@ -106,7 +122,7 @@ class RoleModel extends AbstractModel
         )
         );
         $validator->add(
-            'priority', new Uniqueness(
+            ['priority','appId'], new Uniqueness(
             ['model' => $this, 'message' => $this->translator->_('优先级必须唯一')]
         )
         );
