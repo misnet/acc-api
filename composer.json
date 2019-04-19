@@ -5,16 +5,27 @@
     "license": "LGPL-3.0",
     "require":{
         "php":">=7.0",
-        "kuga/qing":"0.8.7",
-        "kuga/openapi-core":"*",
-        "phalcon/incubator": "^3.4",
-        "aliyuncs/oss-sdk-php": "~2.0",
-        "qcloudsms/qcloudsms_php": "0.1.*",
-        "alibabacloud/client":">=1.0.7"
+        "kuga/qing":"dev-master",
+        "kuga/openapi-core":"dev-master",
+        "phalcon/incubator": "^3.4"
     },
     "autoload": {
         "psr-4": {
             "Kuga\\": "src"
+        }
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        },
+        "qing": {
+            "type": "vcs",
+            "url": "https://github.com/misnet/qing.git"
+        },
+        "openapi-core": {
+            "type": "vcs",
+            "url": "https://github.com/misnet/kuga-openapi-core.git"
         }
     }
 }
