@@ -91,7 +91,7 @@ class AppModel extends  AbstractModel{
         foreach ($apiKeyList as $keyItem) {
             $apiKeys[$keyItem['id']]['secret'] = $keyItem['secret'];
         }
-        $cache->set($cacheId,$apiKeys);
+        $cache->set($cacheId,$apiKeys,-1);
     }
     public function afterSave(){
         $this->freshCache();
