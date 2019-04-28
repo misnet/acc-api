@@ -281,36 +281,63 @@ class User extends BaseApi
         if ( ! $row) {
             throw new ApiException($this->translator->_('账户或密码错误'));
         } elseif ($userModel->passwordVerify($row->password, $data['password'])) {
-            $row->lastVisitIP   = \Qing\Lib\Utils::getClientIp();
-            $row->lastVisitTime = time();
-            //$row->update();
-            //取得角色
-            $result                               = $this->getRoles($row->uid);
-            $result[$this->_accessTokenUserIdKey] = $row->uid;
-            $accessToken                          = $this->_createAccessToken($result);
-
-            //取得可以访问的菜单
-            $menuService = new MenuService($this->_di);
-            $aclService  = new AclService($this->_di);
-            $aclService->setUserId($row->uid);
-            $aclService->setRoles($result['console.roles']);
-            $menuService->setAclService($aclService);
-            $returnData['menuList'] = $menuService->getAll(true, true, false,['id','name','url'],$this->_appKey);
-            $returnData['accessToken'] = $accessToken;
-            $returnData['uid']         = $row->uid;
-            $returnData['username']    = $row->username;
-            $returnData['gender']    = $row->gender;
-            $returnData['mobile']    = $row->mobile;
-            $returnData['realname']    = $row->realname;
-
-            //返回当前用户可以看的菜单列表
-
-            return $returnData;
+            return $this->_generateLoginInfo($row);
         } else {
             throw new ApiException($this->translator->_('账户或密码错误'));
         }
     }
 
+    /**
+     * 刷新accessToken
+     * @throws ApiException
+     */
+    public function refreshAccessToken(){
+        $data = $this->_toParamObject($this->getParams());
+        if($data['refreshToken']){
+            $uid = $this->_di->getShared('cache')->get('refreshToken:'.$data['refreshToken']);
+            if(!$uid){
+                //无效的刷新token
+                throw new ApiException(ApiException::$EXCODE_INVALID_REFRESHTOKEN);
+            }else{
+                $row = UserModel::findFirstByUid($uid);
+                return $this->_generateLoginInfo($row);
+            }
+        }else{
+            throw new ApiException($this->translator->_('refreshToken参数没传值'));
+        }
+    }
+
+    private function _generateLoginInfo($row){
+        $row->lastVisitIP   = \Qing\Lib\Utils::getClientIp();
+        $row->lastVisitTime = time();
+        //$row->update();
+        //取得角色
+        $result                               = $this->getRoles($row->uid);
+        $result[$this->_accessTokenUserIdKey] = $row->uid;
+        $hours = 10;
+        $days  = ceil($hours / 24);
+        $expiredDate = strtotime($days+' days');
+        $accessToken                          = $this->_createAccessToken($result,$hours*3600);
+
+        //取得可以访问的菜单
+        $menuService = new MenuService($this->_di);
+        $aclService  = new AclService($this->_di);
+        $aclService->setUserId($row->uid);
+        $aclService->setRoles($result['console.roles']);
+        $menuService->setAclService($aclService);
+        $returnData['menuList'] = $menuService->getAll(true, true, false,['id','name','url'],$this->_appKey);
+        $returnData['accessToken'] = $accessToken;
+        $returnData['accessTokenExpiredIn'] = $hours * 3600;
+        $returnData['refreshToken'] = md5($accessToken.'KUGA');
+        $returnData['refreshTokenExpiredIn'] = ( $hours + 1) * 3600;
+        $returnData['uid']         = $row->uid;
+        $returnData['username']    = $row->username;
+        $returnData['gender']    = $row->gender;
+        $returnData['mobile']    = $row->mobile;
+        $returnData['realname']    = $row->realname;
+        $this->_di->getShared('cache')->set('refreshToken:'.$returnData['refreshToken'],$row->uid,$returnData['refreshTokenExpiredIn']);
+        return $returnData;
+    }
     /**
      * 载入角色信息
      *
