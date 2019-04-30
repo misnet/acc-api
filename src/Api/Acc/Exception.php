@@ -1,12 +1,23 @@
 <?php
-namespace  Kuga\Api\Acc;
-class Exception extends \Kuga\Core\Api\Exception{
-    const E1 = 60001;
-    const E2 = 60002;
-    public static function getExceptionList(){
+
+namespace Kuga\Api\Acc;
+
+
+class Exception extends \Kuga\Core\Api\Exception
+{
+
+    /**
+     * 无有效数据（数据库数据不全等。。。）
+     * @var int
+     */
+    const INVALID_PASSWORD = 89003;
+
+    public static function getExceptionList()
+    {
+        $di = \Phalcon\DI::getDefault();
+        $t = $di->getShared('translator');
         return [
-            self::E1=>'无聊',
-            self::E2=>'你好'
+            self::INVALID_PASSWORD => $t->_('账户密码错误')
         ];
     }
 }

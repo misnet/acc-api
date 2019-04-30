@@ -11,7 +11,7 @@ use Kuga\Module\Acc\Model\UserBindAppModel;
 use Kuga\Module\Acc\Model\UserModel;
 use Kuga\Module\Acc\Service\Acc as AccService;
 use Kuga\Module\Acc\Service\Acl as AclService;
-use Kuga\Core\Api\Exception as ApiException;
+use Kuga\Api\Acc\Exception as ApiException;
 use Kuga\Module\Acc\Service\Menu as MenuService;
 class User extends BaseApi
 {
@@ -279,11 +279,11 @@ class User extends BaseApi
         $row         = $result->getFirst();
 
         if ( ! $row) {
-            throw new ApiException($this->translator->_('账户或密码错误'));
+            throw new ApiException(ApiException::INVALID_PASSWORD);
         } elseif ($userModel->passwordVerify($row->password, $data['password'])) {
             return $this->_generateLoginInfo($row);
         } else {
-            throw new ApiException($this->translator->_('账户或密码错误'));
+            throw new ApiException(ApiException::INVALID_PASSWORD);
         }
     }
 
