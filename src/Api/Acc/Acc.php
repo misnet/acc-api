@@ -2,11 +2,13 @@
 
 namespace Kuga\Api\Acc;
 
+use Kuga\Module\Acc\Model\AppModel;
 use Kuga\Module\Acc\Model\RoleMenuModel;
 use Kuga\Module\Acc\Model\RoleResModel;
 use Kuga\Module\Acc\Model\RoleUserModel;
 use Kuga\Module\Acc\Model\RoleModel;
 use Kuga\Module\Acc\Service\Acl;
+use Kuga\Module\Acc\Service\Acc as AccService;
 use Kuga\Core\Api\Exception as ApiException;
 use Kuga\Core\GlobalVar;
 use Kuga\Module\Acc\Service\Menu as MenuService;
@@ -247,9 +249,9 @@ class Acc extends BaseApi
      */
     public function listResourcesGroup()
     {
-        $roleMenuModel = new RoleResModel();
-        $roleMenuModel->setResourceConfigFile($this->_di->getShared('config')->acc);
-        $list = $roleMenuModel->getResourceGroup();
+        $data  = $this->_toParamObject($this->getParams());
+        $acc   = new AccService($this->_di);
+        $list = $acc->getResourceList($data['appId']);
         $list || $list = [];
         $returnList = [];
         foreach ($list as $item) {
@@ -279,10 +281,10 @@ class Acc extends BaseApi
         $data['res'] = trim($data['res']);
 
         $roleMenuModel = new RoleResModel();
-        $roleMenuModel->setResourceConfigFile($this->_di->getShared('config')->acc);
-        $resource = $roleMenuModel->getResource($data['res']);
-
+        $acc   = new AccService($this->_di);
+        $resource = $acc->getResource($data['appId'],$data['res']);
         $assignOps = $roleMenuModel->getAssignedOperators($data['rid'], $data['res']);
+
         if ($resource) {
             foreach ($resource['op'] as &$op) {
                 if (in_array($op['code'], $assignOps['allow'])) {
@@ -307,5 +309,83 @@ class Acc extends BaseApi
 
         $menuService = new MenuService($this->_di);
         $menuService->clearMenuAccessCache();
+    }
+
+    /**
+     * 解析权限资源XML内容
+     * @return array
+     * @throws ApiException
+     */
+    public function parseResourceXml(){
+        $data = $this->_toParamObject($this->getParams());
+        $appId     = trim($data['appId']);
+        $xml  = trim($data['xml']);
+        try {
+            $content = new \SimpleXMLElement($xml);
+        }catch(\Exception $e){
+            $content = '';
+        }
+        if(!$content){
+            throw new ApiException('XML文件格式错误');
+        }
+        $resources= $content->xpath('/privileges/resource');
+        if(is_array($resources) && !empty($resources)){
+            $resList = [];
+            foreach($resources as $res){
+                $tmp = [];
+                if(isset($res['title']) && isset($res['code'])){
+                    $tmp['title'] = strval($res['title']);
+                    $tmp['code'] = strval($res['code']);
+                }
+                $opcodes = $res->xpath('op');
+                $tmp['op'] = [];
+                if($opcodes){
+                    foreach ($opcodes as $op){
+                        if(isset($op['title']) && isset($op['code'])){
+                            $t['title'] = strval($op['title']);
+                            $t['code'] = strval($op['code']);
+                            $tmp['op'][] = $t;
+                        }
+                    }
+                }
+                if(!empty($tmp)){
+                    $resList[] = $tmp;
+                }
+            }
+            if($resList){
+                $cache = $this->_di->getShared('cache');
+                $key       = 'resourceXml:'.$appId.':'.$this->_userMemberId;
+                $cache->set($key,$xml,7200);
+                return [
+                    'parsedKey'=>md5($key),
+                    'resources'=>$resList
+                ];
+            }
+        }
+        throw new ApiException($this->translator->_('XML内容格式有误，无法正确识别到权限资源与其对应定义的操作码'));
+    }
+
+    /**
+     * 保存resource xml
+     */
+    public function importResourceXml(){
+        $data = $this->_toParamObject($this->getParams());
+        $parsedKey  = trim($data['parsedKey']);
+        $appId     = trim($data['appId']);
+        $cache     = $this->_di->getShared('cache');
+        $key       = 'resourceXml:'.$appId.':'.$this->_userMemberId;
+        if($parsedKey === md5($key)){
+            $accXml= $cache->get($key);
+            if(!$accXml){
+                throw new ApiException();
+            }else{
+                $app = AppModel::findFirstById($data['appId']);
+                $app->accResourcesXml = $accXml;
+                $result = $app->save();
+                return $result;
+            }
+        }else{
+            throw new ApiException();
+        }
     }
 }

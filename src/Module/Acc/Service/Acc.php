@@ -4,6 +4,8 @@ namespace Kuga\Module\Acc\Service;
 
 use Kuga\Core\Base\AbstractService;
 use Kuga\Core\Base\ServiceException;
+use Kuga\Module\Acc\Config;
+use Kuga\Module\Acc\Model\AppModel;
 use Phalcon\Mvc\Model\Resultset\Simple;
 use Kuga\Module\Acc\Model\RoleModel;
 use Kuga\Module\Acc\Model\RoleUserModel;
@@ -56,13 +58,14 @@ class Acc extends AbstractService
      * @var integer
      */
     const ASSIGN_NOTLOGIN = 2;
+    private $accXmlContent = '';
 
     /**
      * ACC APP KEY
      * @return int
      */
     public static function getAccAppKey(){
-        return 1000;
+        return Config::ACC_APPKEY;
     }
 
     /**
@@ -262,17 +265,26 @@ class Acc extends AbstractService
     /**
      * 取得权限资源列表
      */
-    public function getResourceList()
+    public function getResourceList($appId)
     {
         $cache             = $this->_di->get('cache');
-        $cacheKey          = 'acc_setting';
+        $cacheKey          = 'acc_setting:'.$appId;
         $callback['func']  = [$this, 'parsePrivilegeSetting'];
         $callback['param'] = [];
+
+        $this->setAccXmlContent($appId);
         $resourceList      = $cache->get($cacheKey, $callback);
 
         return $resourceList;
     }
-
+    public function setAccXmlContent($appId){
+        $app = AppModel::findFirstById($appId);
+        if($app){
+            $this->accXmlContent = $app->accResourcesXml;
+        }else{
+            $this->accXmlContent = null;
+        }
+    }
     /**
      * 分析acc.xml文件，读取权限资源操作配置
      *
@@ -280,12 +292,11 @@ class Acc extends AbstractService
      */
     public function parsePrivilegeSetting()
     {
-        $file = QING_ROOT_PATH.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'acc.xml';
+        //$file = QING_ROOT_PATH.DIRECTORY_SEPARATOR.'config'.DIRECTORY_SEPARATOR.'acc.xml';
 
         $resourceList = [];
-        if (is_readable($file)) {
-            //simplexml_load_file失效了，不明
-            $dom = simplexml_load_string(file_get_contents($file));
+        if($this->accXmlContent){
+            $dom = simplexml_load_string($this->accXmlContent);
             if ($dom instanceof \SimpleXMLElement) {
                 if (sizeof($dom->children()) > 0) {
                     $i = 0;
@@ -307,7 +318,6 @@ class Acc extends AbstractService
                 }
             }
         }
-
         return $resourceList;
     }
 
@@ -344,14 +354,14 @@ class Acc extends AbstractService
 
     /**
      * 根据资源代码取得资源数组信息
-     *
+     * @param string $appId
      * @param string $code
      *
      * @return array
      */
-    public function getResource($code)
+    public function getResource($appId,$code)
     {
-        $resourceList = $this->getResourceList();
+        $resourceList = $this->getResourceList($appId);
         if (is_array($resourceList) && sizeof($resourceList) > 0) {
             if (array_key_exists($code, $resourceList)) {
                 return $resourceList[$code];

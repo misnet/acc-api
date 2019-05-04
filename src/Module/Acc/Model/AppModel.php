@@ -36,6 +36,8 @@ class AppModel extends  AbstractModel{
      * @var String
      */
     public $shortDesc;
+
+    public $accResourcesXml;
     public function getSource()
     {
         return 't_apps';
@@ -72,7 +74,8 @@ class AppModel extends  AbstractModel{
             'name'=>'name',
             'secret'=>'secret',
             'disabled'=>'disabled',
-            'short_desc'=>'shortDesc'
+            'short_desc'=>'shortDesc',
+            'acc_resources_xml'=>'accResourcesXml'
         ];
     }
     /**

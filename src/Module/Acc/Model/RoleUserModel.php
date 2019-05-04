@@ -63,7 +63,7 @@ class RoleUserModel extends AbstractModel
 
     public function beforeSave()
     {
-        $acc     = new AclService();
+        $acc     = $this->getDI()->getShared('aclService');
         $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
         $isAllow = true;
         if ( ! $isAllow) {
@@ -75,7 +75,7 @@ class RoleUserModel extends AbstractModel
 
     public function beforeDelete()
     {
-        $acc     = new AclService();
+        $acc     = $this->getDI()->getShared('aclService');
         $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
         $isAllow = true;
         if ( ! $isAllow) {
