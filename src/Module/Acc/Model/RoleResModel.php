@@ -44,8 +44,11 @@ class RoleResModel extends AbstractModel
      * @var integer
      */
     public $isAllow;
-
-    private $accXmlFile;
+    /**
+     * 应用ID
+     * @var
+     */
+    public $appId;
 
     public function getSource()
     {
@@ -63,7 +66,12 @@ class RoleResModel extends AbstractModel
      */
     public function columnMap()
     {
-        return ['id' => 'id', 'rid' => 'rid', 'rescode' => 'rescode', 'opcode' => 'opcode', 'is_allow' => 'isAllow'];
+        return ['id' => 'id',
+            'rid' => 'rid',
+            'rescode' => 'rescode',
+            'opcode' => 'opcode',
+            'app_id' => 'appId',
+            'is_allow' => 'isAllow'];
     }
 
     public function beforeSave()
@@ -71,9 +79,17 @@ class RoleResModel extends AbstractModel
         $acc     = $this->getDI()->getShared('aclService');
         $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
         if ( ! $isAllow) {
-            throw new ModelException($this->_('对不起，您无权限进行此操作'));
+            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
         }
 
+        return true;
+    }
+    public function beforeDelete(){
+        $acc     = $this->getDI()->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
+        if ( ! $isAllow) {
+            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
+        }
         return true;
     }
 
@@ -84,7 +100,7 @@ class RoleResModel extends AbstractModel
      * @param string $resourceCode 资源代码
      * @return array 例：array('allow'=>array('','OP_ADD','OP_REMOVE'),'deny'=>array('OP_CHECK'));
      */
-    public function getAssignedOperators($roleId,$resourceCode){
+    public function getAssignedOperators($roleId,$resourceCode,$appId){
         $roleId = intval($roleId);
         if(!$roleId){
             throw new ModelException($this->translator->_('没有指定角色，无法分配权限'));
@@ -92,9 +108,12 @@ class RoleResModel extends AbstractModel
         if(!$resourceCode){
             throw new ModelException($this->translator->_('没有指定权限资源，无法分配权限'));
         }
+        if(!$appId){
+            throw new ModelException($this->translator->_('没有指定应用，无法分配权限'));
+        }
         $rows = self::find(array(
-            'conditions'=>'rid=:rid: and (rescode=:rescode:)',
-            'bind'=>array('rid'=>$roleId,'rescode'=>$resourceCode),
+            'conditions'=>'rid=:rid: and (rescode=:rescode:) and appId=:aid:',
+            'bind'=>array('rid'=>$roleId,'rescode'=>$resourceCode,'aid'=>$appId),
             'order'=>'id desc'
         ));
         $allowOperators = array();

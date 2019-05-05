@@ -40,7 +40,7 @@ class Menu extends AbstractService {
 	    if($filterByAcc && $this->_aclService){
     	    $keySeed = array(
     	        'isAdmin'=>$this->_aclService->hasSuperRole(),
-    	        'roleIds'=>$this->_aclService->getRoles()
+    	        'roleIds'=>$this->_aclService->getRoles($appId)
             );
 	    }else{
 	        $keySeed=array('allMenu'=>true);
@@ -64,7 +64,7 @@ class Menu extends AbstractService {
             }
     		//通知钩子
     		if($filterByAcc){
-                $this->_menuObject= $this->_filterMenus($this->_menuObject);
+                $this->_menuObject= $this->_filterMenus($this->_menuObject,$appId);
     		}
     		$cacheEngine->set($cacheId,$this->_menuObject);
     		//$this->_menuObject = $rows;
@@ -82,13 +82,13 @@ class Menu extends AbstractService {
 	 * 登陆判断过滤
 	 * @param array $menuObjects
 	 */
-	private  function _filterMenus($menuObjects){
+	private  function _filterMenus($menuObjects,$appId){
 		//根据权限访问过滤
 
 		$isAdmin = $this->_aclService && $this->_aclService->hasSuperRole();
 		if(!$isAdmin && $this->_aclService){
 			//超级角色的有全部权限
-			$currentRoles = $this->_aclService->getRoles();
+			$currentRoles = $this->_aclService->getRoles($appId);
 			if(is_array($currentRoles) && !empty($currentRoles)){
 				//根据当前用户所具有的全部角色分析，只要有一个角色有访问权限就可以访问该菜单
 				$accessableMenuIds = array();

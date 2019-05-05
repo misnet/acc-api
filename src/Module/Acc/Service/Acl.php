@@ -46,6 +46,7 @@ class Acl extends AbstractService
     protected $_operates;
 
     protected $_uid;
+    protected $_appId;
 
     protected $_accService;
 
@@ -72,7 +73,13 @@ class Acl extends AbstractService
     {
         $this->_uid = $id;
     }
-
+    public function getUserId(){
+        return $this->_uid;
+    }
+    public function setAppId($id)
+    {
+        $this->_appId = $id;
+    }
     /**
      * 取得/设置 是否有超级角色
      * 在setRoles()之后才有效
@@ -107,18 +114,22 @@ class Acl extends AbstractService
 
     /**
      * 载入系统自动分配的用户角色
+     * @param integer $appId
      */
     protected function _loadRoles()
     {
-
+        $appId = $this->_appId;
         $roleList = null;
         if ( ! empty($this->_uid)) {
-            $roleList = RoleModel::find(
-                ['conditions' => 'assignPolicy='.Acc::ASSIGN_LOGINED]
-            )->toArray();
+            $roleList = RoleModel::find([
+                'conditions' => 'assignPolicy=:ap: and appId=:aid:',
+                'bind'=>['ap'=>Acc::ASSIGN_LOGINED,'aid'=>$appId]
+                ])->toArray();
         } else {
-            $roleList = RoleModel::find(
-                ['conditions' => 'assignPolicy='.Acc::ASSIGN_NOTLOGIN]
+            $roleList = RoleModel::find([
+                    'conditions' => 'assignPolicy=:ap: and appId=:aid:',
+                    'bind'=>['ap'=>Acc::ASSIGN_NOTLOGIN,'aid'=>$appId]
+                    ]
             )->toArray();
         }
 
@@ -152,17 +163,15 @@ class Acl extends AbstractService
         $ref      = new \ReflectionObject($this);
         $cache    = $this->_di->get('cache');
         $cacheKey = $this->_cachePrefix.md5(serialize($this->_currentRole));
-
+        $appId    = $this->_appId;
         if (1 != 1 && $data = $cache->get($cacheKey)) {
             $this->_rules = $data;
         } else {
-            $service = $this->_accService;
-            //$resourceList = $service->getResourceList();
             if (is_array($this->_currentRole) && ! empty($this->_currentRole)) {
                 foreach ($this->_currentRole as $role) {
                     //取这个角色分配的资源权限情况
                     $privilegeList = RoleResModel::find(
-                        ['rid=?1', 'bind' => [1 => $role['id']]]
+                        ['rid=?1 and appId=?2', 'bind' => [1 => $role['id'],2=>$appId]]
                     );
                     if ($privilegeList) {
                         foreach ($privilegeList as $priv) {
@@ -183,7 +192,7 @@ class Acl extends AbstractService
 
     /**
      * 取得角色列表
-     *
+     * @param integer $appId
      * @return array
      */
     public function getRoles()
@@ -219,6 +228,7 @@ class Acl extends AbstractService
      *
      * @param string $resource
      * @param string $privilege
+     * @param integer $appId
      *
      * @return boolean
      */

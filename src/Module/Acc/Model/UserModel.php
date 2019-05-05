@@ -237,6 +237,11 @@ class UserModel extends AbstractModel
 
     public function beforeCreate()
     {
+        $acl = $this->getDI()->getShared('aclService');
+        $isAllow = $acl->isAllowed('RES_USER','OP_ADD');
+        if(!$isAllow){
+            throw new ModelException($this->translator->_('你没有添加权限'),ModelException::$EXCODE_FORBIDDEN);
+        }
         $this->createTime = time();
         if (!$this->password) {
             throw new ModelException($this->translator->_('请设置好密码'));
@@ -244,9 +249,21 @@ class UserModel extends AbstractModel
         $this->password = $this->passwordHash($this->password);
         return true;
     }
-
+    public function beforeDelete(){
+        $acl = $this->getDI()->getShared('aclService');
+        $isAllow = $acl->isAllowed('RES_USER','OP_REMOVE');
+        if($acl->getUserId() != $this->uid && !$isAllow){
+            throw new ModelException($this->translator->_('你没有删除权限'),ModelException::$EXCODE_FORBIDDEN);
+        }
+        return true;
+    }
     public function beforeUpdate()
     {
+        $acl = $this->getDI()->getShared('aclService');
+        $isAllow = $acl->isAllowed('RES_USER','OP_EDIT');
+        if($acl->getUserId() != $this->uid && !$isAllow){
+            throw new ModelException($this->translator->_('你没有修改权限'),ModelException::$EXCODE_FORBIDDEN);
+        }
         if ($this->password) {
             if ($this->hasSnapshotData() && $this->hasChanged('password')) {
                 $this->password = $this->passwordHash($this->password);
@@ -256,7 +273,6 @@ class UserModel extends AbstractModel
         }
         return true;
     }
-
     public function afterSave()
     {
         $this->getEventsManager()->fire('qing:updateUser', $this);

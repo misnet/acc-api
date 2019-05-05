@@ -65,9 +65,8 @@ class RoleUserModel extends AbstractModel
     {
         $acc     = $this->getDI()->getShared('aclService');
         $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
-        $isAllow = true;
         if ( ! $isAllow) {
-            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'));
+            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
         }
 
         return true;
@@ -77,9 +76,8 @@ class RoleUserModel extends AbstractModel
     {
         $acc     = $this->getDI()->getShared('aclService');
         $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
-        $isAllow = true;
         if ( ! $isAllow) {
-            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'));
+            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
         }
 
         return true;

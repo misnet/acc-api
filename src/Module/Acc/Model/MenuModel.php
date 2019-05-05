@@ -101,13 +101,25 @@ class MenuModel extends AbstractModel {
         }
 	    return $this->validate($validator);
 	}
-
+    public function beforeDelete(){
+        $acc     = $this->getDI()->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_MENU', 'OP_ADMIN');
+        if ( ! $isAllow) {
+            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
+        }
+    }
     /**
      * 保存前钩子
      * @return bool
      * @throws Exception
      */
 	public function beforeSave(){
+        $acc     = $this->getDI()->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_MENU', 'OP_ADMIN');
+        if ( ! $isAllow) {
+            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
+        }
+
 	    if($this->id){
     	    $cond = [
     	        'conditions'=>'url=?1',

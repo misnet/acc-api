@@ -113,7 +113,7 @@ class RoleModel extends AbstractModel
 
         $validator->add(
             ['name','appId'], new Uniqueness(
-            ['model' => new RoleModel(), 'message' => $this->translator->_('角色已存在')]
+            ['model' => $this, 'message' => $this->translator->_('角色已存在')]
         )
         );
         $validator->add(
@@ -162,9 +162,8 @@ class RoleModel extends AbstractModel
     {
         $acc     = $this->getDI()->getShared('aclService');
         $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
-        $isAllow = true;
         if ( ! $isAllow) {
-            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'));
+            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
         }
 
         return true;
@@ -174,9 +173,8 @@ class RoleModel extends AbstractModel
     {
         $acc     = $this->getDI()->getShared('aclService');
         $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
-        $isAllow = true;
         if ( ! $isAllow) {
-            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'));
+            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
         }
 
         return true;

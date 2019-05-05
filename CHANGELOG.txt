@@ -1,2 +1,8 @@
 #
+2019.5.4
+feat: t_apps表增加acc_resources_xml字段，用于存放各应用的权限资源；
+feat: 增加权限资源的解析接口Acc.parseResourceXml
+feat: 增加权限资源的导入接口Acc.importResourceXml
+feat: Acc.listResourcesGroup 和 Acc.listOperationList增加appId入参
+
 2019.4.13 Release V1.0

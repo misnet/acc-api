@@ -437,7 +437,7 @@ class Acc extends AbstractService
         );
         $command->execute(['rid' => $roleId, 'rcd' => $resourceCode]);
         //TODO:权限分配变更了，所以要清缓存
-        $aclService = new AclService($this->_di);
+        $aclService = $this->_di->getShared('aclService');
         $aclService->removeCache();
     }
 
@@ -460,7 +460,7 @@ class Acc extends AbstractService
         }
         //TODO:事务
         //TODO:权限分配变更了，所以要清缓存
-        $aclService = new AclService($this->_di);
+        $aclService = $this->_di->getShared('aclService');
         $aclService->removeCache();
         try {
             $opCode = is_null($opCode) ? '' : $opCode;

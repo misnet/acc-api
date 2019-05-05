@@ -21,6 +21,7 @@ abstract class BaseApi extends AbstractApi{
                     $acl = new Acl($this->_di);
                     $acl->setUserId($uid);
                     $acl->setRoles($roles);
+                    $acl->setAppId($this->_appKey);
                     return $acl;
                 });
             }

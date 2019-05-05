@@ -7,6 +7,7 @@ use Kuga\Module\Acc\Model\RoleMenuModel;
 use Kuga\Module\Acc\Model\RoleResModel;
 use Kuga\Module\Acc\Model\RoleUserModel;
 use Kuga\Module\Acc\Model\RoleModel;
+use Kuga\Module\Acc\Model\UserBindAppModel;
 use Kuga\Module\Acc\Service\Acl;
 use Kuga\Module\Acc\Service\Acc as AccService;
 use Kuga\Core\Api\Exception as ApiException;
@@ -283,7 +284,7 @@ class Acc extends BaseApi
         $roleMenuModel = new RoleResModel();
         $acc   = new AccService($this->_di);
         $resource = $acc->getResource($data['appId'],$data['res']);
-        $assignOps = $roleMenuModel->getAssignedOperators($data['rid'], $data['res']);
+        $assignOps = $roleMenuModel->getAssignedOperators($data['rid'], $data['res'],$data['appId']);
 
         if ($resource) {
             foreach ($resource['op'] as &$op) {
@@ -387,5 +388,216 @@ class Acc extends BaseApi
         }else{
             throw new ApiException();
         }
+    }
+
+    /**
+     * 保存对某个角色的操作权限分配
+     */
+    public function assignOperationsToRole(){
+        $data = $this->_toParamObject($this->getParams());
+        $resource = $data['res'];
+        $roleId   = $data['rid'];
+        $opcodes  = $data['opcodes'];
+        $appId    = $data['appId'];
+        if(!$roleId){
+            throw new Exception($this->translator->_('没有指定角色，无法分配权限'));
+        }
+        if(!$resource){
+            throw new Exception($this->translator->_('没有指定权限资源，无法分配权限'));
+        }
+        if(!$appId){
+            throw new Exception($this->translator->_('没有指定应用，无法分配权限'));
+        }
+        if(!is_array($opcodes)||empty($opcodes)){
+            throw new Exception($this->translator->_('没有指定权限操作，无法分配权限'));
+        }
+        $aclService = $this->_di->getShared('aclService');
+        $aclService->removeCache();
+        $tx = $this->_di->getShared('transactions');
+        $transaction = $tx->get();
+        $hasChanged  = false;
+        foreach ($opcodes as $op){
+            $opcode = $op['code'];
+            $isAllow= $op['allow'];
+            $opRow = RoleResModel::findFirst([
+                'rid=:rid: and rescode=:rc: and opcode=:op: and appId=:aid:',
+                'bind'=>['rid'=>$roleId,'rc'=>$resource,'op'=>$opcode,'aid'=>$appId]
+            ]);
+            if($isAllow<0){
+                if($opRow){
+                    $hasChanged = true;
+                    $opRow->setTransaction($transaction);
+                    $result = $opRow->delete();
+                    if(!$result){
+                        $transaction->rollback();
+                    }
+                }
+            }else{
+                if($opRow){
+                    $hasChanged = true;
+                    $opRow->isAllow = $isAllow;
+                    $result = $opRow->update();
+                }else{
+                    $hasChanged = true;
+                    $model = new RoleResModel();
+                    $model->rescode = $resource;
+                    $model->opcode  = $opcode;
+                    $model->rid     = $roleId;
+                    $model->isAllow = $isAllow;
+                    $model->appId   = $appId;
+                    $model->setTransaction($transaction);
+                    $result = $model->create();
+                }
+                if(!$result){
+                    $transaction->rollback();
+                }
+            }
+        }
+        if($hasChanged){
+            $transaction->commit();
+        }
+        return true;
+    }
+
+    /**
+     * 权限判断
+     * 1.根据给定的用户ID uid 取得这个用户绑定的角色列表
+     * 2.结合查询那些不需要手动分配的角色，按优先级排序
+     * 3.如果角色中有超级角色，则认为有权限
+     * 4.如果查到有定义的权限记录，则看定义的结果是有权还是没权
+     * 5.查不到有定义的权限记录，就看第1个角色的默认权限
+     *
+     */
+    public function getPrivileges(){
+        $data = $this->_toParamObject($this->getParams());
+        $data['uid'] = trim($data['uid']);
+        $appId = $data['appId'];
+        $roleIds = [];
+        $roles   = [];
+        if(!empty($data['uid'])){
+            $searcher = RoleUserModel::query();
+            $searcher->join(RoleModel::class,RoleUserModel::class.'.rid=r.id and r.appId=:aid1:','r','left');
+            $searcher->join(UserBindAppModel::class,RoleUserModel::class.'.uid=ub.uid and ub.appId=:aid2:','ub','left');
+            $searcher->where(RoleUserModel::class.'.uid=:uid:');
+            $searcher->bind(['aid1'=>$appId,'aid2'=>$appId,'uid'=>$data['uid']]);
+            $searcher->columns([
+                'r.id',
+                'r.defaultAllow',
+                'r.roleType'
+            ]);
+            $searcher->orderBy('r.roleType asc,r.priority asc');
+            $result = $searcher->execute();
+            $roles   = $result->toArray();
+            if($roles){
+                foreach($roles as $r){
+                    $roleIds[] = $r['id'];
+                }
+            }
+        }
+        $returnData= [];
+        $acc       = new AccService($this->_di);
+        $resources = $acc->getResourceList($appId);
+        foreach($roles as $role){
+            if($role['roleType'] == AccService::TYPE_ADMIN){
+                if($resources){
+                    foreach($resources as $resource){
+                        $returnData[$resource['code']] = array_map(function($op){
+                            return $op['code'];
+                        },$resource['op']);
+                    }
+                    return $returnData;
+                }
+            }
+        }
+
+        if(!empty($roleIds) && is_array($roleIds)){
+            $searcher = RoleResModel::query();
+            $searcher->join(RoleModel::class,RoleResModel::class.'.rid=r.id','r','left');
+            $searcher->where('r.roleType!=:rt: and isAllow=1');
+            $cond = [];
+            $bind = ['rt'=>AccService::TYPE_ADMIN];
+            if($data['uid']){
+                $cond = '(r.assignPolicy = :ap: and r.appId=:aid1:)';
+                $bind['ap']   = AccService::ASSIGN_LOGINED;
+                $bind['aid1'] = $appId;
+                if(!empty($roleIds)){
+                    $cond.=' or ('.RoleResModel::class.'.rid in (:rid:) and '.RoleResModel::class.'.appId=:aid2:)';
+                    $bind['rid']  = join(',',$roleIds);
+                    $bind['aid2'] = $appId;
+                }
+                $searcher->andWhere($cond);
+            }else{
+                $searcher->andWhere('r.assignPolicy = :ap: and r.appId=:aid3:');
+                $bind['ap'] = AccService::ASSIGN_NOTLOGIN;
+                $bind['aid3'] = $appId;
+            }
+            $searcher->bind($bind);
+            $searcher->columns([
+                'r.priority',
+                RoleResModel::class.'.isAllow',
+                RoleResModel::class.'.rescode',
+                RoleResModel::class.'.opcode',
+            ]);
+            $searcher->orderBy('r.priority asc');
+            $result = $searcher->execute();
+            $rows   = $result->toArray();
+            if($rows){
+                foreach($rows as $row){
+                    $k = $row['rescode'];
+                    if(!$returnData[$k]){
+                        $returnData[$k] = [];
+                    }
+                    if(!in_array($row['opcode'],$returnData[$k])){
+                        //优先级的高的先入为主
+                        $returnData[$k][] = $row['opcode'];
+                    }
+                }
+            }
+            return $returnData;
+        }
+        return false;
+    }
+
+    private function loadRoles($userId,$appId,$roleIds)
+    {
+        $roleList = null;
+        $returnRoles = RoleResModel::find(array(
+            'rid in ({rid:array}) and appId=:aid:',
+            'bind'=>array('rid'=>$roleIds,'aid'=>$appId),
+            'order'=>'id desc'
+        ));
+        if ( ! empty($userId)) {
+            $roleList = RoleModel::find([
+                'conditions' => 'assignPolicy=:ap: and appId=:aid:',
+                'bind'=>['ap'=>AccService::ASSIGN_LOGINED,'aid'=>$appId]
+            ])->toArray();
+        } else {
+            $roleList = RoleModel::find([
+                    'conditions' => 'assignPolicy=:ap: and appId=:aid:',
+                    'bind'=>['ap'=>AccService::ASSIGN_NOTLOGIN,'aid'=>$appId]
+                ]
+            )->toArray();
+        }
+
+        if ( ! empty($roleList)) {
+            foreach ($roleList as $role) {
+                if ( ! in_array($role['id'], $this->_currentRole)) {
+                    $this->_currentRole[$role['priority']] = $role;
+                }
+            }
+        }
+
+        if ( ! empty($this->_roles)) {
+            foreach ($this->_roles as $role) {
+                if ( ! in_array($role, $this->_currentRole)) {
+                    $this->_currentRole[$role['priority']] = $role;
+                }
+                if ($role['roleType'] == AccService::TYPE_ADMIN) {
+                    $this->_hasSuperRole = true;
+                }
+            }
+        }
+        //$this->_currentRole按优先级顺序排序一下
+        ksort($this->_currentRole);
     }
 }

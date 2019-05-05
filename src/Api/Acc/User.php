@@ -209,6 +209,12 @@ class User extends BaseApi
     public function userList()
     {
         $data = $this->_toParamObject($this->getParams());
+        $acl = $this->_di->getShared('aclService');
+        $isAllow = $acl->isAllowed('RES_USER','OP_LIST');
+        if(!$isAllow){
+            throw new ApiException($this->translator->_('你没有查看用户列表权限'),ApiException::$EXCODE_FORBIDDEN);
+        }
+
         $data['limit'] || $data['limit'] = 10;
         $data['page'] || $data['page'] = 1;
         //只列出当前用户的
@@ -242,6 +248,9 @@ class User extends BaseApi
         if($list){
             foreach($list as &$user){
                 $user['appIds'] = explode(',',$user['appIds']);
+                $user['appIds'] = array_map(function($item){
+                    return intval($item);
+                },$user['appIds']);
             }
         }
         return ['list' => $list, 'total' => $total, 'page' => $data['page'], 'limit' => $data['limit']];
