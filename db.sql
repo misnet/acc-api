@@ -1,8 +1,18 @@
 /*
- * Data file for Application Controller Center
- * @author Donny
- * @copyright 2019
- */
+ Navicat Premium Data Transfer
+
+ Source Server         : localhost
+ Source Server Type    : MySQL
+ Source Server Version : 50724
+ Source Host           : localhost:3306
+ Source Schema         : dpj_acc
+
+ Target Server Type    : MySQL
+ Target Server Version : 50724
+ File Encoding         : 65001
+
+ Date: 05/05/2019 22:50:46
+*/
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -17,6 +27,7 @@ CREATE TABLE `t_apps` (
   `secret` varchar(100) COLLATE utf8mb4_bin NOT NULL COMMENT 'AppSecret',
   `disabled` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否禁用',
   `short_desc` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '描述',
+  `acc_resources_xml` text COLLATE utf8mb4_bin COMMENT '权限资源xml内容',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1000 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='应用';
 
@@ -33,7 +44,7 @@ CREATE TABLE `t_menu` (
   `display` enum('1','0') NOT NULL DEFAULT '1',
   `app_id` int(11) DEFAULT NULL COMMENT '应用ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for t_regions
@@ -63,7 +74,7 @@ CREATE TABLE `t_role` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用ID',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `priority` (`priority`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 -- ----------------------------
 -- Table structure for t_role_menu
@@ -85,9 +96,10 @@ CREATE TABLE `t_role_res` (
   `rescode` varchar(50) NOT NULL COMMENT '资源code',
   `opcode` varchar(50) DEFAULT NULL COMMENT '操作code',
   `is_allow` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否允许',
+  `app_id` int(11) NOT NULL COMMENT 'APPID',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `rid` (`rid`,`rescode`,`opcode`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色资源分配表';
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COMMENT='角色资源分配表';
 
 -- ----------------------------
 -- Table structure for t_role_user
@@ -100,7 +112,7 @@ CREATE TABLE `t_role_user` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `uid` (`uid`) USING BTREE,
   KEY `rid` (`rid`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='角色用户分配表';
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='角色用户分配表';
 
 -- ----------------------------
 -- Table structure for t_sendmsg_logs
@@ -116,7 +128,7 @@ CREATE TABLE `t_sendmsg_logs` (
   `send_state` int(11) DEFAULT '1' COMMENT '发送结果状态值',
   `send_time` int(11) DEFAULT '0' COMMENT '发送时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='发送的消息日志';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='发送的消息日志';
 
 -- ----------------------------
 -- Table structure for t_sysparams
@@ -162,6 +174,6 @@ CREATE TABLE `t_user_bind_app` (
   `app_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uid` (`uid`,`app_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户适用APPS';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户适用APPS';
 
 SET FOREIGN_KEY_CHECKS = 1;

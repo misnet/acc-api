@@ -11,7 +11,7 @@
  Target Server Version : 50724
  File Encoding         : 65001
 
- Date: 13/04/2019 15:23:35
+ Date: 05/05/2019 22:51:19
 */
 
 SET NAMES utf8mb4;
@@ -27,14 +27,16 @@ CREATE TABLE `t_apps` (
   `secret` varchar(100) COLLATE utf8mb4_bin NOT NULL COMMENT 'AppSecret',
   `disabled` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否禁用',
   `short_desc` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '描述',
+  `acc_resources_xml` text COLLATE utf8mb4_bin COMMENT '权限资源xml内容',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1004 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='应用';
+) ENGINE=InnoDB AUTO_INCREMENT=1002 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='应用';
 
 -- ----------------------------
 -- Records of t_apps
 -- ----------------------------
 BEGIN;
-INSERT INTO `t_apps` VALUES (1000, 'ACC', 'IsuZLMPJDVnwYp8XYp/Pf4HH6e5PY28c8oQy8akF5vWxMjvvSNORdPvDu6HK9eOAGcVmDk1jLRYIkAcGu7tgUQ==', 0, '');
+INSERT INTO `t_apps` VALUES (1000, 'ACC', 'IsuZLMPJDVnwYp8XYp/Pf4HH6e5PY28c8oQy8akF5vWxMjvvSNORdPvDu6HK9eOAGcVmDk1jLRYIkAcGu7tgUQ==', 0, '', '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- \n系统会自动对title部分进行多语种翻译 \nid,code的属性只允许用英文开头，可以有英文，数字，下划线\n若有修改，请清除缓存目录var/cache-...\n-->\n<privileges>\n	<resource title=\"用户\" code=\"RES_USER\">\n		<op title=\"添加\" code=\"OP_ADD\"/>\n		<op title=\"编辑\" code=\"OP_EDIT\"/>\n		<op title=\"删除\" code=\"OP_REMOVE\"/>\n		<op title=\"查看列表\" code=\"OP_LIST\"/>\n	</resource>\n\n	<resource title=\"权限系统\" code=\"RES_ACC\">\n		<op title=\"授权\" code=\"OP_ASSIGN\"/>\n	</resource>\n	<resource title=\"菜单管理\" code=\"RES_MENU\">\n		<op title=\"管理\" code=\"OP_ADMIN\"/>\n	</resource>\n	<resource title=\"应用\" code=\"RES_APP\">\n		<op title=\"添加\" code=\"OP_ADD\"/>\n		<op title=\"编辑\" code=\"OP_EDIT\"/>\n		<op title=\"删除\" code=\"OP_REMOVE\"/>\n	</resource>\n</privileges>');
+INSERT INTO `t_apps` VALUES (1001, '仓储系统', '0bc5cf0a4e1241e56cd6210598264c48', 0, '', '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<privileges>\n	<resource title=\"店仓\" code=\"RES_STORE\">\n		<op title=\"添加\" code=\"OP_ADD\"/>\n		<op title=\"编辑\" code=\"OP_EDIT\"/>\n		<op title=\"删除\" code=\"OP_REMOVE\"/>\n		<op title=\"查看列表\" code=\"OP_LIST\"/>\n	</resource>\n	<resource title=\"商品管理\" code=\"RES_PRODUCT\">\n		<op title=\"添加\" code=\"OP_ADD\"/>\n		<op title=\"编辑\" code=\"OP_EDIT\"/>\n		<op title=\"删除\" code=\"OP_REMOVE\"/>\n		<op title=\"查看详情\" code=\"OP_VIEW\"/>\n		<op title=\"查看列表\" code=\"OP_LIST\"/>\n	</resource>\n	<resource title=\"系统管理\" code=\"RES_SYS\">\n		<op title=\"管理\" code=\"OP_ADMIN\"/>\n	</resource>\n\n	<resource title=\"库存\" code=\"RES_INVENTORY\">\n		<op title=\"出入库\" code=\"OP_ENTRYOUT\"/>\n		<op title=\"单据列表\" code=\"OP_LISTSHEET\"/>\n		<op title=\"存量查询\" code=\"OP_VIEWSTOCK\"/>\n	</resource>\n	<resource title=\"销售订单\" code=\"RES_SALEORDER\">\n		<op title=\"添加\" code=\"OP_ADD\"/>\n		<op title=\"领料\" code=\"OP_REQUISITION\"/>\n		<op title=\"成品入库\" code=\"OP_ENTRY\"/>\n		<op title=\"发货\" code=\"OP_DELIVERY\"/>\n	</resource>\n</privileges>');
 COMMIT;
 
 -- ----------------------------
@@ -50,7 +52,26 @@ CREATE TABLE `t_menu` (
   `display` enum('1','0') NOT NULL DEFAULT '1',
   `app_id` int(11) DEFAULT NULL COMMENT '应用ID',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_menu
+-- ----------------------------
+BEGIN;
+INSERT INTO `t_menu` VALUES (1, 'Dashboard', '/dashboard', 0, 0, '1', 1001);
+INSERT INTO `t_menu` VALUES (2, '工作台', '/dashboard/workplace', 1, 0, '1', 1001);
+INSERT INTO `t_menu` VALUES (3, '资料管理', '/sys', 0, 0, '1', 1001);
+INSERT INTO `t_menu` VALUES (4, '商品列表', '/sys/product-list', 3, 0, '1', 1001);
+INSERT INTO `t_menu` VALUES (5, '类目属性', '/sys/product-catalog', 3, 0, '1', 1001);
+INSERT INTO `t_menu` VALUES (6, '属性管理', '/sys/props', 3, 0, '1', 1001);
+INSERT INTO `t_menu` VALUES (7, '属性集管理', '/sys/propsets', 3, 0, '1', 1001);
+INSERT INTO `t_menu` VALUES (8, '店仓列表', '/sys/store-list', 3, 0, '1', 1001);
+INSERT INTO `t_menu` VALUES (9, '出入库', '/store/inandout', 13, 0, '1', 1001);
+INSERT INTO `t_menu` VALUES (10, '库存查询', '/store/inventory', 13, 0, '1', 1001);
+INSERT INTO `t_menu` VALUES (11, '销售订单', '/saleorder', 0, 0, '1', 1001);
+INSERT INTO `t_menu` VALUES (12, '订单列表', '/saleorder/list', 11, 0, '1', 1001);
+INSERT INTO `t_menu` VALUES (13, '库存管理', '/store', 0, 0, '1', 1001);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for t_regions
@@ -48332,13 +48353,14 @@ CREATE TABLE `t_role` (
   `app_id` int(11) DEFAULT NULL COMMENT '应用ID',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `priority` (`priority`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='角色表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='角色表';
 
 -- ----------------------------
 -- Records of t_role
 -- ----------------------------
 BEGIN;
-INSERT INTO `t_role` VALUES (1, '管理员', 1, 0, 0, 1, 1000);
+INSERT INTO `t_role` VALUES (1, '管理员', 0, 0, 0, 1, 1000);
+INSERT INTO `t_role` VALUES (2, '仓库管理员', 1, 0, 1, 0, 1001);
 COMMIT;
 
 -- ----------------------------
@@ -48352,6 +48374,25 @@ CREATE TABLE `t_role_menu` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色菜单分配表';
 
 -- ----------------------------
+-- Records of t_role_menu
+-- ----------------------------
+BEGIN;
+INSERT INTO `t_role_menu` VALUES (2, 1);
+INSERT INTO `t_role_menu` VALUES (2, 2);
+INSERT INTO `t_role_menu` VALUES (2, 3);
+INSERT INTO `t_role_menu` VALUES (2, 4);
+INSERT INTO `t_role_menu` VALUES (2, 5);
+INSERT INTO `t_role_menu` VALUES (2, 6);
+INSERT INTO `t_role_menu` VALUES (2, 7);
+INSERT INTO `t_role_menu` VALUES (2, 8);
+INSERT INTO `t_role_menu` VALUES (2, 9);
+INSERT INTO `t_role_menu` VALUES (2, 10);
+INSERT INTO `t_role_menu` VALUES (2, 11);
+INSERT INTO `t_role_menu` VALUES (2, 12);
+INSERT INTO `t_role_menu` VALUES (2, 13);
+COMMIT;
+
+-- ----------------------------
 -- Table structure for t_role_res
 -- ----------------------------
 DROP TABLE IF EXISTS `t_role_res`;
@@ -48361,9 +48402,39 @@ CREATE TABLE `t_role_res` (
   `rescode` varchar(50) NOT NULL COMMENT '资源code',
   `opcode` varchar(50) DEFAULT NULL COMMENT '操作code',
   `is_allow` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否允许',
+  `app_id` int(11) NOT NULL COMMENT 'APPID',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `rid` (`rid`,`rescode`,`opcode`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色资源分配表';
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COMMENT='角色资源分配表';
+
+-- ----------------------------
+-- Records of t_role_res
+-- ----------------------------
+BEGIN;
+INSERT INTO `t_role_res` VALUES (10, 1, 'RES_USER', 'OP_ADD', 0, 1000);
+INSERT INTO `t_role_res` VALUES (11, 1, 'RES_USER', 'OP_EDIT', 0, 1000);
+INSERT INTO `t_role_res` VALUES (12, 1, 'RES_USER', 'OP_REMOVE', 0, 1000);
+INSERT INTO `t_role_res` VALUES (13, 1, 'RES_ACC', 'OP_ASSIGN', 0, 1000);
+INSERT INTO `t_role_res` VALUES (15, 1, 'RES_APP', 'OP_ADD', 1, 1000);
+INSERT INTO `t_role_res` VALUES (16, 1, 'RES_APP', 'OP_EDIT', 1, 1000);
+INSERT INTO `t_role_res` VALUES (17, 1, 'RES_APP', 'OP_REMOVE', 0, 1000);
+INSERT INTO `t_role_res` VALUES (19, 2, 'RES_STORE', 'OP_EDIT', 1, 1001);
+INSERT INTO `t_role_res` VALUES (20, 2, 'RES_STORE', 'OP_REMOVE', 1, 1001);
+INSERT INTO `t_role_res` VALUES (21, 2, 'RES_STORE', 'OP_LIST', 1, 1001);
+INSERT INTO `t_role_res` VALUES (22, 2, 'RES_STORE', 'OP_ADD', 1, 1001);
+INSERT INTO `t_role_res` VALUES (23, 2, 'RES_PRODUCT', 'OP_ADD', 1, 1001);
+INSERT INTO `t_role_res` VALUES (24, 2, 'RES_PRODUCT', 'OP_EDIT', 0, 1001);
+INSERT INTO `t_role_res` VALUES (25, 2, 'RES_PRODUCT', 'OP_REMOVE', 0, 1001);
+INSERT INTO `t_role_res` VALUES (26, 2, 'RES_PRODUCT', 'OP_VIEW', 0, 1001);
+INSERT INTO `t_role_res` VALUES (27, 2, 'RES_PRODUCT', 'OP_LIST', 1, 1001);
+INSERT INTO `t_role_res` VALUES (28, 2, 'RES_INVENTORY', 'OP_ENTRYOUT', 1, 1001);
+INSERT INTO `t_role_res` VALUES (29, 2, 'RES_INVENTORY', 'OP_LISTSHEET', 1, 1001);
+INSERT INTO `t_role_res` VALUES (30, 2, 'RES_INVENTORY', 'OP_VIEWSTOCK', 1, 1001);
+INSERT INTO `t_role_res` VALUES (31, 2, 'RES_SALEORDER', 'OP_ADD', 1, 1001);
+INSERT INTO `t_role_res` VALUES (32, 2, 'RES_SALEORDER', 'OP_REQUISITION', 1, 1001);
+INSERT INTO `t_role_res` VALUES (33, 2, 'RES_SALEORDER', 'OP_ENTRY', 1, 1001);
+INSERT INTO `t_role_res` VALUES (34, 2, 'RES_SALEORDER', 'OP_DELIVERY', 1, 1001);
+COMMIT;
 
 -- ----------------------------
 -- Table structure for t_role_user
@@ -48376,13 +48447,14 @@ CREATE TABLE `t_role_user` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `uid` (`uid`) USING BTREE,
   KEY `rid` (`rid`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COMMENT='角色用户分配表';
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='角色用户分配表';
 
 -- ----------------------------
 -- Records of t_role_user
 -- ----------------------------
 BEGIN;
 INSERT INTO `t_role_user` VALUES (23, 1, 1000);
+INSERT INTO `t_role_user` VALUES (24, 2, 1001);
 COMMIT;
 
 -- ----------------------------
@@ -48399,7 +48471,7 @@ CREATE TABLE `t_sendmsg_logs` (
   `send_state` int(11) DEFAULT '1' COMMENT '发送结果状态值',
   `send_time` int(11) DEFAULT '0' COMMENT '发送时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='发送的消息日志';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='发送的消息日志';
 
 -- ----------------------------
 -- Table structure for t_sysparams
@@ -48433,13 +48505,14 @@ CREATE TABLE `t_user` (
   `mobile_verified` enum('0','1') NOT NULL DEFAULT '0' COMMENT '手机是否认证',
   `email_verified` enum('0','1') DEFAULT '0' COMMENT '邮箱是否认证',
   PRIMARY KEY (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1012 DEFAULT CHARSET=utf8 COMMENT='用户表';
+) ENGINE=InnoDB AUTO_INCREMENT=1003 DEFAULT CHARSET=utf8 COMMENT='用户表';
 
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
 BEGIN;
-INSERT INTO `t_user` VALUES (1000, 'admin', '$2y$10$FCJnL5uxEwKjN9m1FvpOHOMw8wFYv2pxTPA9NA6kBBPtmmi6ZNzXW', '15859079001', 'qing@tapy.org', 0, '', 0, 1, '管理员', '1', '1');
+INSERT INTO `t_user` VALUES (1000, 'admin', '$2y$10$FCJnL5uxEwKjN9m1FvpOHOMw8wFYv2pxTPA9NA6kBBPtmmi6ZNzXW', '15859079002', 'qing@tapy.org', 0, '', 0, 1, '管理员', '1', '1');
+INSERT INTO `t_user` VALUES (1001, 'production', '$2y$10$FXdejrE2LV/ay/firVcSue.iQ/0GUX.UN4xVEvGf3.mkmlUW3M.yO', '18959243598', '', 1555407489, '192.20.0.1', 1555407489, 1, '', '1', '0');
 COMMIT;
 
 -- ----------------------------
@@ -48452,13 +48525,15 @@ CREATE TABLE `t_user_bind_app` (
   `app_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uid` (`uid`,`app_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户适用APPS';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户适用APPS';
 
 -- ----------------------------
 -- Records of t_user_bind_app
 -- ----------------------------
 BEGIN;
 INSERT INTO `t_user_bind_app` VALUES (8, 1000, 1000);
+INSERT INTO `t_user_bind_app` VALUES (9, 1000, 1001);
+INSERT INTO `t_user_bind_app` VALUES (10, 1001, 1001);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
