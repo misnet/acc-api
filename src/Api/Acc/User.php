@@ -398,7 +398,7 @@ class User extends BaseApi
         $result[$this->_accessTokenUserIdKey] = $row->uid;
         $hours = 10;
         $days  = ceil($hours / 24);
-        $expiredDate = strtotime($days+' days');
+        //$expiredDate = strtotime($days+' days');
         $accessToken                          = $this->_createAccessToken($result,$hours*3600);
 
         //取得可以访问的菜单
