@@ -15,7 +15,7 @@ use Kuga\Core\Base\AbstractService;
 class Menu extends AbstractService {
 	private $_menuObject;
     /**
-     * @var \Kuga\Service\AclService
+     * @var \Kuga\Module\Acc\Service\Acl
      */
 	private $_aclService;
 	const PREFIX_MENULIST = 'data:menuList:';
@@ -40,7 +40,7 @@ class Menu extends AbstractService {
 	    if($filterByAcc && $this->_aclService){
     	    $keySeed = array(
     	        'isAdmin'=>$this->_aclService->hasSuperRole(),
-    	        'roleIds'=>$this->_aclService->getRoles($appId)
+    	        'roleIds'=>$this->_aclService->getRoles()
             );
 	    }else{
 	        $keySeed=array('allMenu'=>true);
@@ -88,7 +88,8 @@ class Menu extends AbstractService {
 		$isAdmin = $this->_aclService && $this->_aclService->hasSuperRole();
 		if(!$isAdmin && $this->_aclService){
 			//超级角色的有全部权限
-			$currentRoles = $this->_aclService->getRoles($appId);
+			$currentRoles = $this->_aclService->getRoles();
+
 			if(is_array($currentRoles) && !empty($currentRoles)){
 				//根据当前用户所具有的全部角色分析，只要有一个角色有访问权限就可以访问该菜单
 				$accessableMenuIds = array();

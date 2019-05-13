@@ -15,13 +15,14 @@ abstract class BaseApi extends AbstractApi{
         if ($this->_accessToken && $this->_accessTokenRequiredLevel > 0) {
             $di  = $this->_di;
             $uid = $this->_userMemberId;
-            $roles = $this->_getInfoFromAccessToken($this->_accessToken,'console.roles');
+            $roles = $this->_getInfoFromAccessToken($this->_accessToken,'console.roles.'.$this->_appKey);
+            $appKey= $this->_appKey;
             if(!$this->_di->has('aclService')){
-                $this->_di->setShared('aclService',function() use($uid,$roles,$di){
+                $this->_di->setShared('aclService',function() use($uid,$roles,$di,$appKey){
                     $acl = new Acl($this->_di);
                     $acl->setUserId($uid);
+                    $acl->setAppId($appKey);
                     $acl->setRoles($roles);
-                    $acl->setAppId($this->_appKey);
                     return $acl;
                 });
             }

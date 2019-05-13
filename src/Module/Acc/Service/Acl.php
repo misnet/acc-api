@@ -80,6 +80,9 @@ class Acl extends AbstractService
     {
         $this->_appId = $id;
     }
+    public function getAppId(){
+        return $this->_appId;
+    }
     /**
      * 取得/设置 是否有超级角色
      * 在setRoles()之后才有效
@@ -118,7 +121,7 @@ class Acl extends AbstractService
      */
     protected function _loadRoles()
     {
-        $appId = $this->_appId;
+        $appId = $this->getAppId();
         $roleList = null;
         if ( ! empty($this->_uid)) {
             $roleList = RoleModel::find([
@@ -132,7 +135,6 @@ class Acl extends AbstractService
                     ]
             )->toArray();
         }
-
         if ( ! empty($roleList)) {
             foreach ($roleList as $role) {
                 if ( ! in_array($role['id'], $this->_currentRole)) {
@@ -140,10 +142,10 @@ class Acl extends AbstractService
                 }
             }
         }
-
         if ( ! empty($this->_roles)) {
             foreach ($this->_roles as $role) {
                 if ( ! in_array($role, $this->_currentRole)) {
+                    //注意：不同appId下可能priority重复，到时就会覆盖
                     $this->_currentRole[$role['priority']] = $role;
                 }
                 if ($role['roleType'] == Acc::TYPE_ADMIN) {
@@ -176,7 +178,7 @@ class Acl extends AbstractService
                     if ($privilegeList) {
                         foreach ($privilegeList as $priv) {
                             $key                = $this->_createRuleKey($role['id'], $priv->rescode, $priv->opcode);
-                            $this->_rules[$key] = boolval($priv->is_allow);
+                            $this->_rules[$key] = boolval($priv->isAllow);
                         }
                     }
                 }

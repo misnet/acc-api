@@ -202,6 +202,68 @@ class User extends BaseApi
     }
 
     /**
+     * 按用户ID给列表
+     * @return array
+     * @throws Exception
+     * @throws \Kuga\Core\Api\Exception
+     */
+    public function userListByIds(){
+        $data = $this->_toParamObject($this->getParams());
+        $acl = $this->_di->getShared('aclService');
+        $isAllow = $acl->isAllowed('RES_USER','OP_LIST');
+        if(!$isAllow){
+            throw new ApiException($this->translator->_('你没有查看用户列表权限'),ApiException::$EXCODE_FORBIDDEN);
+        }
+
+        $data['limit'] || $data['limit'] = 10;
+        $data['page'] || $data['page'] = 1;
+        //只列出当前用户的
+        $searcher  = UserBindAppModel::query();
+        $searcher->join(UserModel::class,UserBindAppModel::class.'.uid=u.uid and appId=:aid:','u','left');
+        $appId = $data['appId'];
+        if(!$appId){
+            $appId = $this->_appKey;
+        }
+        $bind['aid'] = $appId;
+        if($data['uids']){
+            $searcher->where('u.uid in ({q1:array})');
+            //$bind['q1'] = join(',',$data['uids']);
+            $bind['q1'] = $data['uids'];
+        }else{
+            $searcher->where('1!=1');
+        }
+        $searcher->bind($bind);
+        $searcher->columns('count(0) as total');
+        $result = $searcher->execute();
+        $total  = $result->getFirst()->total;
+        $searcher->orderBy('u.uid desc');
+        $searcher->columns([
+            'u.uid',
+            'u.mobile',
+            'u.email',
+            'u.realname',
+            'u.gender',
+            'u.username',
+            'u.mobileVerified',
+            'u.emailVerified',
+            'u.createTime',
+            '(select group_concat(appId) from '.UserBindAppModel::class.' b where b.uid=u.uid) as appIds'
+        ]);
+        $searcher->limit($data['limit'], ($data['page'] - 1) * $data['limit']);
+        $result = $searcher->execute();
+        $list   = $result->toArray();
+        if($list){
+            foreach($list as &$user){
+                $user['appIds'] = explode(',',$user['appIds']);
+                $user['appIds'] = array_map(function($item){
+                    return intval($item);
+                },$user['appIds']);
+            }
+        }
+        return ['list' => $list, 'total' => $total, 'page' => $data['page'], 'limit' => $data['limit']];
+    }
+
+    /**
      * 显示用户列表
      * @todo 权限验证
      * @return array
@@ -224,7 +286,18 @@ class User extends BaseApi
         if(!$appId){
             $appId = $this->_appKey;
         }
-        $searcher->bind(['aid'=>$appId]);
+        $bind['aid'] = $appId;
+        if($data['q']){
+            $searcher->where('u.realname like :q1:');
+            $searcher->orWhere('u.mobile like :q2:');
+            $searcher->orWhere('u.email like :q3:');
+            $searcher->orWhere('u.username like :q4:');
+            $bind['q1'] = '%'.$data['q'].'%';
+            $bind['q2'] = '%'.$data['q'].'%';
+            $bind['q3'] = '%'.$data['q'].'%';
+            $bind['q4'] = '%'.$data['q'].'%';
+        }
+        $searcher->bind($bind);
         $searcher->columns('count(0) as total');
         $result = $searcher->execute();
         $total  = $result->getFirst()->total;
@@ -332,7 +405,13 @@ class User extends BaseApi
         $menuService = new MenuService($this->_di);
         $aclService  = new AclService($this->_di);
         $aclService->setUserId($row->uid);
-        $aclService->setRoles($result['console.roles']);
+        $aclService->setAppId($this->_appKey);
+        if(isset($result['console.roles.'.$this->_appKey])){
+            $aclService->setRoles($result['console.roles.'.$this->_appKey]);
+        }else{
+            $aclService->setRoles([]);
+        }
+        //$aclService->setRoles($result['console.roles']);
         $menuService->setAclService($aclService);
         $returnData['menuList'] = $menuService->getAll(true, true, false,['id','name','url'],$this->_appKey);
         $returnData['accessToken'] = $accessToken;
@@ -364,31 +443,40 @@ class User extends BaseApi
             'roleType',
             'defaultAllow',
             'priority',
-            'assignPolicy'
+            'assignPolicy',
+            'appId'
         ]);
         $searcher->bind(['uid'=>$userId]);
+        $searcher->orderBy('appId asc');
         $result = $searcher->execute();
         $roles  = $result->toArray();
+        //TODO:console.roles要作废掉
         $data['console.roles']      = $roles;
-        $data['console.super_role'] = false;
-        if (is_array($roles)) {
-            $superRoles = $acc->findRolesByTypeId(AccService::TYPE_ADMIN);
-
-            if (is_array($superRoles)) {
-                $ids = [];
-                foreach ($roles as $role) {
-                    $ids[] = $role['id'];
-                }
-                $data['console.role_ids'] = $ids;
-                foreach ($superRoles as $superRole) {
-                    if (in_array($superRole['id'], $ids)) {
-                        $data['console.super_role'] = true;
-                        unset ($superRoles);
-                        break;
-                    }
-                }
+        if($roles){
+            foreach($roles as $role){
+                $data['console.roles.'.$role['appId']][] = $role;
             }
         }
+
+//        $data['console.super_role'] = false;
+//        if (is_array($roles)) {
+//            $superRoles = $acc->findRolesByTypeId(AccService::TYPE_ADMIN);
+//
+//            if (is_array($superRoles)) {
+//                $ids = [];
+//                foreach ($roles as $role) {
+//                    $ids[] = $role['id'];
+//                }
+//                $data['console.role_ids'] = $ids;
+//                foreach ($superRoles as $superRole) {
+//                    if (in_array($superRole['id'], $ids)) {
+//                        $data['console.super_role'] = true;
+//                        unset ($superRoles);
+//                        break;
+//                    }
+//                }
+//            }
+//        }
 
         return $data;
     }

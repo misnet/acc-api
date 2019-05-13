@@ -42,12 +42,18 @@ class Menu extends BaseApi{
         $list || $list = [];
 
         foreach($list as &$item){
+            $item['display'] = intval($item['display']);
             $childList = MenuModel::find([
                 'order'=>'sortByWeight desc',
                 'parentId=?1',
                 'bind'=>[1=>$item['id']]
             ]);
             $item['children']= $childList->toArray();
+            if($item['children']){
+                foreach($item['children'] as &$childItem){
+                    $childItem['display'] = intval($childItem['display']);
+                }
+            }
             if(!$item['children']){
                 unset($item['children']);
             }else{
