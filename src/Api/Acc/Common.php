@@ -3,6 +3,7 @@
  * 通用类目API
  */
 namespace Kuga\Api\Acc;
+use AlibabaCloud\Client\AlibabaCloud;
 use Kuga\Core\Api\AbstractApi;
 use Kuga\Core\Api\ApiService;
 use Kuga\Core\Api\Exception as ApiException;
@@ -11,7 +12,6 @@ use Kuga\Core\Api\Request;
 
 use Kuga\Core\GlobalVar;
 use Kuga\Core\Model\RegionModel;
-use Sts\Request\V20150401 as Sts;
 class Common extends  AbstractApi {
     private $smsPrefix = 'sms';
     /**
@@ -119,21 +119,25 @@ class Common extends  AbstractApi {
         $configSetting = $fileStorage->getOption();
 
         $stsRegion = $configSetting['bucket']['region'];
-        $iClientProfile = \DefaultProfile::getProfile($stsRegion, $configSetting['accessKeyId'], $configSetting['accessKeySecret']);
-        $client = new \DefaultAcsClient($iClientProfile);
-        $request = new Sts\AssumeRoleRequest();
-
-        // RoleSessionName即临时身份的会话名称，用于区分不同的临时身份
-        // 您可以使用您的客户的ID作为会话名称
-        $request->setRoleSessionName($configSetting['roleSessionName']);
-        $request->setRoleArn($configSetting['roleArn']);
-        $request->setPolicy($configSetting['policy']);
-        $request->setDurationSeconds($configSetting['tokenExpireTime']);
-        $response = $client->doAction($request);
-        $result   = json_decode($response->getBody(),true);
-        //采用大写Bucket，和其他统一
-        $result['Bucket'] = $configSetting['bucket'];
-        return $result;
+        AlibabaCloud::accessKeyClient($configSetting['accessKeyId'], $configSetting['accessKeySecret'])->regionId($stsRegion)->asDefaultClient();
+        $result = AlibabaCloud::rpc()
+            ->product('Sts')
+            ->scheme('https')
+            ->version('2015-04-01')
+            ->action('AssumeRole')
+            ->method('POST')
+            ->options([
+                'query'=>[
+                    'RoleSessionName'=>$configSetting['roleSessionName'],
+                    'RoleArn'=>$configSetting['roleArn'],
+                    'Policy'=>$configSetting['policy'],
+                    'DurationSeconds'=>$configSetting['tokenExpireTime']
+                ]
+            ])
+            ->request();
+        $returnData = $result->toArray();
+        $returnData['Bucket'] = $configSetting['bucket'];
+        return $returnData;
     }
     /**
      * 取得地区列表
