@@ -19,7 +19,7 @@ abstract class BaseApi extends AbstractApi{
             $appKey= $this->_appKey;
             if(!$this->_di->has('aclService')){
                 $this->_di->setShared('aclService',function() use($uid,$roles,$di,$appKey){
-                    $acl = new Acl($this->_di);
+                    $acl = new Acl($di);
                     $acl->setUserId($uid);
                     $acl->setAppId($appKey);
                     $acl->setRoles($roles);
