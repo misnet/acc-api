@@ -264,7 +264,7 @@ class Acl extends AbstractService
      */
     public function removeCache()
     {
-        $cache = $this->_di->get('cache');
+        $cache = $this->_di->getShared('cache');
         $cache->deleteKeys($this->_cachePrefix);
     }
 

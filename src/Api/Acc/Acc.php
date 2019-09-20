@@ -383,6 +383,7 @@ class Acc extends BaseApi
                 $app = AppModel::findFirstById($data['appId']);
                 $app->accResourcesXml = $accXml;
                 $result = $app->save();
+                $this->clearCache();
                 return $result;
             }
         }else{
@@ -467,6 +468,7 @@ class Acc extends BaseApi
      * 4.如果查到有定义的权限记录，则看定义的结果是有权还是没权
      * 5.查不到有定义的权限记录，就看第1个角色的默认权限
      *
+     * @TODO:有必要传uid吗，直接用当前用户ID是否可以？
      */
     public function getPrivileges(){
         $data = $this->_toParamObject($this->getParams());
@@ -476,7 +478,7 @@ class Acc extends BaseApi
         $roles   = [];
         if(!empty($data['uid'])){
             $searcher = RoleUserModel::query();
-            $searcher->join(RoleModel::class,RoleUserModel::class.'.rid=r.id and r.appId=:aid1:','r','left');
+            $searcher->join(RoleModel::class,RoleUserModel::class.'.rid=r.id and r.appId=:aid1:','r');
             $searcher->join(UserBindAppModel::class,RoleUserModel::class.'.uid=ub.uid and ub.appId=:aid2:','ub','left');
             $searcher->where(RoleUserModel::class.'.uid=:uid:');
             $searcher->bind(['aid1'=>$appId,'aid2'=>$appId,'uid'=>$data['uid']]);
@@ -494,6 +496,7 @@ class Acc extends BaseApi
                 }
             }
         }
+
         $returnData= [];
         $acc       = new AccService($this->_di);
         $resources = $acc->getResourceList($appId);

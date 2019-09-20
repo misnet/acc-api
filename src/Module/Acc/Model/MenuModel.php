@@ -122,8 +122,8 @@ class MenuModel extends AbstractModel {
 
 	    if($this->id){
     	    $cond = [
-    	        'conditions'=>'url=?1',
-    	        'bind'=>[1=>$this->url]
+    	        'conditions'=>'url=?1 and appId=?5',
+    	        'bind'=>[1=>$this->url,5=>$this->appId]
     	    ];
     	    if($this->id){
     	        $cond['conditions'].=' and id!=?4';
