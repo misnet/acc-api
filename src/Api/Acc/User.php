@@ -262,7 +262,62 @@ class User extends BaseApi
         }
         return ['list' => $list, 'total' => $total, 'page' => $data['page'], 'limit' => $data['limit']];
     }
+    public function allUserList(){
+        $data = $this->_toParamObject($this->getParams());
+        $acl = $this->_di->getShared('aclService');
+        $isAllow = $acl->isAllowed('RES_USER','OP_LIST');
+        if(!$isAllow){
+            throw new ApiException($this->translator->_('你没有查看用户列表权限'),ApiException::$EXCODE_FORBIDDEN);
+        }
 
+        $data['limit'] || $data['limit'] = 10;
+        $data['page'] || $data['page'] = 1;
+        //只列出当前用户的
+        $searcher  = UserModel::query();
+        $bind = [];
+        if($data['q']){
+            $searcher->where('realname like :q1:');
+            $searcher->orWhere('mobile like :q2:');
+            $searcher->orWhere('email like :q3:');
+            $searcher->orWhere('username like :q4:');
+            $bind['q1'] = '%'.$data['q'].'%';
+            $bind['q2'] = '%'.$data['q'].'%';
+            $bind['q3'] = '%'.$data['q'].'%';
+            $bind['q4'] = '%'.$data['q'].'%';
+        }
+        if(!empty($bind)){
+            $searcher->bind($bind);
+        }
+        $searcher->columns('count(0) as total');
+        $result = $searcher->execute();
+        $total  = $result->getFirst()->total;
+
+        $searcher->orderBy('uid desc');
+        $searcher->columns([
+            'uid',
+            'mobile',
+            'email',
+            'realname',
+            'gender',
+            'username',
+            'mobileVerified',
+            'emailVerified',
+            'createTime',
+            '(select group_concat(appId) from '.UserBindAppModel::class.' b where b.uid='.UserModel::class.'.uid) as appIds'
+        ]);
+        $searcher->limit($data['limit'], ($data['page'] - 1) * $data['limit']);
+        $result = $searcher->execute();
+        $list   = $result->toArray();
+        if($list){
+            foreach($list as &$user){
+                $user['appIds'] = explode(',',$user['appIds']);
+                $user['appIds'] = array_map(function($item){
+                    return intval($item);
+                },$user['appIds']);
+            }
+        }
+        return ['list' => $list, 'total' => $total, 'page' => $data['page'], 'limit' => $data['limit']];
+    }
     /**
      * 显示用户列表
      * @todo 权限验证

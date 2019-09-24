@@ -131,6 +131,10 @@ class Acc extends BaseApi
         if (!$roleRow) {
             throw new ApiException($this->translator->_('指定的角色不存在'));
         }
+        $appId = $data['appId'];
+        if (!$appId) {
+            $appId = $this->_appKey;
+        }
         $searcher = RoleUserModel::query();
         $searcher->join(UserModel::class, RoleUserModel::class . '.uid=user.uid', 'user');
         $searcher->columns(
@@ -142,11 +146,15 @@ class Acc extends BaseApi
         $result = $searcher->execute();
         $assignedList = $result->toArray();
 
-        $userSearcher = UserModel::query();
+
+        $userSearcher = UserBindAppModel::query();
+        $userSearcher->join(UserModel::class,UserBindAppModel::class.'.uid=u.uid and appId=:aid:','u');
+        $userSearcher->bind(['aid'=>$appId]);
+
         //$userSearcher->where(UserModel::class.'.uid not in (select '.RoleUserModel::class.'.uid from '.RoleUserModel::class.' where rid=:rid:)');
         //$userSearcher->bind($bind);
         $userSearcher->columns(
-            [UserModel::class . '.uid', 'username']
+            ['u.uid', 'u.username']
         );
         $result = $userSearcher->execute();
         $unassignedList = $result->toArray();
