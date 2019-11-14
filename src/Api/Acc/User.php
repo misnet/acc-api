@@ -451,7 +451,7 @@ class User extends BaseApi
         //取得角色
         $result                               = $this->getRoles($row->uid);
         $result[$this->_accessTokenUserIdKey] = $row->uid;
-        $hours = 10;
+        $hours = 4;
         $days  = ceil($hours / 24);
         //$expiredDate = strtotime($days+' days');
         $accessToken                          = $this->_createAccessToken($result,1200);
