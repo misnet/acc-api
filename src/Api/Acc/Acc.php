@@ -532,8 +532,8 @@ class Acc extends BaseApi
                 $bind['ap']   = AccService::ASSIGN_LOGINED;
                 $bind['aid1'] = $appId;
                 if(!empty($roleIds)){
-                    $cond.=' or ('.RoleResModel::class.'.rid in (:rid:) and '.RoleResModel::class.'.appId=:aid2:)';
-                    $bind['rid']  = join(',',$roleIds);
+                    $cond.=' or ('.RoleResModel::class.'.rid in ({rid:array}) and '.RoleResModel::class.'.appId=:aid2:)';
+                    $bind['rid']  = $roleIds;
                     $bind['aid2'] = $appId;
                 }
                 $searcher->andWhere($cond);
