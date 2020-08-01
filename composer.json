@@ -17,7 +17,7 @@
     },
     "repositories": [
         {
-            "packagist": false
+            "packagist.org": false
         },
         {
             "type": "composer",
