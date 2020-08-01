@@ -5,6 +5,8 @@
 
 namespace Kuga\Api\Acc;
 
+use Kuga\Core\GlobalVar;
+use Kuga\Core\Service\JWTService;
 use Kuga\Module\Acc\Model\RoleModel;
 use Kuga\Module\Acc\Model\RoleUserModel;
 use Kuga\Module\Acc\Model\UserBindAppModel;
@@ -469,10 +471,18 @@ class User extends BaseApi
         //$aclService->setRoles($result['console.roles']);
         $menuService->setAclService($aclService);
         $returnData['menuList'] = $menuService->getAll(true, true, false,['id','name','url'],$this->_appKey);
-        $returnData['accessToken'] = $accessToken;
-        $returnData['accessTokenExpiredIn'] = $hours * 3600;
+        if($this->_accessTokenType ===  GlobalVar::TOKEN_TYPE_JWT){
+            $jwt = new JWTService();
+            $jwt->setSecret($this->_di->get('config')->get('jwtTokenSecret'));
+            $token = $jwt->createToken($result,$hours * 3600);
+            $returnData['accessToken'] = $token;
+        }else{
+            $returnData['accessToken'] = $accessToken;
+        }
         $returnData['refreshToken'] = md5($accessToken.'KUGA');
         $returnData['refreshTokenExpiredIn'] = ( $hours + 1) * 3600;
+        $returnData['accessTokenExpiredIn'] = $hours * 3600;
+
         $returnData['uid']         = $row->uid;
         $returnData['username']    = $row->username;
         $returnData['gender']    = $row->gender;

@@ -344,11 +344,11 @@ class Acl extends AbstractService
      */
     public function isRolesHasMenuId($roleIds, $menuId)
     {
-        if (is_array($roleIds)) {
-            $roleIds = join(',', $roleIds);
+        if (!is_array($roleIds)) {
+            $roleIds = explode(',', $roleIds);
         }
         $model = new RoleMenuModel();
-        $count = $model->count(['conditions' => 'rid in ('.$roleIds.') and mid=?1', 'bind' => [1 => $menuId]]);
+        $count = $model->count(['conditions' => 'rid in ({rid:array}) and mid=:mid', 'bind' => ['rid'=>$roleIds,'mid' => $menuId]]);
 
         return $count ? true : false;
     }

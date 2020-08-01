@@ -7,7 +7,7 @@ use AlibabaCloud\Client\AlibabaCloud;
 use Kuga\Core\Api\AbstractApi;
 use Kuga\Core\Api\ApiService;
 use Kuga\Core\Api\Exception as ApiException;
-use Kuga\Core\Api\Request;
+use Kuga\Core\Api\Request\BaseRequest as Request;
 
 
 use Kuga\Core\GlobalVar;
@@ -117,7 +117,6 @@ class Common extends  AbstractApi {
         //官方说用杭州的，可以授权所有的
         $fileStorage   = $this->_di->getShared('fileStorage');
         $configSetting = $fileStorage->getOption();
-
         $stsRegion = $configSetting['bucket']['region'];
         AlibabaCloud::accessKeyClient($configSetting['accessKeyId'], $configSetting['accessKeySecret'])->regionId($stsRegion)->asDefaultClient();
         $result = AlibabaCloud::rpc()
