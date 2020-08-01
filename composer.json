@@ -15,18 +15,34 @@
             "Kuga\\": "src"
         }
     },
-    "repositories": {
-        "packagist": {
+    "repositories": [
+        {
+            "packagist": false
+        },
+        {
             "type": "composer",
-            "url": "https://packagist.phpcomposer.com"
+            "url": "https://mirrors.aliyun.com/composer/"
         },
-        "qing": {
-            "type": "vcs",
-            "url": "https://github.com/misnet/qing.git"
+        {
+            "type": "composer",
+            "url":"https://packagist.mirrors.sjtug.sjtu.edu.cn"
         },
-        "openapi-core": {
+        {
             "type": "vcs",
-            "url": "https://github.com/misnet/kuga-openapi-core.git"
+            "url": "https://git.sdut.me/misnet/kuga-openapi-core"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.sdut.me/misnet/qing"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.sdut.me/phalcon/incubator"
+        },
+        {
+            "type": "vcs",
+            "url": "https://git.sdut.me/aliyun/openapi-sdk-php-client"
         }
-    }
+
+    ]
 }
