@@ -183,35 +183,47 @@ class Common extends  AbstractApi {
 
     public function ip(){
         $data = $this->_toParamObject($this->getParams());
-        $host = "https://ipquery.market.alicloudapi.com";
-        $path = "/query";
-        $method = "GET";
-        $appcode = "3c1cebe87c2a46a28ce105e89727dce1";
-        $headers = array();
-        array_push($headers, "Authorization:APPCODE " . $appcode);
-        $querys = "ip=".$data['ip'];
-        $bodys = "";
-        $url = $host . $path . "?" . $querys;
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($curl, CURLOPT_FAILONERROR, false);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HEADER, true);
-        if (1 == strpos("$" . $host, "https://")) {
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-        }
-        $result= curl_exec($curl);
-        $body = '';
-        if (curl_getinfo($curl, CURLINFO_HTTP_CODE) == '200') {
-            $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-            $header = substr($result, 0, $headerSize);
-            $body = substr($result, $headerSize);
-        }
+        $query= 'http://ip-api.com/json/'.$data['ip'].'?lang=zh-CN';
+        $body = file_get_contents($query);
         $resultData = json_decode($body,true);
+        var_dump($data);
+        if($resultData){
+            return [
+                'country'=>$resultData['country'],
+                'prov'=>$resultData['regionName'],
+                'city'=>$resultData['city'],
+                'area'=>''
+            ];
+        }
+//        $host = "https://ipquery.market.alicloudapi.com";
+//        $path = "/query";
+//        $method = "GET";
+//        $appcode = "3c1cebe87c2a46a28ce105e89727dce1";
+//        $headers = array();
+//        array_push($headers, "Authorization:APPCODE " . $appcode);
+//        $querys = "ip=".$data['ip'];
+//        $bodys = "";
+//        $url = $host . $path . "?" . $querys;
+//
+//        $curl = curl_init();
+//        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+//        curl_setopt($curl, CURLOPT_URL, $url);
+//        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+//        curl_setopt($curl, CURLOPT_FAILONERROR, false);
+//        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+//        curl_setopt($curl, CURLOPT_HEADER, true);
+//        if (1 == strpos("$" . $host, "https://")) {
+//            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+//            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+//        }
+//        $result= curl_exec($curl);
+//        $body = '';
+//        if (curl_getinfo($curl, CURLINFO_HTTP_CODE) == '200') {
+//            $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+//            $header = substr($result, 0, $headerSize);
+//            $body = substr($result, $headerSize);
+//        }
+//        $resultData = json_decode($body,true);
         return $resultData['data']??[];
     }
 
