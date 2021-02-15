@@ -138,7 +138,7 @@ class Acc extends BaseApi
         $searcher = RoleUserModel::query();
         $searcher->join(UserModel::class, RoleUserModel::class . '.uid=user.uid', 'user');
         $searcher->columns(
-            ['user.uid']
+            ['user.uid','user.username']
         );
         $searcher->orderBy(RoleUserModel::class . '.id desc');
         $searcher->where('rid=:rid:');
@@ -159,7 +159,7 @@ class Acc extends BaseApi
         $result = $userSearcher->execute();
         $unassignedList = $result->toArray();
 
-        return ['role' => $roleRow->toArray(), 'assigned' => $assignedList, 'unassigned' => $unassignedList,];
+        return ['role' => $roleRow->toArray(), 'assigned' => $assignedList, 'unassigned' => $unassignedList];
     }
 
     /**

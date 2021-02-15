@@ -199,7 +199,7 @@ class User extends BaseApi
         if(!$row){
             throw new ApiException(ApiException::$EXCODE_NOTEXIST);
         }
-        $row->passwd = $data['password'];
+        $row->password = $data['password'];
         return $row->update();
     }
 
