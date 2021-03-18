@@ -88,6 +88,11 @@ class UserModel extends AbstractModel
      */
     public $emailVerified;
     /**
+     * 备注
+     * @var
+     */
+    public $memo;
+    /**
      * 开通的应用ID列表
      * @var array 例：[1000,1002]
      */
@@ -110,9 +115,10 @@ class UserModel extends AbstractModel
             'last_visit_ip' => 'lastVisitIp',
             'last_visit_time' => 'lastVisitTime',
             'gender' => 'gender',
+            'fullname' => 'fullname',
             'mobile_verified'=>'mobileVerified',
             'email_verified'=>'emailVerified',
-            'fullname'=>'fullname'
+            'memo'=>'memo'
         );
     }
 

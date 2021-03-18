@@ -77,6 +77,8 @@ class User extends BaseApi
         $tx = $this->_di->getShared('transactions');
         $transaction = $tx->get();
 
+        $row->fullname = $data['fullname'];
+        $row->memo = $data['memo'];
         $row->username = $data['username'];
         if ($data['password']) {
             $row->password = $data['password'];
@@ -152,6 +154,7 @@ class User extends BaseApi
         $transaction = $tx->get();
         $model                = new UserModel();
         $model->username      = $data['username'];
+        $model->memo      = $data['memo'];
         $model->fullname      = $data['fullname'];
         $model->password      = $data['password'];
         $model->mobile        = $data['mobile'];
@@ -248,6 +251,7 @@ class User extends BaseApi
             'u.fullname',
             'u.gender',
             'u.username',
+            'u.memo',
             'u.mobileVerified',
             'u.emailVerified',
             'u.createTime',
@@ -302,6 +306,7 @@ class User extends BaseApi
             'mobile',
             'email',
             'fullname',
+            'memo',
             'gender',
             'username',
             'mobileVerified',
@@ -367,6 +372,7 @@ class User extends BaseApi
             'u.mobile',
             'u.email',
             'u.fullname',
+            'u.memo',
             'u.gender',
             'u.username',
             'u.mobileVerified',
