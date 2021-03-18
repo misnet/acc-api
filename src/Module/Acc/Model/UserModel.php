@@ -76,7 +76,7 @@ class UserModel extends AbstractModel
      * 姓名
      * @var String
      */
-    public $realname;
+    public $fullname;
     /**
      * 手机是否验证通过
      * @var
@@ -110,9 +110,9 @@ class UserModel extends AbstractModel
             'last_visit_ip' => 'lastVisitIp',
             'last_visit_time' => 'lastVisitTime',
             'gender' => 'gender',
-            'realname' => 'realname',
             'mobile_verified'=>'mobileVerified',
-            'email_verified'=>'emailVerified'
+            'email_verified'=>'emailVerified',
+            'fullname'=>'fullname'
         );
     }
 

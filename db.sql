@@ -176,4 +176,6 @@ CREATE TABLE `t_user_bind_app` (
   UNIQUE KEY `uid` (`uid`,`app_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='用户适用APPS';
 
+alter table `t_user` add fullname varchar(50) null comment '姓名';
+alter table `t_user` drop column realname;
 SET FOREIGN_KEY_CHECKS = 1;
