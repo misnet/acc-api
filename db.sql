@@ -158,7 +158,8 @@ CREATE TABLE `t_user` (
   `last_visit_ip` varchar(15) NOT NULL DEFAULT '' COMMENT '最近一次访问IP',
   `last_visit_time` int(11) NOT NULL DEFAULT '0' COMMENT '最近一次访问时间',
   `gender` tinyint(4) NOT NULL DEFAULT '1' COMMENT '性别',
-  `realname` varchar(50) DEFAULT '' COMMENT '姓名',
+  `fullname` varchar(50) DEFAULT '' COMMENT '姓名',
+  `memo` varchar(255) default '' comment '备注',
   `mobile_verified` enum('0','1') NOT NULL DEFAULT '0' COMMENT '手机是否认证',
   `email_verified` enum('0','1') DEFAULT '0' COMMENT '邮箱是否认证',
   PRIMARY KEY (`uid`)
