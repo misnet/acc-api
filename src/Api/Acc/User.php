@@ -87,7 +87,6 @@ class User extends BaseApi
         $row->mobileVerified= $data['mobileVerified'];
         $row->emailVerified = $data['emailVerified'];
         $row->mobile = $data['mobile'];
-        $row->fullname = $data['fullnname'];
         $row->setTransaction($transaction);
         $result      = $row->update();
         if ( ! $result) {
