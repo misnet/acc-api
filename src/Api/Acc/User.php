@@ -51,8 +51,8 @@ class User extends BaseApi
             if($data['password']!=$data['repassword']){
                 throw new ApiException($this->translator->_('新密码和确认密码不一致'));
             }
-            if($data['realname']){
-                $row->realname = $data['realname'];
+            if($data['fullname']){
+                $row->fullname = $data['fullname'];
             }
             if(!is_null($data['gender'])){
                 $row->gender = intval($data['gender']);
@@ -243,7 +243,7 @@ class User extends BaseApi
             'u.uid',
             'u.mobile',
             'u.email',
-            'u.realname',
+            'u.fullname',
             'u.gender',
             'u.username',
             'u.mobileVerified',
@@ -278,7 +278,7 @@ class User extends BaseApi
         $searcher  = UserModel::query();
         $bind = [];
         if($data['q']){
-            $searcher->where('realname like :q1:');
+            $searcher->where('fullname like :q1:');
             $searcher->orWhere('mobile like :q2:');
             $searcher->orWhere('email like :q3:');
             $searcher->orWhere('username like :q4:');
@@ -299,7 +299,7 @@ class User extends BaseApi
             'uid',
             'mobile',
             'email',
-            'realname',
+            'fullname',
             'gender',
             'username',
             'mobileVerified',
@@ -345,7 +345,7 @@ class User extends BaseApi
         }
         $bind['aid'] = $appId;
         if($data['q']){
-            $searcher->where('u.realname like :q1:');
+            $searcher->where('u.fullname like :q1:');
             $searcher->orWhere('u.mobile like :q2:');
             $searcher->orWhere('u.email like :q3:');
             $searcher->orWhere('u.username like :q4:');
@@ -364,7 +364,7 @@ class User extends BaseApi
             'u.uid',
             'u.mobile',
             'u.email',
-            'u.realname',
+            'u.fullname',
             'u.gender',
             'u.username',
             'u.mobileVerified',
@@ -402,7 +402,7 @@ class User extends BaseApi
             'u.uid',
             'u.mobile',
             'u.email',
-            'u.realname',
+            'u.fullname',
             'u.gender',
             'u.username',
             'u.mobileVerified',
@@ -487,7 +487,7 @@ class User extends BaseApi
         $returnData['username']    = $row->username;
         $returnData['gender']    = $row->gender;
         $returnData['mobile']    = $row->mobile;
-        $returnData['realname']    = $row->realname;
+        $returnData['fullname']    = $row->fullname;
         $this->_di->getShared('cache')->set('refreshToken:'.$returnData['refreshToken'],$row->uid,$returnData['refreshTokenExpiredIn']);
         return $returnData;
     }
