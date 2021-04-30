@@ -478,6 +478,12 @@ class User extends BaseApi
         //$aclService->setRoles($result['console.roles']);
         $menuService->setAclService($aclService);
         $returnData['menuList'] = $menuService->getAll(true, true, false,['id','name','url'],$this->_appKey);
+
+        //权限数据放到token
+        $acc = new Acc($this->_di);
+        $acc->initParams(['uid'=>$row->uid,'appId'=>$this->_appKey],'getPrivileges');
+        $result['acc'] = $acc->getPrivileges();
+
         if($this->_accessTokenType ===  GlobalVar::TOKEN_TYPE_JWT){
             $jwt = new JWTService();
             $jwt->setSecret($this->_di->get('config')->get('jwtTokenSecret'));
