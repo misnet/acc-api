@@ -23,6 +23,7 @@ class User extends BaseApi
      */
     public function delete()
     {
+
         $data   = $this->_toParamObject($this->getParams());
         $row    = UserModel::findFirstByUid($data['uid']);
         $result = true;
