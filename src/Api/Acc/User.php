@@ -461,6 +461,7 @@ class User extends BaseApi
         //取得角色
         $result                               = $this->getRoles($row->uid);
         $result[$this->_accessTokenUserIdKey] = $row->uid;
+        $result['fullname'] = $row->fullname;
         $hours = 10;
         $days  = ceil($hours / 24);
         //$expiredDate = strtotime($days+' days');
@@ -484,7 +485,7 @@ class User extends BaseApi
         $acc = new Acc($this->_di);
         $acc->initParams(['uid'=>$row->uid,'appId'=>$this->_appKey],'getPrivileges');
         $result['acc'] = $acc->getPrivileges();
-
+        $result['fullname'] = $this->_userFullname;
         if($this->_accessTokenType ===  GlobalVar::TOKEN_TYPE_JWT){
             $jwt = new JWTService();
             $jwt->setSecret($this->_di->get('config')->get('jwtTokenSecret'));
