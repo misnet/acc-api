@@ -180,3 +180,17 @@ CREATE TABLE `t_user_bind_app` (
 alter table `t_user` add fullname varchar(50) null comment '姓名';
 alter table `t_user` drop column realname;
 SET FOREIGN_KEY_CHECKS = 1;
+
+
+DROP TABLE IF EXISTS `t_oauth`;
+CREATE TABLE `t_oauth`  (
+    `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `oauth_id` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户第三方标识id',
+    `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '邮箱地址',
+    `name` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名称',
+    `last_login_time` int(11) NOT NULL COMMENT '上一次登录时间',
+    PRIMARY KEY (`id`) USING BTREE,
+    UNIQUE INDEX `oauth_id`(`oauth_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+SET FOREIGN_KEY_CHECKS = 1;
