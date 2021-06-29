@@ -105,16 +105,15 @@ class Oauth2Model extends AbstractModel
         if($this->isExistUser($data['oauthId'])){
             if($rows){
                 $rows->lastLoginTime = time();
-                $rows->update();
+                return $rows->update();
             }
         }else{
             $rows->oauthId = $data['oauthId'];
             $rows->name = $data['name'];
             $rows->email = $data['email'];
             $rows->lastLoginTime = time();
-            $rows->create();
+            return $rows->create();
         }
-
 
     }
 

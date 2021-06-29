@@ -26,10 +26,10 @@ class Oauth extends BaseApi{
             $data['email'] =  $google_account_info->email;
             $data['name'] =  $google_account_info->name;
             $data['oauthId']=  $google_account_info->id;
-            //替换系统自己的逻辑 待完善
-            print_r($google_account_info);
+            //替换系统自己的逻辑
+//            print_r($google_account_info);
             $oauth2Model = new Oauth2Model();
-            $oauth2Model->creatOrUpdateUser($data);
+            return $oauth2Model->creatOrUpdateUser($data);
             // now you can use this profile info to create account in your website and make user logged in.
         } else {
             echo "<a href='".$client->createAuthUrl()."'>Google Login</a>";
