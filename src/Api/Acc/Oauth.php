@@ -2,7 +2,7 @@
 namespace Kuga\Api\Acc;
 use Kuga\Module\Acc\Model\Oauth2Model;
 class Oauth extends BaseApi{
-    public function redirectAction(){
+    public function createAuth(){
 
         // init configuration
         $clientID = '1080695414532-f1rv91ka4kcbkaivin0qrg7m163jt1eb.apps.googleusercontent.com';
