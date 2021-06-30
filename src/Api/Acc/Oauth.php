@@ -17,7 +17,7 @@ class Oauth extends BaseApi{
         $client->addScope("profile");
         $client->addScope('https://mail.google.com/');//您必须声明要访问的范围，例如-Gmail的最高特权范围，该范围还允许脱机访问
 // authenticate code from Google OAuth Flow
-        if ($this->request->get('code')){
+        if (isset($_GET['code'])) {
             $token = $client->fetchAccessTokenWithAuthCode($this->request->get('code'));
             $client->setAccessToken($token['access_token']);
             // get profile info
@@ -32,8 +32,7 @@ class Oauth extends BaseApi{
             return $oauth2Model->creatOrUpdateUser($data);
             // now you can use this profile info to create account in your website and make user logged in.
         } else {
-            echo "<a href='".$client->createAuthUrl()."'>Google Login</a>";
+            return "<a href='".$client->createAuthUrl()."'>Google Login</a>";
         }
-        exit;
     }
 }
