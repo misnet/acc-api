@@ -393,7 +393,43 @@ class User extends BaseApi
         }
         return ['list' => $list, 'total' => $total, 'page' => $data['page'], 'limit' => $data['limit']];
     }
+    public function loginByCode(){
+        $data      = $this->_toParamObject($this->getParams());
+        $storage = $this->_di->getShared('simpleStorage');
+        $userId  = $storage->get($data['code']);
+        if(!$userId){
+            throw new ApiException($this->translator->_('错误的code'));
+        }else{
+            $userModel = new UserModel();
+            $searcher  = UserBindAppModel::query();
+            $searcher->join(UserModel::class,UserBindAppModel::class.'.uid=u.uid and appId=:aid:','u');
+            //$searcher->where(UserBindAppModel::class.'.appId=:aid:');
+            $searcher->where('u.uid=:uid:');
+            $searcher->columns([
+                'password',
+                'u.uid',
+                'u.mobile',
+                'u.email',
+                'u.fullname',
+                'u.gender',
+                'u.username',
+                'u.mobileVerified',
+                'u.emailVerified'
+            ]);
+            $bind['aid'] = $this->_appKey;
+            $bind['uid']   = $userId;
 
+            $searcher->bind($bind);
+            $result      = $searcher->execute();
+            $row         = $result->getFirst();
+
+            if ( $row) {
+                return $this->generateLoginInfo($row);
+            } else {
+                throw new ApiException(ApiException::$EXCODE_NOTEXIST);
+            }
+        }
+    }
     /**
      * 管理人员登录
      */
@@ -428,7 +464,7 @@ class User extends BaseApi
         if ( ! $row) {
             throw new ApiException(ApiException::INVALID_PASSWORD);
         } elseif ($userModel->passwordVerify($row->password, $data['password'])) {
-            return $this->_generateLoginInfo($row);
+            return $this->generateLoginInfo($row);
         } else {
             throw new ApiException(ApiException::INVALID_PASSWORD);
         }
@@ -447,14 +483,14 @@ class User extends BaseApi
                 throw new ApiException(ApiException::$EXCODE_INVALID_REFRESHTOKEN);
             }else{
                 $row = UserModel::findFirstByUid($uid);
-                return $this->_generateLoginInfo($row);
+                return $this->generateLoginInfo($row);
             }
         }else{
             throw new ApiException($this->translator->_('refreshToken参数没传值'));
         }
     }
 
-    private function _generateLoginInfo($row){
+    public function generateLoginInfo($row){
         $row->lastVisitIP   = \Qing\Lib\Utils::getClientIp();
         $row->lastVisitTime = time();
         //$row->update();

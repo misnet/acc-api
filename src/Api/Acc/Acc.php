@@ -31,6 +31,11 @@ class Acc extends BaseApi
      */
     public function assignMenusToRole()
     {
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
         $data = $this->_toParamObject($this->getParams());
         $data['rid'] = intval($data['rid']);
         $roleRow = RoleModel::findFirstById($data['rid']);
@@ -61,6 +66,11 @@ class Acc extends BaseApi
      */
     public function assignRoleToUsers()
     {
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
         $data = $this->_toParamObject($this->getParams());
         $data['rid'] = intval($data['rid']);
         $roleRow = RoleModel::findFirstById($data['rid']);
@@ -93,6 +103,11 @@ class Acc extends BaseApi
      */
     public function unassignRoleToUsers()
     {
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
         $data = $this->_toParamObject($this->getParams());
         $data['rid'] = intval($data['rid']);
         $roleRow = RoleModel::findFirstById($data['rid']);
@@ -120,6 +135,11 @@ class Acc extends BaseApi
      */
     public function listRoleUser()
     {
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
         $data = $this->_toParamObject($this->getParams());
         $data['rid'] = intval($data['rid']);
         $bind = ['rid' => $data['rid']];
@@ -167,6 +187,12 @@ class Acc extends BaseApi
      */
     public function listRole()
     {
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_LIST_ROLE');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
+
         $data = $this->_toParamObject($this->getParams());
         $data['page'] = intval($data['page']);
         $data['limit'] = intval($data['limit']);
@@ -205,6 +231,12 @@ class Acc extends BaseApi
      */
     public function createRole()
     {
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ADD_ROLE');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
+
         $data = $this->_toParamObject($this->getParams());
         $row = new RoleModel();
         $row->initData($data->toArray(), ['id']);
@@ -221,6 +253,12 @@ class Acc extends BaseApi
      */
     public function updateRole()
     {
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_UPDATE_ROLE');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
+
         $data = $this->_toParamObject($this->getParams());
         $data['id'] = intval($data['id']);
         $row = RoleModel::findFirstById($data['id']);
@@ -241,6 +279,12 @@ class Acc extends BaseApi
      */
     public function deleteRole()
     {
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_REMOVE_ROLE');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
+
         $data = $this->_toParamObject($this->getParams());
         $data['id'] = intval($data['id']);
         $row = RoleModel::findFirstById($data['id']);
@@ -258,6 +302,12 @@ class Acc extends BaseApi
      */
     public function listResourcesGroup()
     {
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_LIST_RES');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
+
         $data  = $this->_toParamObject($this->getParams());
         $acc   = new AccService($this->_di);
         $list = $acc->getResourceList($data['appId']);
@@ -280,6 +330,12 @@ class Acc extends BaseApi
      */
     public function listOperationList()
     {
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_LIST_RES');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
+
         $data = $this->_toParamObject($this->getParams());
         $data['rid'] = intval($data['rid']);
         $row = RoleModel::findFirstById($data['rid']);
@@ -326,6 +382,13 @@ class Acc extends BaseApi
      * @throws ApiException
      */
     public function parseResourceXml(){
+
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_IMPORT_RES');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
+
         $data = $this->_toParamObject($this->getParams());
         $appId     = trim($data['appId']);
         $xml  = trim($data['xml']);
@@ -378,6 +441,12 @@ class Acc extends BaseApi
      * 保存resource xml
      */
     public function importResourceXml(){
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_IMPORT_RES');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
+
         $data = $this->_toParamObject($this->getParams());
         $parsedKey  = trim($data['parsedKey']);
         $appId     = trim($data['appId']);
@@ -403,6 +472,11 @@ class Acc extends BaseApi
      * 保存对某个角色的操作权限分配
      */
     public function assignOperationsToRole(){
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
         $data = $this->_toParamObject($this->getParams());
         $resource = $data['res'];
         $roleId   = $data['rid'];

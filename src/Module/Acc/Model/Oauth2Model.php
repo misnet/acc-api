@@ -9,28 +9,29 @@ namespace Kuga\Module\Acc\Model;
 use Kuga\Core\Base\AbstractModel;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Email as EmailValidator;
+use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
 use Phalcon\Mvc\Model\Relation;
 
-class Oauth2Model extends AbstractModel
-{
-    /**
-     * User id
-     * @var integer
-     */
-    public $uid;
+class Oauth2Model extends AbstractModel{
 
     /**
      * oauthId
      * @var string
      */
     public $oauthId;
+    /**
+     * 应用
+     * @var string
+     */
+    public $oauthApp;
 
     /**
      * email
      * @var string
      */
     public $email;
+    public $mobile;
 
     /**
      *
@@ -44,7 +45,13 @@ class Oauth2Model extends AbstractModel
      * @var integer
      */
     public $lastLoginTime;
-
+    public $id;
+    public $userId;
+    public $avatarUrl;
+    public function getSource()
+    {
+        return 't_oauth';
+    }
     /**
      * Independent Column Mapping.
      */
@@ -53,18 +60,16 @@ class Oauth2Model extends AbstractModel
         return array(
             'id' => 'id',
             'oauth_id' => 'oauthId',
+            'oauth_app'=>'oauthApp',
+            'user_id'=>'userId',
             'email' => 'email',
             'name' => 'name',
-            'last_login_time' => 'lastLoginTime'
-
+            'last_login_time' => 'lastLoginTime',
+            'mobile'=> 'mobile',
+            'avatar_url'=>'avatarUrl'
         );
     }
 
-    /**
-     * 所属门店名称
-     * @var string
-     */
-    public $storeName;
 
     /**
      * Validations and business logic
@@ -72,55 +77,11 @@ class Oauth2Model extends AbstractModel
     public function validation()
     {
         $validator = new Validation();
-        $validator->add('oauthId', new UniquenessValidator([
-            'model' => $this,
-            'message' => $this->translator->_('oauthId已存在')
-        ]));
-
-        if ($this->email) {
-            $validator->add('email', new EmailValidator([
-                'model' => $this,
-                'message' => $this->translator->_('Email格式错误')
-            ]));
-
-            $validator->add('email', new UniquenessValidator([
-                'model' => $this,
-                'message' => $this->translator->_('Email已存在')
-            ]));
-        }
+        $validator->add(
+            ['oauthApp','oauthId'], new Uniqueness(
+                ['model' => $this, 'message' => $this->translator->_('应用已绑定授权')]
+            )
+        );
         return $this->validate($validator);
     }
-
-    /**
-     * 创建或者更新用户
-     * @param $data
-     * Created on:2021/6/29 17:18
-     * Create by:Roy
-     */
-    public function creatOrUpdateUser($data)
-    {
-        //判断是否存在该用户，存在则更新登录时间，反之则创建用户
-        $rows = $this->find(array('conditions'=>'oauthId=?oauthId','bind'=>array('oauthId'=>$data['oauthId'])));
-
-        if($this->isExistUser($data['oauthId'])){
-            if($rows){
-                $rows->lastLoginTime = time();
-                return $rows->update()==false ? false : true;
-            }
-        }else{
-            $rows->oauthId = $data['oauthId'];
-            $rows->name = $data['name'];
-            $rows->email = $data['email'];
-            $rows->lastLoginTime = time();
-            return $rows->create()==false ? false : true;
-        }
-
-    }
-
-    public function isExistUser($oauthId)
-    {
-        $rows = $this->find(array('conditions'=>'oauthId=?oauthId','bind'=>array('oauthId'=>$oauthId)));
-        return empty($rows) ? false : $rows;
-    }
-
 }

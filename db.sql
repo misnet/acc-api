@@ -183,14 +183,19 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 
 DROP TABLE IF EXISTS `t_oauth`;
-CREATE TABLE `t_oauth`  (
+CREATE TABLE `t_oauth`(
     `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
     `oauth_id` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户第三方标识id',
+    `oauth_app` varchar(30)  NOT NULL COMMENT '第三方应用名称，如google，apple，facebook等',
     `email` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '邮箱地址',
-    `name` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名称',
+    `mobile` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '手机号',
+    `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '用户名称',
     `last_login_time` int(11) NOT NULL COMMENT '上一次登录时间',
+    `user_id` int not null comment '',
+    `avatar_url` varchar(255)
     PRIMARY KEY (`id`) USING BTREE,
-    UNIQUE INDEX `oauth_id`(`oauth_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+    unique(`oauth_id`,`oauth_app`),
+    index(`user_id`)
+) comment='oauth关联认证表';
 
 SET FOREIGN_KEY_CHECKS = 1;

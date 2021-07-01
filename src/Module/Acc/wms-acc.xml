@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<privileges>
+
+	<resource title="商品管理" code="RES_PRODUCT">
+		<op title="添加" code="OP_ADD"/>
+		<op title="编辑" code="OP_EDIT"/>
+		<op title="删除" code="OP_REMOVE"/>
+		<op title="查看详情" code="OP_VIEW"/>
+		<op title="查看列表" code="OP_LIST"/>
+	</resource>
+
+	<resource title="店仓管理" code="RES_STORE">
+		<op title="添加" code="OP_ADD"/>
+		<op title="编辑" code="OP_EDIT"/>
+		<op title="删除" code="OP_REMOVE"/>
+		<op title="查看列表" code="OP_LIST"/>
+	</resource>
+	<resource title="货架管理" code="RES_STORE_RACK">
+		<op title="添加" code="OP_ADD"/>
+		<op title="编辑" code="OP_EDIT"/>
+		<op title="删除" code="OP_REMOVE"/>
+		<op title="查看列表" code="OP_LIST"/>
+	</resource>
+	<resource title="系统管理" code="RES_SYS">
+		<op title="管理" code="OP_ADMIN"/>
+	</resource>
+
+	<resource title="库存" code="RES_INVENTORY">
+		<op title="出入库" code="OP_ENTRYOUT"/>
+		<op title="单据列表" code="OP_LISTSHEET"/>
+		<op title="存量查询" code="OP_VIEWSTOCK"/>
+	</resource>
+	<resource title="订单" code="RES_SALEORDER">
+		<op title="添加" code="OP_ADD"/>
+		<op title="领料" code="OP_REQUISITION"/>
+		<op title="成品入库" code="OP_ENTRY"/>
+		<op title="发货" code="OP_DELIVERY"/>
+	</resource>
+	<resource title="商户" code="RES_OWNER">
+		<op title="添加" code="OP_ADD"/>
+		<op title="编辑" code="OP_EDIT"/>
+		<op title="删除" code="OP_REMOVE"/>
+		<op title="查看详情" code="OP_VIEW"/>
+		<op title="查看列表" code="OP_LIST"/>
+		<op title="用户列表" code="OP_LISTUSER"/>
+		<op title="绑定用户" code="OP_BIND"/>
+		<op title="解绑用户" code="OP_UNBIND"/>
+	</resource>
+
+	<resource title="用户" code="RES_USER">
+		<op title="查看列表" code="OP_LIST"/>
+	</resource>
+
+	<resource title="账单" code="RES_USER">
+		<op title="查看列表" code="OP_LIST"/>
+	</resource>
+</privileges>

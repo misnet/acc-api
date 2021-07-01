@@ -100,6 +100,10 @@ class UserModel extends AbstractModel
     const GENDER_BOY = 1;
     const GENDER_GIRL = 0;
     const GENDER_SECRET = 2;
+    private $isAccBeforeSave = true;
+    public function accBeforeSave($s){
+        $this->isAccBeforeSave = $s;
+    }
     /**
      * Independent Column Mapping.
      */
@@ -243,10 +247,12 @@ class UserModel extends AbstractModel
 
     public function beforeCreate()
     {
-        $acl = $this->getDI()->getShared('aclService');
-        $isAllow = $acl->isAllowed('RES_USER','OP_ADD');
-        if(!$isAllow){
-            throw new ModelException($this->translator->_('你没有添加权限'),ModelException::$EXCODE_FORBIDDEN);
+        if($this->isAccBeforeSave){
+            $acl = $this->getDI()->getShared('aclService');
+            $isAllow = $acl->isAllowed('RES_USER','OP_ADD');
+            if(!$isAllow){
+                throw new ModelException($this->translator->_('你没有添加权限'),ModelException::$EXCODE_FORBIDDEN);
+            }
         }
         $this->createTime = time();
         if (!$this->password) {
@@ -256,20 +262,25 @@ class UserModel extends AbstractModel
         return true;
     }
     public function beforeDelete(){
-        $acl = $this->getDI()->getShared('aclService');
-        $isAllow = $acl->isAllowed('RES_USER','OP_REMOVE');
-        if($acl->getUserId() != $this->uid && !$isAllow){
-            throw new ModelException($this->translator->_('你没有删除权限'),ModelException::$EXCODE_FORBIDDEN);
+        if($this->isAccBeforeSave) {
+            $acl = $this->getDI()->getShared('aclService');
+            $isAllow = $acl->isAllowed('RES_USER', 'OP_REMOVE');
+            if ($acl->getUserId() != $this->uid && !$isAllow) {
+                throw new ModelException($this->translator->_('你没有删除权限'), ModelException::$EXCODE_FORBIDDEN);
+            }
         }
         return true;
     }
     public function beforeUpdate()
     {
-        $acl = $this->getDI()->getShared('aclService');
-        $isAllow = $acl->isAllowed('RES_USER','OP_EDIT');
-        if($acl->getUserId() != $this->uid && !$isAllow){
-            throw new ModelException($this->translator->_('你没有修改权限'),ModelException::$EXCODE_FORBIDDEN);
+        if($this->isAccBeforeSave) {
+            $acl = $this->getDI()->getShared('aclService');
+            $isAllow = $acl->isAllowed('RES_USER','OP_EDIT');
+            if($acl->getUserId() != $this->uid && !$isAllow){
+                throw new ModelException($this->translator->_('你没有修改权限'),ModelException::$EXCODE_FORBIDDEN);
+            }
         }
+
         if ($this->password) {
             if ($this->hasSnapshotData() && $this->hasChanged('password')) {
                 $this->password = $this->passwordHash($this->password);

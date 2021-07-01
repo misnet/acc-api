@@ -1,6 +1,7 @@
 <?php
 namespace Kuga\Api\Acc;
 use Kuga\Core\Api\Exception as ApiException;
+use Kuga\Core\Base\ModelException;
 use Kuga\Module\Acc\Model\AppModel;
 use Kuga\Module\Acc\Model\UserBindAppModel;
 use Kuga\Module\Acc\Model\UserModel;
@@ -24,6 +25,11 @@ class App extends BaseApi{
         if(!$hasPrivilege){
             throw new ApiException(ApiException::$EXCODE_FORBIDDEN);
         }
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_APP', 'OP_LIST');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
         $data = $this->_toParamObject($this->getParams());
         $data['limit'] || $data['limit'] = 10;
         $data['page'] || $data['page'] = 1;
@@ -43,6 +49,12 @@ class App extends BaseApi{
      * @throws ApiException
      */
     public function create(){
+
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_APP', 'OP_ADD');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
         $data                 = $this->_toParamObject($this->getParams());
         $model                = new AppModel();
         $model->name          = $data['name'];
@@ -58,6 +70,12 @@ class App extends BaseApi{
      * @throws ApiException
      */
     public function update(){
+
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_APP', 'OP_UPDATE');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
         $data                 = $this->_toParamObject($this->getParams());
         $model                = AppModel::findFirstById($data['id']);
         if(!$model){
