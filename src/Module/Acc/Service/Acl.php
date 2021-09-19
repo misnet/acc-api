@@ -166,7 +166,8 @@ class Acl extends AbstractService
         $cache    = $this->_di->get('cache');
         $cacheKey = $this->_cachePrefix.md5(serialize($this->_currentRole));
         $appId    = $this->_appId;
-        if (1 != 1 && $data = $cache->get($cacheKey)) {
+        $lifetime = 600;
+        if ($data = $cache->get($cacheKey)) {
             $this->_rules = $data;
         } else {
             if (is_array($this->_currentRole) && ! empty($this->_currentRole)) {
@@ -183,7 +184,7 @@ class Acl extends AbstractService
                     }
                 }
             }
-            $cache->set($cacheKey, $this->_rules);
+            $cache->set($cacheKey, $this->_rules,$lifetime);
         }
     }
 

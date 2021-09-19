@@ -68,6 +68,7 @@ class Acc extends BaseApi
     {
         $acc     = $this->_di->getShared('aclService');
         $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
+
         if ( ! $isAllow) {
             throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
         }
@@ -158,7 +159,7 @@ class Acc extends BaseApi
         $searcher = RoleUserModel::query();
         $searcher->join(UserModel::class, RoleUserModel::class . '.uid=user.uid', 'user');
         $searcher->columns(
-            ['user.uid','user.username']
+            ['user.uid','user.username','user.fullname']
         );
         $searcher->orderBy(RoleUserModel::class . '.id desc');
         $searcher->where('rid=:rid:');
@@ -174,7 +175,7 @@ class Acc extends BaseApi
         //$userSearcher->where(UserModel::class.'.uid not in (select '.RoleUserModel::class.'.uid from '.RoleUserModel::class.' where rid=:rid:)');
         //$userSearcher->bind($bind);
         $userSearcher->columns(
-            ['u.uid', 'u.username']
+            ['u.uid', 'u.username','u.fullname']
         );
         $result = $userSearcher->execute();
         $unassignedList = $result->toArray();
