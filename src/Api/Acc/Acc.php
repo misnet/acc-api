@@ -62,6 +62,58 @@ class Acc extends BaseApi
     }
 
     /**
+     * 为某个人员指定多个角色
+     */
+    public function assignRolesToUser(){
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
+        if ( ! $isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
+        }
+        $data = $this->_toParamObject($this->getParams());
+        $data['uid'] = intval($data['uid']);
+        $userRow = UserModel::findFirstByUid($data['uid']);
+        if (!$userRow) {
+            throw new ApiException($this->translator->_('指定的用户不存在'));
+        }
+        $idList = $data['rids'];
+        $success = 0;
+        //当前应用的所有角色
+        $roles = RoleModel::find([
+            'appId=:aid:',
+            'bind'=>['aid'=>$data['appId']]
+        ]);
+        $allRoles = [];
+        foreach($roles as $r){
+            $allRoles[] = $r->id;
+        }
+        foreach ($idList as $rid) {
+            $rid = intval($rid);
+            if ($rid) {
+                $hasAssigned = RoleUserModel::count(['rid=:rid: and uid=:uid:', 'bind' => ['uid' => $data['uid'], 'rid' => $rid]]);
+                if (!$hasAssigned) {
+                    $row = new RoleUserModel();
+                    $row->uid = $data['uid'];
+                    $row->rid = $rid;
+                    $result = $row->create();
+                    if ($result) {
+                        $success++;
+                    }
+                }
+            }
+        }
+        $row = new RoleUserModel();
+        $sql = 'delete from '.RoleUserModel::class.' where uid=:uid: and rid in ({allRoles:array}) and rid not in ({ids:array})';
+        $bind = [
+            'uid'=>$data['uid'],
+            'allRoles'=>$allRoles,
+            'ids'=>$idList
+        ];
+        $row->getModelsManager()->executeQuery($sql,$bind);
+        $this->clearCache();
+        return true;
+    }
+    /**
      * 给某些用户分配指定的角色
      */
     public function assignRoleToUsers()

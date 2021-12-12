@@ -389,6 +389,17 @@ class User extends BaseApi
                 $user['appIds'] = array_map(function($item){
                     return intval($item);
                 },$user['appIds']);
+                $searcher = RoleUserModel::query();
+                $searcher->join(RoleModel::class,RoleUserModel::class.'.rid=role.id','role','left');
+                $searcher->where('role.appId=:aid: and uid=:uid:');
+                $searcher->bind(['aid'=>$appId,'uid'=>$user['uid']]);
+                $searcher->columns([
+                    'role.name as roleName',
+                    'role.id as roleId',
+                    'role.roleType'
+                ]);
+                $result = $searcher->execute();
+                $user['roles'] = $result->toArray();
             }
         }
         return ['list' => $list, 'total' => $total, 'page' => $data['page'], 'limit' => $data['limit']];
