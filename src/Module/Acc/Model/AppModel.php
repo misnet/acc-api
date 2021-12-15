@@ -39,6 +39,7 @@ class AppModel extends  AbstractModel{
     public $shortDesc;
 
     public $accResourcesXml;
+    public $allowAutoCreateUser = 0;
     public function getSource()
     {
         return 't_apps';
@@ -76,7 +77,8 @@ class AppModel extends  AbstractModel{
             'secret'=>'secret',
             'disabled'=>'disabled',
             'short_desc'=>'shortDesc',
-            'acc_resources_xml'=>'accResourcesXml'
+            'acc_resources_xml'=>'accResourcesXml',
+            'allow_auto_create_user'=>'allowAutoCreateUser'
         ];
     }
     /**

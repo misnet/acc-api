@@ -7,6 +7,8 @@ namespace Kuga\Api\Acc;
 
 use Kuga\Core\GlobalVar;
 use Kuga\Core\Service\JWTService;
+use Kuga\Module\Acc\Model\AppModel;
+use Kuga\Module\Acc\Model\Oauth2Model;
 use Kuga\Module\Acc\Model\RoleModel;
 use Kuga\Module\Acc\Model\RoleUserModel;
 use Kuga\Module\Acc\Model\UserBindAppModel;
@@ -404,6 +406,165 @@ class User extends BaseApi
         }
         return ['list' => $list, 'total' => $total, 'page' => $data['page'], 'limit' => $data['limit']];
     }
+    private function _login($mobile,$email){
+        $searcher  = UserBindAppModel::query();
+        $searcher->join(UserModel::class,UserBindAppModel::class.'.uid=u.uid and appId=:aid:','u');
+        //$searcher->where(UserBindAppModel::class.'.appId=:aid:');
+        $searcher->where('(mobile=:m: and mobileVerified=1)  or (email=:e: and emailVerified=1)');
+        $searcher->columns([
+            'password',
+            'u.uid',
+            'u.mobile',
+            'u.email',
+            'u.fullname',
+            'u.gender',
+            'u.username',
+            'u.mobileVerified',
+            'u.emailVerified'
+        ]);
+        $bind['aid'] = $this->_appKey;
+        $bind['m']   = $mobile;
+        $bind['e']   = $email;
+
+        $searcher->bind($bind);
+        $result      = $searcher->execute();
+        $row         = $result->getFirst();
+        return $row;
+    }
+    private function _loginByVerifyCode($receive,$verifyCode,$seed){
+        $storage = $this->_di->getShared('simpleStorage');
+        $smsPrefix = 'sms';
+        $countryCode = '';
+        $key = $smsPrefix . $countryCode. $receive . '_' . $seed;
+
+        $correctVerifyCode = $storage->get($key);
+        if(!$correctVerifyCode){
+            throw new ApiException($this->translator->_('验证码已过期'));
+        }
+        if($verifyCode != $correctVerifyCode){
+            throw new ApiException($this->translator->_('验证码不正确'));
+        }
+        $email = '';
+        $mobile ='';
+        if(preg_match('/^(13|14|15|17|18|19)[\d+]{9}$/',$receive)){
+            //手机
+            $mobile = $receive;
+        }else{
+            //邮箱
+            $email = $receive;
+        }
+        $user =  $this->_login($mobile,$email);
+        if($user){
+            return $this->generateLoginInfo($user);
+        }else{
+            return null;
+        }
+    }
+    private function _createUser($data){
+        $tx = $this->_di->getShared('transactions');
+        $transaction = $tx->get();
+        $model                = new UserModel();
+        $model->username      = $data['username'];
+        $model->memo          = $data['memo'];
+        $model->fullname      = $data['fullname'];
+        $model->password      = $data['password'];
+        $model->mobile        = $data['mobile'];
+        $model->email         = $data['email'];
+        $model->mobileVerified= $data['mobileVerified'];
+        $model->emailVerified = $data['emailVerified'];
+
+        $model->createTime    = time();
+        $model->lastVisitIp   = \Qing\Lib\Utils::getClientIp();
+        $model->lastVisitTime = $model->createTime;
+        $model->setTransaction($transaction);
+        $result               = $model->create();
+        if ( ! $result) {
+            $transaction->rollback($model->getMessages()[0]->getMessage());
+            //throw new ApiException($model->getMessages()[0]->getMessage());
+        }else{
+            if(is_array($data['appIds'])){
+
+                foreach($data['appIds'] as $appId){
+                    $appId = intval($appId);
+                    if($appId){
+                        $bindModel = new UserBindAppModel();
+                        $bindModel->appId = $appId;
+                        $bindModel->setTransaction($transaction);
+                        $bindModel->uid   = $model->uid;
+                        $result = $bindModel->create();
+                        if(!$result){
+                            $transaction->rollback($this->translator->_('用户绑定应用失败'));
+                        }
+                    }
+                }
+            }
+            $transaction->commit();
+        }
+        return true;
+    }
+    /**
+     * 根据手机号/邮箱，验证码
+     *
+     */
+    public function bindLogin(){
+        $data      = $this->_toParamObject($this->getParams());
+        $oauth     = Oauth2Model::findFirst([
+            'oauthId=:id: and oauthApp=:app:',
+            'bind'=>['id'=>$data['oauthId'],'app'=>$data['app']]
+        ]);
+        if(!$oauth){
+            throw new ApiException($this->translator->_('未在第三方平台登陆'));
+        }
+        if($oauth->userId){
+            throw new ApiException($this->translator->_('已绑定过用户'));
+        }
+        $result    = $this->_loginByVerifyCode($data['receive'],$data['verifyCode'],$data['seed']);
+        if(!$result){
+            //自动创建？
+            $app = AppModel::findFirstById($this->_appKey);
+            if(!$app){
+                throw new ApiException($this->translator->_('应用不存在'));
+            }
+            if(!$app->allowAutoCreateUser){
+                throw new ApiException($this->translator->_('用户不存在，不能绑定'));
+            }
+            $row['username'] = uniqid('guest');
+            $row['mobile']   = '';
+            $row['email']    = '';
+            $row['mobileVerified'] = 0;
+            $row['emailVerified'] = 0;
+            if(preg_match('/^(13|14|15|17|18|19)[\d+]{9}$/',$data['receive'])){
+                $row['mobile'] = $data['receive'];
+                $row['mobileVerified'] = 1;
+            }else{
+                $row['email'] = $data['receive'];
+                $row['emailVerified'] = 1;
+            }
+            $row['password'] = md5(time());
+            $row['fullname'] = $row['username'];
+            $row['memo'] = '';
+            $row['appIds'] = [$this->_appKey];
+            $success = $this->_createUser($row);
+            if($success){
+                $result = $this->_loginByVerifyCode($data['receive'],$data['verifyCode'],$data['seed']);
+                if($result){
+                    $oauth->userId = $result['uid'];
+                    $oauth->update();
+                    return $result;
+                }else{
+                    return false;
+                }
+            }else{
+                return false;
+            }
+        }else{
+            //绑定
+            $oauth->userId = $result['uid'];
+            $oauth->update();
+            return $result;
+        }
+    }
+
     public function loginByCode(){
         $data      = $this->_toParamObject($this->getParams());
         $storage = $this->_di->getShared('simpleStorage');

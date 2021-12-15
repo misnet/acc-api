@@ -37,6 +37,7 @@ class Common extends  AbstractApi {
         }elseif (preg_match('/^(13|14|15|17|18|19)[\d+]{9}$/', $data['receive'])) {
             //是手机
             $key = $this->smsPrefix . $data['countryCode']. $data['receive'] . '_' . $seed;
+
             $simpleStorage = $this->_di->get('simpleStorage');
             $r = $simpleStorage->get($key);
             if (! $r) {
