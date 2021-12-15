@@ -410,7 +410,7 @@ class User extends BaseApi
         $searcher  = UserBindAppModel::query();
         $searcher->join(UserModel::class,UserBindAppModel::class.'.uid=u.uid and appId=:aid:','u');
         //$searcher->where(UserBindAppModel::class.'.appId=:aid:');
-        $searcher->where('(mobile=:m: and mobileVerified=1)  or (email=:e: and emailVerified=1)');
+        $searcher->where('(mobile=:m: and mobileVerified="1")  or (email=:e: and emailVerified="1")');
         $searcher->columns([
             'password',
             'u.uid',
@@ -425,7 +425,6 @@ class User extends BaseApi
         $bind['aid'] = $this->_appKey;
         $bind['m']   = $mobile;
         $bind['e']   = $email;
-
         $searcher->bind($bind);
         $result      = $searcher->execute();
         $row         = $result->getFirst();
@@ -612,7 +611,7 @@ class User extends BaseApi
         $searcher  = UserBindAppModel::query();
         $searcher->join(UserModel::class,UserBindAppModel::class.'.uid=u.uid and appId=:aid:','u');
         //$searcher->where(UserBindAppModel::class.'.appId=:aid:');
-        $searcher->where('username=:name: or (mobile=:m: and mobileVerified=1)  or (email=:e: and emailVerified=1)');
+        $searcher->where('username=:name: or (mobile=:m: and mobileVerified="1")  or (email=:e: and emailVerified="1")');
         $searcher->columns([
             'password',
             'u.uid',
