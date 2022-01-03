@@ -3,6 +3,8 @@
 namespace Kuga\Api\Acc;
 
 
+use Phalcon\Di\Di;
+
 class Exception extends \Kuga\Core\Api\Exception
 {
 
@@ -14,7 +16,7 @@ class Exception extends \Kuga\Core\Api\Exception
 
     public static function getExceptionList()
     {
-        $di = \Phalcon\DI::getDefault();
+        $di = Di::getDefault();
         $t = $di->getShared('translator');
         return [
             self::INVALID_PASSWORD => $t->_('账户密码错误')

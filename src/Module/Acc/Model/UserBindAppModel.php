@@ -11,13 +11,10 @@ class UserBindAppModel extends AbstractModel{
     public $id;
     public $uid;
     public $appId;
-    public function getSource()
-    {
-        return 't_user_bind_app';
-    }
     public function initialize()
     {
         parent::initialize();
+        $this->setSource('t_user_bind_app');
         $this->belongsTo('uid','UserModel','uid',[
             'namespace'=>'Kuga\Module\Acc\Model'
         ]);

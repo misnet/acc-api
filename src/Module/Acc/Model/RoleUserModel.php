@@ -32,14 +32,10 @@ class RoleUserModel extends AbstractModel
 
     public $username;
 
-    public function getSource()
-    {
-        return 't_role_user';
-    }
-
     public function initialize()
     {
         parent::initialize();
+        $this->setSource('t_role_user');
         $this->belongsTo('rid', 'RoleModel', 'id',['namespace'=>'Kuga\\Module\\Acc\\Model']);
         $this->belongsTo('uid', 'UserModel', 'uid',['namespace'=>'Kuga\\Module\\Acc\\Module']);
     }
@@ -52,14 +48,14 @@ class RoleUserModel extends AbstractModel
         return ['id' => 'id', 'rid' => 'rid', 'uid' => 'uid'];
     }
 
-    public function joinFind($cond, $cols = [])
-    {
-        if (empty($cols)) {
-            $cols = ['*', '`rid;name`' => 'roleName', '`uid;username`' => 'username'];
-        }
-
-        return parent::joinFind($cond, $cols);
-    }
+//    public function joinFind($cond, $cols = [])
+//    {
+//        if (empty($cols)) {
+//            $cols = ['*', '`rid;name`' => 'roleName', '`uid;username`' => 'username'];
+//        }
+//
+//        return parent::joinFind($cond, $cols);
+//    }
 
     public function beforeSave()
     {

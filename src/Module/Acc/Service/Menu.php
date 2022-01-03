@@ -18,7 +18,7 @@ class Menu extends AbstractService {
      * @var \Kuga\Module\Acc\Service\Acl
      */
 	private $_aclService;
-	const PREFIX_MENULIST = 'data:menuList:';
+	const PREFIX_MENULIST = 'data_menuList_';
 
     /**
      * 注入权限判断服务ACL

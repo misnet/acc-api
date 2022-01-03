@@ -26,14 +26,10 @@ class RoleMenuModel extends AbstractModel
      */
     public $mid;
 
-    public function getSource()
-    {
-        return 't_role_menu';
-    }
-
     public function initialize()
     {
         parent::initialize();
+        $this->setSource('t_role_menu');
         $this->belongsTo("rid", "RoleModel", "id",['namespace'=>'Kuga\\Module\\Acc\\Model']);
         $this->belongsTo("mid", "MenuModel", "id",['namespace'=>'Kuga\\Module\\Acc\\Model']);
     }

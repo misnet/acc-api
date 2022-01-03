@@ -268,7 +268,7 @@ class Acc extends AbstractService
     public function getResourceList($appId)
     {
         $cache             = $this->_di->get('cache');
-        $cacheKey          = 'acc_setting:'.$appId;
+        $cacheKey          = 'acc_setting_'.$appId;
         $callback['func']  = [$this, 'parsePrivilegeSetting'];
         $callback['param'] = [];
 

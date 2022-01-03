@@ -7,11 +7,8 @@
 namespace Kuga\Module\Acc\Model;
 
 use Kuga\Core\Base\AbstractModel;
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Email as EmailValidator;
-use Phalcon\Validation\Validator\Uniqueness;
-use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
-use Phalcon\Mvc\Model\Relation;
+use Phalcon\Filter\Validation;
+use Phalcon\Filter\Validation\Validator\Uniqueness;
 
 class Oauth2Model extends AbstractModel{
 
@@ -48,9 +45,10 @@ class Oauth2Model extends AbstractModel{
     public $id;
     public $userId;
     public $avatarUrl;
-    public function getSource()
+    public function initialize()
     {
-        return 't_oauth';
+        parent::initialize();
+        $this->setSource('t_oauth');
     }
     /**
      * Independent Column Mapping.

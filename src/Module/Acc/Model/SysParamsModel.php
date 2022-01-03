@@ -7,10 +7,10 @@ namespace Kuga\Module\Acc\Model;
 
 use Kuga\Core\Base\AbstractModel;
 use Kuga\Core\GlobalVar;
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Uniqueness;
-use Phalcon\Validation\Validator\Regex;
+use Phalcon\Filter\Validation;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\Uniqueness;
+use Phalcon\Filter\Validation\Validator\Regex;
 
 class SysParamsModel extends AbstractModel {
 /**
@@ -99,8 +99,9 @@ class SysParamsModel extends AbstractModel {
 	    ]));
 	    return $this->validate($validator);
 	}
-	public function getSource() {
-		return 't_sysparams';
+	public function initialize() {
+	    parent::initialize();
+	    $this->setSource('t_sysparams');
 	}
 	public function beforeSave(){
 	    $this->keyname = trim($this->keyname);

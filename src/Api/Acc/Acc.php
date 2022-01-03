@@ -479,7 +479,7 @@ class Acc extends BaseApi
             }
             if($resList){
                 $cache = $this->_di->getShared('cache');
-                $key       = 'resourceXml:'.$appId.':'.$this->_userMemberId;
+                $key       = 'resourceXml-'.$appId.'-'.$this->_userMemberId;
                 $cache->set($key,$xml,7200);
                 return [
                     'parsedKey'=>md5($key),
@@ -504,7 +504,7 @@ class Acc extends BaseApi
         $parsedKey  = trim($data['parsedKey']);
         $appId     = trim($data['appId']);
         $cache     = $this->_di->getShared('cache');
-        $key       = 'resourceXml:'.$appId.':'.$this->_userMemberId;
+        $key       = 'resourceXml-'.$appId.'-'.$this->_userMemberId;
         if($parsedKey === md5($key)){
             $accXml= $cache->get($key);
             if(!$accXml){
@@ -551,6 +551,7 @@ class Acc extends BaseApi
         $aclService->removeCache();
         $tx = $this->_di->getShared('transactions');
         $transaction = $tx->get();
+        $transaction->throwRollbackException(true);
         $hasChanged  = false;
         foreach ($opcodes as $op){
             $opcode = $op['code'];
@@ -682,7 +683,7 @@ class Acc extends BaseApi
             if($rows){
                 foreach($rows as $row){
                     $k = $row['rescode'];
-                    if(!$returnData[$k]){
+                    if(!isset($returnData[$k])||!$returnData[$k]){
                         $returnData[$k] = [];
                     }
                     if(!in_array($row['opcode'],$returnData[$k])){

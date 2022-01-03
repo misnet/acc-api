@@ -50,14 +50,10 @@ class RoleResModel extends AbstractModel
      */
     public $appId;
 
-    public function getSource()
-    {
-        return 't_role_res';
-    }
-
     public function initialize()
     {
         parent::initialize();
+        $this->setSource('t_role_res');
         $this->belongsTo("rid", "RoleModel", "id", ['namespace' => 'Kuga\\Core\\Acc\\Model']);
     }
 

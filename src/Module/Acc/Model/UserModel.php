@@ -8,10 +8,10 @@ namespace Kuga\Module\Acc\Model;
 
 use Kuga\Core\Base\AbstractModel;
 use Kuga\Core\Base\ModelException;
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Email as EmailValidator;
-use Phalcon\Validation\Validator\PresenceOf as PresenceOfValidator;
-use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
+use Phalcon\Filter\Validation;
+use Phalcon\Filter\Validation\Validator\Email as EmailValidator;
+use Phalcon\Filter\Validation\Validator\PresenceOf as PresenceOfValidator;
+use Phalcon\Filter\Validation\Validator\Uniqueness as UniquenessValidator;
 use Phalcon\Mvc\Model\Relation;
 
 class UserModel extends AbstractModel
@@ -163,12 +163,6 @@ class UserModel extends AbstractModel
         }
         return $this->validate($validator);
     }
-
-    public function getSource()
-    {
-        return 't_user';
-    }
-
     /**
      * 添加前设置默认值
      */
@@ -202,6 +196,7 @@ class UserModel extends AbstractModel
     public function initialize()
     {
         parent::initialize();
+        $this->setSource('t_user');
         $this->keepSnapshots(true);
         $this->hasMany("uid",
             "RoleUserModel",

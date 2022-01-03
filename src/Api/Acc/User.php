@@ -37,6 +37,8 @@ class User extends BaseApi
             if ( ! $result) {
                 throw new ApiException($row->getMessages()[0]->getMessage());
             }
+        }else{
+            throw new ApiException(ApiException::$EXCODE_NOTEXIST);
         }
 
         return $result;
@@ -79,6 +81,7 @@ class User extends BaseApi
         }
         $tx = $this->_di->getShared('transactions');
         $transaction = $tx->get();
+        $transaction->throwRollbackException(true);
 
         $row->fullname = $data['fullname'];
         $row->memo = $data['memo'];
@@ -154,6 +157,8 @@ class User extends BaseApi
         $data                 = $this->_toParamObject($this->getParams());
         $tx = $this->_di->getShared('transactions');
         $transaction = $tx->get();
+        //要设throwRollbackException为true，否则不会throw exception
+        $transaction->throwRollbackException(true);
         $model                = new UserModel();
         $model->username      = $data['username'];
         $model->memo      = $data['memo'];
@@ -462,6 +467,7 @@ class User extends BaseApi
     private function _createUser($data){
         $tx = $this->_di->getShared('transactions');
         $transaction = $tx->get();
+        $transaction->throwRollbackException(true);
         $model                = new UserModel();
         $model->username      = $data['username'];
         $model->memo          = $data['memo'];
@@ -648,7 +654,7 @@ class User extends BaseApi
     public function refreshAccessToken(){
         $data = $this->_toParamObject($this->getParams());
         if($data['refreshToken']){
-            $uid = $this->_di->getShared('cache')->get('refreshToken:'.$data['refreshToken']);
+            $uid = $this->_di->getShared('cache')->get('refreshToken-'.$data['refreshToken']);
             if(!$uid){
                 //无效的刷新token
                 throw new ApiException(ApiException::$EXCODE_INVALID_REFRESHTOKEN);
@@ -669,6 +675,7 @@ class User extends BaseApi
         $result                               = $this->getRoles($row->uid);
         $result[$this->_accessTokenUserIdKey] = $row->uid;
         $result['fullname'] = $row->fullname;
+        $result['username'] = $row->username;
         $hours = 10;
         $days  = ceil($hours / 24);
         //$expiredDate = strtotime($days+' days');
@@ -710,7 +717,7 @@ class User extends BaseApi
         $returnData['gender']    = $row->gender;
         $returnData['mobile']    = $row->mobile;
         $returnData['fullname']    = $row->fullname;
-        $this->_di->getShared('cache')->set('refreshToken:'.$returnData['refreshToken'],$row->uid,$returnData['refreshTokenExpiredIn']);
+        $this->_di->getShared('cache')->set('refreshToken-'.$returnData['refreshToken'],$row->uid,$returnData['refreshTokenExpiredIn']);
         return $returnData;
     }
     /**

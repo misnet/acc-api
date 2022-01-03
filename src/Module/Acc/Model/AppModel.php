@@ -3,7 +3,7 @@ namespace Kuga\Module\Acc\Model;
 use Kuga\Core\Base\AbstractModel;
 use Kuga\Core\Base\ModelException;
 use Kuga\Core\GlobalVar;
-use Phalcon\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
 use Qing\Lib\Utils;
 
 /**
@@ -40,9 +40,11 @@ class AppModel extends  AbstractModel{
 
     public $accResourcesXml;
     public $allowAutoCreateUser = 0;
-    public function getSource()
+
+    public function initialize()
     {
-        return 't_apps';
+        parent::initialize();
+        $this->setSource('t_apps');
     }
 
     /**
@@ -53,11 +55,11 @@ class AppModel extends  AbstractModel{
         $pattern = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLOMNOPQRSTUVWXYZ1234567890';
         $string = '';
         for($i=0;$i<50;$i++) {
-            $string .= $pattern{mt_rand(0,35)};
+            $string .= $pattern[mt_rand(0,35)];
         }
         return md5(substr($string,8,32));
     }
-    public function validate(\Phalcon\ValidationInterface $validator)
+    public function validate(\Phalcon\Filter\Validation\ValidationInterface $validator):bool
     {
         $validator->add('name',new PresenceOf([
             'model'=>$this,
@@ -86,7 +88,7 @@ class AppModel extends  AbstractModel{
      */
     public  function freshCache(){
         $cacheId = GlobalVar::APPLIST_CACHE_ID;
-        $cache   = $this->getDI()->getShared('cache');
+        $cache   = $this->getDI()->get('cache');
         $cache->delete($cacheId);
         //访问APP数据库
         $rows = self::find([

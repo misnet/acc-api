@@ -6,11 +6,11 @@ use Kuga\Module\Acc\Service\Acc as AccService;
 use Kuga\Module\Acc\Service\Acl as AclService;
 use Kuga\Core\Base\AbstractModel;
 use Phalcon\Mvc\Model\Relation;
-use Phalcon\Validation\Validator\PresenceOf;
-use Phalcon\Validation\Validator\Uniqueness;
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\Regex;
-use Phalcon\Validation\Validator\InclusionIn;
+use Phalcon\Filter\Validation\Validator\PresenceOf;
+use Phalcon\Filter\Validation\Validator\Uniqueness;
+use Phalcon\Filter\Validation;
+use Phalcon\Filter\Validation\Validator\Regex;
+use Phalcon\Filter\Validation\Validator\InclusionIn;
 use Kuga\Core\Base\ModelException;
 
 /**
@@ -63,14 +63,10 @@ class RoleModel extends AbstractModel
      */
     public $appId;
 
-    public function getSource()
-    {
-        return 't_role';
-    }
-
     public function initialize()
     {
         parent::initialize();
+        $this->setSource('t_role');
         $this->hasMany(
             "id", "RoleResModel", "rid",
             ['foreignKey' => ['action' => Relation::ACTION_CASCADE], 'namespace' => 'Kuga\\Module\\Acc\\Model']

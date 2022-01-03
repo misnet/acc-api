@@ -4,8 +4,8 @@ namespace Kuga\Module\Acc\Model;
 use Kuga\Core\Base\AbstractModel;
 use Kuga\Core\Base\ModelException;
 use Kuga\Module\Acc\Service\Menu;
-use Phalcon\Validation;
-use Phalcon\Validation\Validator\PresenceOf as PresenceOfValidator;
+use Phalcon\Filter\Validation;
+use Phalcon\Filter\Validation\Validator\PresenceOf as PresenceOfValidator;
 use Phalcon\Mvc\Model\Relation;
 class MenuModel extends AbstractModel {
 /**
@@ -54,13 +54,9 @@ class MenuModel extends AbstractModel {
                 'app_id'=>'appId'
 		);
 	}
-
-	public function getSource() {
-		return 't_menu';
-	}
-
 	public function initialize(){
 		parent::initialize();
+        $this->setSource('t_menu');
 		//实现菜单删除时，权限分配菜单给角色的记录也删除
 		$this->hasMany("id", "RoleMenuModel", "mid",array(
 			'foreignKey'=>array(
