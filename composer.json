@@ -3,11 +3,12 @@
     "description":"Application Control Center API",
     "type":"library",
     "license": "LGPL-3.0",
+    "version": "2.1.0",
     "require":{
-        "php":">=7.0",
-        "kuga/qing":"dev-master",
-        "kuga/openapi-core":"dev-master",
-        "phalcon/incubator": "^3.4",
+        "php":">=7.4",
+        "kuga/qing":">=1.1.0",
+        "kuga/openapi-core":">=2.1.0",
+        "phalcon/cphalcon": ">=5.0.x-dev",
         "alibabacloud/client":">=1.0.7",
         "guzzlehttp/psr7": "1.8.2"
     },
@@ -16,6 +17,7 @@
             "Kuga\\": "src"
         }
     },
+    "minimum-stability": "dev",
     "repositories": [
         {
             "packagist.org": false
@@ -29,16 +31,12 @@
             "url":"https://packagist.mirrors.sjtug.sjtu.edu.cn"
         },
         {
-            "type": "vcs",
-            "url": "https://git.sdut.me/misnet/kuga-openapi-core"
+            "type": "path",
+            "url": "https://github.com/misnet/kuga-openapi-core"
         },
         {
-            "type": "vcs",
-            "url": "https://git.sdut.me/misnet/qing"
-        },
-        {
-            "type": "vcs",
-            "url": "https://git.sdut.me/phalcon/incubator"
+            "type": "path",
+            "url": "https://github.com/misnet/qing"
         },
         {
             "type": "vcs",
