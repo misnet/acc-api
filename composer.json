@@ -9,8 +9,7 @@
         "kuga/qing":">=1.1.0",
         "kuga/openapi-core":">=2.1.0",
         "phalcon/cphalcon": ">=5.0.x-dev",
-        "alibabacloud/client":">=1.0.7",
-        "guzzlehttp/psr7": "1.8.2"
+        "alibabacloud/client":">=1.0.7"
     },
     "autoload": {
         "psr-4": {
