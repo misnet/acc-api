@@ -711,7 +711,12 @@ class User extends BaseApi
         $returnData['refreshToken'] = md5($accessToken.'KUGA');
         $returnData['refreshTokenExpiredIn'] = ( $hours + 1) * 3600;
         $returnData['accessTokenExpiredIn'] = $hours * 3600;
-
+        $key = bin2hex(random_bytes(32 / 2));
+        $lifetime = 120;
+        $storage = $this->_di->getShared('simpleStorage');
+        $storage->set($key,$row->uid);
+        $storage->expired($key,$lifetime);
+        $returnData['code'] = $key;
         $returnData['uid']         = $row->uid;
         $returnData['username']    = $row->username;
         $returnData['gender']    = $row->gender;
