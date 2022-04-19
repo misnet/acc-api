@@ -5,8 +5,8 @@
     "license": "LGPL-3.0",
     "require":{
         "php":">=7.0",
-        "kuga/qing":"dev-master",
-        "kuga/openapi-core":"dev-master",
+        "kuga/openapi-core":"~2.0.3",
+        "kuga/qing": "~1.0.0",
         "phalcon/incubator": "^3.4",
         "alibabacloud/client":">=1.0.7",
         "guzzlehttp/psr7": "1.8.2"
