@@ -196,7 +196,7 @@ class User extends BaseApi
             }
             $transaction->commit();
         }
-        return true;
+        return $model->uid;
     }
 
     /**
@@ -637,7 +637,6 @@ class User extends BaseApi
         $searcher->bind($bind);
         $result      = $searcher->execute();
         $row         = $result->getFirst();
-
         if ( ! $row) {
             throw new ApiException(ApiException::INVALID_PASSWORD);
         } elseif ($userModel->passwordVerify($row->password, $data['password'])) {
