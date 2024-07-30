@@ -191,12 +191,42 @@ class User extends BaseApi
                         if(!$result){
                             $transaction->rollback($this->translator->_('用户绑定应用失败'));
                         }
+                        if(!empty($data['roleIds']) && is_array($data['roleIds'])){
+                            $this->assignRoles($appId,$bindModel->uid,$data['roleIds']);
+                        }
                     }
                 }
             }
             $transaction->commit();
         }
         return $model->uid;
+    }
+    private function assignRoles($appId,$uid,$roleIds){
+        $acc     = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
+        if ( ! $isAllow) {
+            return false;
+        }
+        $roles = RoleModel::find([
+            'appId=:aid:',
+            'bind'=>['aid'=>$appId]
+        ]);
+        $allRoles = [];
+        foreach($roles as $r){
+            $allRoles[] = $r->id;
+        }
+        foreach ($roleIds as $rid) {
+            $rid = intval($rid);
+            if ($rid && in_array($rid, $allRoles)) {
+                $row = new RoleUserModel();
+                $row->uid = $uid;
+                $row->rid = $rid;
+                $result = $row->create();
+                if(!$result){
+                    throw new Exception($this->translator->_('分配角色失败'));
+                }
+            }
+        }
     }
 
     /**
@@ -698,7 +728,7 @@ class User extends BaseApi
         $acc = new Acc($this->_di);
         $acc->initParams(['uid'=>$row->uid,'appId'=>$this->_appKey],'getPrivileges');
         $result['acc'] = $acc->getPrivileges();
-        $result['fullname'] = $this->_userFullname;
+//        $result['fullname'] = $this->_userFullname;
         if($this->_accessTokenType ===  GlobalVar::TOKEN_TYPE_JWT){
             $jwt = new JWTService();
             $jwt->setSecret($this->_di->get('config')->get('jwtTokenSecret'));
