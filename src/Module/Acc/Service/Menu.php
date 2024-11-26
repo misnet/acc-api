@@ -45,7 +45,7 @@ class Menu extends AbstractService {
 	    }else{
 	        $keySeed=array('allMenu'=>true);
 	    }
-	    $cacheId = self::PREFIX_MENULIST.md5(serialize($keySeed));
+	    $cacheId = self::PREFIX_MENULIST.md5(json_encode($keySeed));
 	    $data = $cacheEngine->get($cacheId);
 	    if($data===0){
 	        $this->_menuObject = $data;
