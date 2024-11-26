@@ -244,7 +244,91 @@ class User extends BaseApi
         $row->password = $data['password'];
         return $row->update();
     }
-
+    /**
+     * 验证码是否正确
+     * @param $phone
+     * @param $verifyCode
+     * @param $token
+     * @return void
+     * @throws ApiException
+     */
+    protected function validateVerifyCode($receive,$verifyCode,$seed,$autoThrow=true){
+        //验证码是否正确
+        $storage = $this->_di->getShared('simpleStorage');
+        $smsPrefix = 'sms';
+        $countryCode = '';
+        $key = $smsPrefix . $countryCode. $receive . '_' . $seed;
+        $correctVerifyCode = $storage->get($key);
+        if(!$correctVerifyCode || $correctVerifyCode != $verifyCode){
+            if($autoThrow){
+                throw new ApiException($this->translator->_('验证码错误'));
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+    /**
+     * 更换手机号
+     * @param array $params['newPhone'] 手机号或email
+     * @param array $params['oldVerifyCode'] 旧手机验证码
+     * @param array $params['oldVerifyCodeToken'] 旧手机验证码种子
+     * @param array $params['newVerifyCode'] 新手机验证码
+     * @param array $params['newVerifyCodeToken'] 新手机验证码种子
+     * @return void
+     */
+    public function changePhoneByVerifyCode($params=[]){
+        $uid = $this->getUserMemberId();
+        $user = UserModel::findFirst(['uid=:uid:','bind'=>['uid'=>$uid]]);
+        if(!$user){
+            throw new ApiException($this->translator->_('账号不存在'));
+        }
+        $data = $this->_toParamObject($params);
+        //验证码是否正确
+        if($user->mobile)
+            $this->validateVerifyCode($user->mobile,$data['oldVerifyCode'],$data['oldVerifyCodeToken']);
+        else {
+            //未设手机号时，允许不验证旧手机
+            //throw new ApiException($this->translator->_('原手机号不存在'));
+        }
+        $this->validateVerifyCode($data['newPhone'],$data['newVerifyCode'],$data['newVerifyCodeToken']);
+        $user->mobile = $data['newPhone'];
+        $result = $user->update();
+        if(!$result) {
+            throw new ApiException($this->translator->_('手机号修改失败，原因%s%', ['s' => $user->getMessages()[0]->getMessage()]));
+        }else{
+            return true;
+        }
+    }
+    /**
+     * 改密码
+     * @param $params['phone'] 手机号或email
+     * @param $params['verifyCode']
+     * @param $params['verifyCodeToken']
+     * @param $params['password']
+     * @return void
+     */
+    public function changePasswordByVerifyCode($params=[]){
+        $data = $this->_toParamObject($params);
+        //验证码是否正确
+        $user = $this->_loginByVerifyCode($data['phone'],$data['verifyCode'],$data['verifyCodeToken']);
+        $user= UserModel::findFirst([
+            'conditions' => 'uid = :uid:',
+            'bind' => [
+                'uid' => $user['uid']
+            ]
+        ]);
+        if(!$user){
+            throw new ApiException($this->translator->_('账号不存在'));
+        }
+        $user->password = $data['password'];
+        $result = $user->update();
+        if(!$result){
+            throw new ApiException($this->translator->_('密码修改失败，原因%s%',['s'=>$user->getMessages()[0]->getMessage()]));
+        }else{
+            return true;
+        }
+    }
     /**
      * 按用户ID给列表
      * @return array
@@ -635,6 +719,15 @@ class User extends BaseApi
             } else {
                 throw new ApiException(ApiException::$EXCODE_NOTEXIST);
             }
+        }
+    }
+    public function loginByVerifyCode(){
+        $data      = $this->_toParamObject($this->getParams());
+        $result    = $this->_loginByVerifyCode($data['receive'],$data['verifyCode'],$data['seed']);
+        if($result){
+            return $result;
+        }else{
+            throw new ApiException(ApiException::$EXCODE_NOTEXIST);
         }
     }
     /**
