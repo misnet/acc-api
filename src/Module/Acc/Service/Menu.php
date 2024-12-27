@@ -47,7 +47,7 @@ class Menu extends AbstractService {
 	    }
 	    $cacheId = self::PREFIX_MENULIST.md5(json_encode($keySeed));
 	    $data = $cacheEngine->get($cacheId);
-	    if($data===0){
+	    if($data){
 	        $this->_menuObject = $data;
 	    }else{
     		$this->_menuObject= null;
@@ -205,7 +205,7 @@ class Menu extends AbstractService {
 		$bind['pid']= $pid;
 		if(is_numeric($visible)){
 		    $cond.=' and display = :v:';
-		    $bind['v'] = $visible?1:0;
+		    $bind['v'] = $visible?'y':'n';
         }
         if($appId){
             $cond.=' and appId=:aid:';
@@ -234,7 +234,7 @@ class Menu extends AbstractService {
 		$bind['pid'] = $parentId;
 		if(!is_null($visible)){
 			$condition.=' and display=:v: ';
-			$bind['v'] = $visible?1:0;
+			$bind['v'] = $visible?'y':'n';
 		}
         if($appId){
             $condition.=' and appId=:aid:';

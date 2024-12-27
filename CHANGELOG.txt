@@ -1,4 +1,6 @@
-2024.12.24
+2024.12.27 [v2.0.1]
+fixed menu的display是y与n不是1与0
+2024.12.24 [v2.0.0]
 update: openapi-core版本升级至2.3.2
 add: 增加ConfigurationApi
 update: t_role表的default_allow字段从tinyint改为enum('y,'n')
