@@ -3,7 +3,7 @@
     "name":"角色下的用户列表",
     "description":"获取指定角色的用户列表",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"acc.listRoleUser",
+    "method":"Acc.listRoleUser",
     "accessLevel": 1,
     "request":[
         {
@@ -12,6 +12,12 @@
             "default":"",
             "type":"Integer",
             "description":"指定的角色ID"
+        },
+        {
+            "param":"appId",
+            "required":false,
+            "type":"Integer",
+            "description":"指定应用ID"
         }
     ],
     "response":{
@@ -53,22 +59,6 @@
                         "uid":{
                             "type":"Integer",
                             "sample":1,
-                            "description":"用户ID"
-                        }
-                    }
-                },
-                "unassigned":{
-                    "type":"Array",
-                    "description":"未分配的用户列表",
-                    "responseItem":{
-                        "username":{
-                            "type":"String",
-                            "sample":"小陈",
-                            "description":"用户名称"
-                        },
-                        "uid":{
-                            "type":"Integer",
-                            "sample":2,
                             "description":"用户ID"
                         }
                     }

@@ -4,8 +4,15 @@ namespace Kuga\Module\Acc\Service;
 
 use Kuga\Core\Base\AbstractService;
 use Kuga\Core\Base\ServiceException;
+use Kuga\Core\Service\ApiAccessLogService;
+use Kuga\Core\Sms\SendmsgLogsModel;
 use Kuga\Module\Acc\Config;
+use Kuga\Module\Acc\Exception;
 use Kuga\Module\Acc\Model\AppModel;
+use Kuga\Module\Acc\Model\ConfigurationModel;
+use Kuga\Module\Acc\Model\MenuModel;
+use Kuga\Module\Acc\Model\UserBindAppModel;
+use Kuga\Module\Acc\Model\UserModel;
 use Phalcon\Mvc\Model\Resultset\Simple;
 use Kuga\Module\Acc\Model\RoleModel;
 use Kuga\Module\Acc\Model\RoleUserModel;
@@ -269,12 +276,11 @@ class Acc extends AbstractService
     {
         $cache             = $this->_di->get('cache');
         $cacheKey          = 'acc_setting_'.$appId;
-        $callback['func']  = [$this, 'parsePrivilegeSetting'];
-        $callback['param'] = [];
-
         $this->setAccXmlContent($appId);
-        $resourceList      = $cache->get($cacheKey, $callback);
-
+        $resourceList      = $cache->get($cacheKey);
+        if(!$resourceList){
+            $resourceList = $this->parsePrivilegeSetting();
+        }
         return $resourceList;
     }
     public function setAccXmlContent($appId){
@@ -604,5 +610,121 @@ class Acc extends AbstractService
         $aclService->removeCache();
 
         return $roleUserModel->save();
+    }
+
+    /**
+     * 初始化系统
+     * —— 条件：系统中没有任何应用与用户，缓存中system_init不存在
+     * —— 处理：删除所有表数据，重新创建一个应用，一个超级管理员角色，一个超级管理员用户，并绑定
+     * @param $username
+     * @param $password
+     * @param $appId
+     * @return false|UserModel
+     * @throws \Exception
+     */
+    public function initSystem($username,$password,$appId){
+        $cache = $this->_di->get('cache');
+        $cacheKey = 'system_init';
+        $init = $cache->get($cacheKey);
+        if($init){
+            return false;
+        }
+
+        $cnt = AppModel::count();
+        if($cnt !== 0){
+            return false;
+        }
+
+        $cnt = UserModel::count();
+        if($cnt !== 0){
+            return false;
+        }
+//        $tx = $this->_di->get('transactions');
+//        $transaction = $tx->get();
+        $appModel = new AppModel();
+        $query     = $appModel->getModelsManager()->createQuery('delete from '.RoleModel::class);
+        $query->execute();
+
+        $query     = $appModel->getModelsManager()->createQuery('delete from '.MenuModel::class);
+        $query->execute();
+
+        $query     = $appModel->getModelsManager()->createQuery('delete from '.ConfigurationModel::class);
+        $query->execute();
+
+        $query     = $appModel->getModelsManager()->createQuery('delete from '.UserBindAppModel::class);
+        $query->execute();
+
+        $query     = $appModel->getModelsManager()->createQuery('delete from '.RoleUserModel::class);
+        $query->execute();
+
+        $query     = $appModel->getModelsManager()->createQuery('delete from '.RoleResModel::class);
+        $query->execute();
+
+        $query     = $appModel->getModelsManager()->createQuery('delete from '.RoleMenuModel::class);
+        $query->execute();
+
+        $query     = $appModel->getModelsManager()->createQuery('delete from '.SendmsgLogsModel::class);
+        $query->execute();
+        $appModel->getModelsManager()->getWriteConnection($appModel)->begin();
+
+        $appModel->id = $appId;
+        $appModel->name = 'ACC系统';
+        $appModel->accResourcesXml = file_get_contents(QING_ROOT_PATH.'/config/acc.xml');
+        $appModel->allowAutoCreateUser = 'n';
+        $appModel->disabled = 'n';
+        $appModel->secret = $appModel->generateSecret();
+        $result = $appModel->create();
+        if(!$result){
+            $appModel->getModelsManager()->getWriteConnection($appModel)->rollback();
+            throw new \Exception('初始化系统失败——无法创建应用');
+        }
+
+        $roleModel = new RoleModel();
+        $roleModel->roleType = self::TYPE_ADMIN;
+        $roleModel->name     = '超级管理员';
+        $roleModel->defaultAllow = 'y';
+        $roleModel->assignPolicy = self::ASSIGN_NO;
+        $roleModel->priority = 0;
+        $roleModel->appId = $appId;
+        $result = $roleModel->create();
+        if(!$result){
+            $appModel->getModelsManager()->getWriteConnection($appModel)->rollback();
+            throw new \Exception('初始化系统失败——无法创建角色');
+        }
+        $userModel = new UserModel();
+        $userModel->username = $username;
+        $userModel->password = $password;
+        $userModel->fullname = '系统管理员';
+        $userModel->mobile   = '';
+        $userModel->email    = '';
+        $result = $userModel->create();
+        if(!$result){
+            $appModel->getModelsManager()->getWriteConnection($appModel)->rollback();
+            throw new \Exception('初始化系统失败——无法创建用户');
+        }
+        $bindModel = new UserBindAppModel();
+        $bindModel->uid = $userModel->uid;
+        $bindModel->appId = $appId;
+        $result = $bindModel->create();
+        if(!$result){
+            $appModel->getModelsManager()->getWriteConnection($appModel)->rollback();
+            throw new \Exception('初始化系统失败——无法绑定用户与应用');
+        }
+        $this->bindRoleUser($roleModel->id,$userModel->uid);
+        $config = $this->_di->getShared('config');
+        if($config->path('app.apiLogEnabled')){
+            $logService = new ApiAccessLogService($this->_di);
+            $logService->flush();
+        }
+        $acl = new AclService($this->_di);
+        $acl->removeCache();
+
+        $menuService = new Menu();
+        $menuService->clearMenuAccessCache();
+
+        $cache->set($cacheKey,1);
+//        $transaction->commit();
+        $appModel->getModelsManager()->getWriteConnection($appModel)->commit();
+        return $userModel;
     }
 }

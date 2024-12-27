@@ -78,16 +78,6 @@ class UserModel extends AbstractModel
      */
     public $fullname;
     /**
-     * 手机是否验证通过
-     * @var
-     */
-    public $mobileVerified;
-    /**
-     * Email是否验证通过
-     * @var
-     */
-    public $emailVerified;
-    /**
      * 备注
      * @var
      */
@@ -100,7 +90,7 @@ class UserModel extends AbstractModel
     const GENDER_BOY = 1;
     const GENDER_GIRL = 0;
     const GENDER_SECRET = 2;
-    private $isAccBeforeSave = true;
+    private $isAccBeforeSave = false;
     public function accBeforeSave($s){
         $this->isAccBeforeSave = $s;
     }
@@ -120,8 +110,6 @@ class UserModel extends AbstractModel
             'last_visit_time' => 'lastVisitTime',
             'gender' => 'gender',
             'fullname' => 'fullname',
-            'mobile_verified'=>'mobileVerified',
-            'email_verified'=>'emailVerified',
             'memo'=>'memo'
         );
     }
@@ -146,10 +134,13 @@ class UserModel extends AbstractModel
             'model' => $this,
             'message' => $this->translator->_('用户名已存在')
         ]));
-        $validator->add('mobile', new UniquenessValidator([
-            'model' => $this,
-            'message' => $this->translator->_('手机号已存在')
-        ]));
+        if($this->mobile){
+
+            $validator->add('mobile', new UniquenessValidator([
+                'model' => $this,
+                'message' => $this->translator->_('手机号已存在')
+            ]));
+        }
         if ($this->email) {
             $validator->add('email', new EmailValidator([
                 'model' => $this,

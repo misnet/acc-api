@@ -3,7 +3,7 @@
     "name":"创建用户",
     "description":"创建后台用户账号",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"user.create",
+    "method":"User.create",
     "accessLevel": 1,
     "request":[
         {
@@ -23,6 +23,14 @@
             "name":"密码"
         },
         {
+            "param":"fullname",
+            "required":true,
+            "default":"",
+            "name":"姓名",
+            "type":"String",
+            "description":"描述"
+        },
+        {
             "param":"mobile",
             "required":true,
             "default":"",
@@ -38,32 +46,25 @@
             "description":"Email"
         },
         {
-            "param":"emailVerified",
-            "required":false,
-            "default":0,
-            "type":"Integer",
-            "description":"Email是否验证过,1是，0不是"
-        },
-        {
-            "param":"mobileVerified",
-            "required":false,
-            "default":"0",
-            "type":"Integer",
-            "description":"手机是否验证过,1是，0不是"
-        },
-        {
             "param":"appIds",
             "required":false,
             "default":[],
             "type":"Array",
             "description":"开通的应用ID列表，值如[1000,1001,2333]"
+        },
+        {
+            "param":"roleIds",
+            "required":false,
+            "default":[],
+            "type":"Array",
+            "description":"授权的角色ID列表，值如[1000,1001,2333]"
         }
     ],
     "response":{
         "data":{
-            "type":"Boolean",
+            "type":"integer",
             "sample":true,
-            "description":"成功返回true，失败返回false"
+            "description":"成功返回创建的用户ID，否则返回false"
         }
     }
 }

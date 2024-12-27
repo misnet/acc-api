@@ -1,0 +1,39 @@
+{
+    "id":"common.ip",
+    "name":"接口批量操作",
+    "description":"批量执行多个API接口",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"Common.ip",
+    "accessLevel": 0,
+    "disableFilterParams":true,
+    "request":[{
+        "param":"ip",
+        "required":true,
+        "default":"",
+        "type":"String",
+        "description":"IP地址"
+    }],
+    "response": {
+        "data": {
+            "type": "Object",
+            "responseItem": {
+                "country": {
+                    "type": "String",
+                    "description": "国家名称"
+                },
+                "prov": {
+                    "type": "String",
+                    "description": "省份名称"
+                },
+                "city": {
+                    "type": "String",
+                    "description": "城市名称"
+                },
+                "area": {
+                    "type": "String",
+                    "description": "所在区"
+                }
+            }
+        }
+    }
+}

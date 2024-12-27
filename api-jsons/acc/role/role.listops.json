@@ -1,9 +1,9 @@
 {
     "id":"acc.role.listops",
     "name":"列出权限操作",
-    "description":"根据角色id和资源编码列出权限操作",
+    "description":"根据应用ID，角色id和资源编码列出权限操作",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"acc.listOperationList",
+    "method":"Acc.listOperationList",
     "accessLevel": 1,
     "request":[
         {
@@ -12,6 +12,13 @@
             "default":"",
             "type":"Integer",
             "description":"角色ID"
+        },
+        {
+            "param":"appId",
+            "required":true,
+            "default":"",
+            "type":"String",
+            "description":"应用ID"
         },
         {
             "param":"res",

@@ -1,0 +1,29 @@
+{
+  "id": "acc.configuration.items.bykeys",
+  "name": "配置项",
+  "description": "根据指定的keys获取配置项",
+  "namespace": "Kuga\\Api\\Acc",
+  "method": "ConfigurationApi.getItemsByKeys",
+  "accessLevel":0,
+  "request":[
+    {
+      "param":"keys",
+      "required":true,
+      "default":"",
+      "type":"Array",
+      "description":"配置项"
+    },
+    {
+      "param":"appId",
+      "required":true,
+      "name":"所属应用ID",
+      "type":"integer"
+    }
+  ],
+  "response":{
+    "data":{
+      "type":"string",
+      "description":"凭证码"
+    }
+  }
+}

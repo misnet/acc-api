@@ -3,7 +3,7 @@
     "name":"创建菜单",
     "description":"创建菜单",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"menu.createMenu",
+    "method":"Menu.createMenu",
     "accessLevel": 1,
     "request":[
         {
@@ -33,10 +33,10 @@
         {
             "param":"display",
             "required":false,
-            "default":"1",
+            "default":"y",
             "name":"是否显示",
-            "type":"Integer",
-            "description":""
+            "type":"string",
+            "description":"是否显示，y是,n不显示"
         },
         {
             "param":"sortByWeight",

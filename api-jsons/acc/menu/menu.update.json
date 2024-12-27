@@ -3,7 +3,7 @@
     "name":"修改菜单",
     "description":"菜单修改",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"menu.updateMenu",
+    "method":"Menu.updateMenu",
     "accessLevel": 1,
     "request":[
         {
@@ -40,10 +40,10 @@
         {
             "param":"display",
             "required":false,
-            "default":"0",
+            "default":"y",
             "name":"是否显示",
-            "type":"Integer",
-            "description":""
+            "type":"string",
+            "description":"是否显示，y是,n不显示"
         },
         {
             "param":"sortByWeight",
@@ -51,14 +51,6 @@
             "default":"0",
             "name":"显示权重",
             "type":"Integer",
-            "description":""
-        },
-        {
-            "param":"className",
-            "required":false,
-            "default":"",
-            "name":"图标样式名",
-            "type":"String",
             "description":""
         }
     ],

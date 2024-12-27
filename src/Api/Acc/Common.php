@@ -10,6 +10,7 @@ use Kuga\Core\Api\Exception as ApiException;
 use Kuga\Core\Api\Request\BaseRequest as Request;
 
 
+use Kuga\Core\File\FileRequire;
 use Kuga\Core\GlobalVar;
 use Kuga\Core\Model\RegionModel;
 class Common extends  AbstractApi {
@@ -59,7 +60,7 @@ class Common extends  AbstractApi {
             // 写入数据库
             $s = $simpleStorage->set($key, $r);
             // 2分钟有效
-            $simpleStorage->expired($key, 300);
+            $simpleStorage->getAdapter()->expire($key, 600);
             return $seed;
         } else {
             throw new ApiException($this->translator->_('验证码发送失败'));
@@ -116,10 +117,27 @@ class Common extends  AbstractApi {
     public function ossSetting()
     {
         //官方说用杭州的，可以授权所有的
-        $fileStorage   = $this->_di->getShared('fileStorage');
-        $configSetting = $fileStorage->getOption();
-        $stsRegion = $configSetting['bucket']['region'];
+        $config   = $this->_di->getShared('config');
+        if(!isset($config->aliyun)||!isset($config->aliyun->sts)){
+            throw new ApiException($this->translator->_('请配置阿里云STS信息'));
+        }
+        if(!$config->aliyunoss){
+            throw new ApiException($this->translator->_('请配置阿里云OSS信息'));
+        }
+        $cache = $this->_di->getShared('cache');
+        $cacheKey = 'ossSetting';
+        $cacheData = $cache->get($cacheKey);
+        if($cacheData){
+            return $cacheData;
+        }
+
+        $configSetting   = $config->aliyun->sts->toArray();
+        $ossConfigSetting = $config->aliyunoss->toArray();
+        $stsRegion = $ossConfigSetting['bucket']['region'];
         AlibabaCloud::accessKeyClient($configSetting['accessKeyId'], $configSetting['accessKeySecret'])->regionId($stsRegion)->asDefaultClient();
+        if($configSetting['policyFile'] && file_exists($configSetting['policyFile'])){
+            $configSetting['policy'] = file_get_contents($configSetting['policyFile']);
+        }
         $result = AlibabaCloud::rpc()
             ->product('Sts')
             ->scheme('https')
@@ -136,7 +154,8 @@ class Common extends  AbstractApi {
             ])
             ->request();
         $returnData = $result->toArray();
-        $returnData['Bucket'] = $configSetting['bucket'];
+        $returnData['Bucket'] = $ossConfigSetting['bucket'];
+        $cache->set($cacheKey,$returnData,$configSetting['tokenExpireTime']>100?$configSetting['tokenExpireTime']-100:600);
         return $returnData;
     }
     /**
@@ -227,5 +246,99 @@ class Common extends  AbstractApi {
 //        $resultData = json_decode($body,true);
         return $resultData['data']??[];
     }
+    /**
+     * 基础能力测试
+     * @return void
+     */
+    public function baseTest()
+    {
+        $returnData = [];
+        $redisTest = [
+            'name'=>'Redis存储',
+            'success'=>true,
+            'message'=>''
+        ];
+        try{
+            $simpleStorage = $this->_di->getShared('simpleStorage');
+            $simpleStorage->set('test','test');
+            $simpleStorage->get('test');
+        }catch (\Exception $e){
+            $redisTest['success'] = false;
+            $redisTest['message'] = $e->getMessage();
+        }
 
+        $dbTest = [
+            'name'=>'数据库',
+            'success'=>true,
+            'message'=>''
+        ];
+        try{
+            $dbRead = $this->_di->getShared('dbRead');
+            $dbRead->fetchAll('select 1');
+        }catch(\Exception $e){
+            $dbTest['success'] = false;
+            $dbTest['message'] = $e->getMessage();
+        }
+        $ossTest = [
+            'name'=>'OSS存储',
+            'success'=>true,
+            'message'=>''
+        ];
+        $tmpFile = QING_TMP_PATH.DS.uniqid().'.txt';
+        $tmpDirWriteTest = [
+            'name'=>'临时目录写入',
+            'success'=>true,
+            'message'=>''
+        ];
+        try{
+            file_put_contents($tmpFile,'test');
+            if(!file_exists($tmpFile)){
+                throw new \Exception('无法写入临时文件');
+            }
+        }catch(\Exception $e){
+            $tmpDirWriteTest['success'] = false;
+            $tmpDirWriteTest['message'] = QING_TMP_PATH.'目录无法写入';
+        }
+        $returnData[] = $tmpDirWriteTest;
+
+        $tmpFileRemoveTest = [
+            'name'=>'临时文件删除',
+            'success'=>true,
+            'message'=>''
+        ];
+        try{
+            unlink($tmpFile);
+            if(file_exists($tmpFile)){
+                throw new \Exception('无法删除临时文件');
+            }
+        }catch(\Exception $e){
+            $tmpFileRemoveTest['success'] = false;
+            $tmpFileRemoveTest['message'] = QING_TMP_PATH.'目录无法删除临时文件';
+        }
+        $returnData[] = $tmpFileRemoveTest;
+
+        try {
+            $config = $this->_di->getShared('config');
+            $aliyunConfig = $config->aliyun->server->toArray();
+            $option = $config->aliyunoss->toArray();
+            $option = \Qing\Lib\Utils::arrayExtend($option, $aliyunConfig);
+            $adapter = \Kuga\Core\Service\FileService::factory('Aliyun', $option, $this->_di);
+            file_put_contents($tmpFile,'test');
+            if(!file_exists($tmpFile)){
+                throw new \Exception('无法写入临时文件');
+            }
+            $fr = new FileRequire();
+            $fr->newFilename = '___'.uniqid().'.txt';
+            $url = $adapter->upload($tmpFile,$fr);
+            unlink($tmpFile);
+            $adapter->remove($url);
+        }catch(\Exception $e){
+            $ossTest['success'] = false;
+            $ossTest['message'] = $e->getMessage();
+        }
+        $returnData[] = $ossTest;
+        $returnData[] = $redisTest;
+        $returnData[] = $dbTest;
+        return $returnData;
+    }
 }

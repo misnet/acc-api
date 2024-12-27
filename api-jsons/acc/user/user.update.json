@@ -3,7 +3,7 @@
     "name":"修改用户",
     "description":"修改用户信息",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"user.update",
+    "method":"User.update",
     "accessLevel": 1,
     "request":[
         {
@@ -19,6 +19,22 @@
             "required":true,
             "default":"",
             "name":"用户名",
+            "type":"String",
+            "description":"描述"
+        },
+        {
+            "param":"fullname",
+            "required":false,
+            "default":"",
+            "name":"姓名",
+            "type":"String",
+            "description":"描述"
+        },
+        {
+            "param":"memo",
+            "required":false,
+            "default":"",
+            "name":"备注",
             "type":"String",
             "description":"描述"
         },
@@ -44,20 +60,6 @@
             "default":"",
             "type":"String",
             "description":"Email"
-        },
-        {
-            "param":"emailVerified",
-            "required":false,
-            "default":0,
-            "type":"Integer",
-            "description":"Email是否验证过,1是，0不是"
-        },
-        {
-            "param":"mobileVerified",
-            "required":false,
-            "default":"0",
-            "type":"Integer",
-            "description":"手机是否验证过,1是，0不是"
         },
         {
             "param":"appIds",

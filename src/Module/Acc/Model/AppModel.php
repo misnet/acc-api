@@ -39,12 +39,41 @@ class AppModel extends  AbstractModel{
     public $shortDesc;
 
     public $accResourcesXml;
-    public $allowAutoCreateUser = 0;
 
     public function initialize()
     {
         parent::initialize();
         $this->setSource('t_apps');
+        $this->hasMany('id',UserBindAppModel::class,'appId',[
+            'namespace'=>'',
+            'foreignKey'=>[
+                'action'=>\Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            ]
+        ]);
+        $this->hasMany('id',RoleModel::class,'appId',[
+            'namespace'=>'',
+            'foreignKey'=>[
+                'action'=>\Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            ]
+        ]);
+        $this->hasMany('id',RoleResModel::class,'appId',[
+            'namespace'=>'',
+            'foreignKey'=>[
+                'action'=>\Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            ]
+        ]);
+        $this->hasMany('id',MenuModel::class,'appId',[
+            'namespace'=>'',
+            'foreignKey'=>[
+                'action'=>\Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            ]
+        ]);
+        $this->hasMany('id',ConfigurationModel::class,'appId',[
+            'namespace'=>'',
+            'foreignKey'=>[
+                'action'=>\Phalcon\Mvc\Model\Relation::ACTION_CASCADE
+            ]
+        ]);
     }
 
     /**
@@ -107,28 +136,5 @@ class AppModel extends  AbstractModel{
     public function afterDelete(){
         $this->freshCache();
     }
-    public function beforeCreate(){
-        $acc     = $this->getDI()->getShared('aclService');
-        $isAllow = $acc->isAllowed('RES_APP', 'OP_ADD');
-        if ( ! $isAllow) {
-            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
-        }
-        return true;
-    }
-    public function beforeUpdate(){
-        $acc     = $this->getDI()->getShared('aclService');
-        $isAllow = $acc->isAllowed('RES_APP', 'OP_EDIT');
-        if ( ! $isAllow) {
-            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
-        }
-        return true;
-    }
-    public function beforeDelete(){
-        $acc     = $this->getDI()->getShared('aclService');
-        $isAllow = $acc->isAllowed('RES_APP', 'OP_REMOVE');
-        if ( ! $isAllow) {
-            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
-        }
-        return true;
-    }
+
 }

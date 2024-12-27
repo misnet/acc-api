@@ -3,7 +3,7 @@
   "name":"用户注册",
   "description":"用户主动自行注册",
   "namespace":"Kuga\\Api\\Frontend",
-  "method":"user.register",
+  "method":"User.register",
   "accessLevel": 0,
   "request":[
     {

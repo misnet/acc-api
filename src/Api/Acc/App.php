@@ -31,16 +31,16 @@ class App extends BaseApi{
             throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
         }
         $data = $this->_toParamObject($this->getParams());
-        $data['limit'] || $data['limit'] = 10;
-        $data['page'] || $data['page'] = 1;
+        $data['pageSize'] || $data['pageSize'] = 10;
+        $data['current'] || $data['current'] = 1;
         $list  = AppModel::find(
             [
                 'limit'   => $data['limit'],
-                'offset' => ($data['page'] - 1) * $data['limit'],
+                'offset' => ($data['current'] - 1) * $data['pageSize'],
                 'order' => 'id desc']
         );
         $total = AppModel::count();
-        return ['list' => $list->toArray(), 'total' => $total, 'page' => $data['page'], 'limit' => $data['limit']];
+        return ['list' => $list->toArray(), 'total' => $total, 'current' => $data['current'], 'pageSize' => $data['pageSize']];
     }
 
     /**
@@ -60,7 +60,8 @@ class App extends BaseApi{
         $model->name          = $data['name'];
         $model->shortDesc     = trim($data['shortDesc']);
         $model->secret        = $model->generateSecret();
-        $model->disabled      = intval($data['disabled'])>0?1:0;
+        $model->disabled      = strtolower($data['disabled'])==='y'?'y':'n';
+        $model->allowAutoCreateUser  = strtolower($data['allowAutoCreateUser'])==='y'?'y':'n';
         $result               = $model->create();
         return $result;
     }
@@ -82,12 +83,40 @@ class App extends BaseApi{
             throw new ApiException(ApiException::$EXCODE_NOTEXIST);
         }
         $model->name          = $data['name'];
-        $model->shortDesc     = trim($data['shortDesc']);
-        if($data['autoCreateSecret']){
+        if(!is_null($data['shortDesc'])){
+            $model->shortDesc     = trim($data['shortDesc']);
+        }
+        if($data['autoCreateSecret']==='y'){
             $model->secret    = $model->generateSecret();
         }
-        $model->disabled      = intval($data['disabled'])>0?1:0;
+        if($data['disabled']){
+            $model->disabled  = strtolower($data['disabled'])==='y'?'y':'n';
+        }
+        if($data['allowAutoCreateUser']){
+            $model->allowAutoCreateUser = strtolower($data['allowAutoCreateUser'])==='y'?'y':'n';
+        }
         $result               = $model->update();
+        return $result;
+    }
+    public function delete()
+    {
+        $acc = $this->_di->getShared('aclService');
+        $isAllow = $acc->isAllowed('RES_APP', 'OP_REMOVE');
+        if (!$isAllow) {
+            throw new ApiException($this->translator->_('对不起，您无权限进行此操作'), ApiException::$EXCODE_FORBIDDEN);
+        }
+        $data = $this->_toParamObject($this->getParams());
+        $app  = AppModel::findFirstById($data['id']);
+        if (!$app) {
+            throw new ApiException(ApiException::$EXCODE_NOTEXIST);
+        }
+        if(intval($app->id) === intval($this->_appKey)){
+            throw new ApiException($this->translator->_('不能删除当前应用'));
+        }
+        if($app->secret!==$data['secret']){
+            throw new ApiException($this->translator->_('应用秘钥不正确，无法删除'));
+        }
+        $result = $app->delete();
         return $result;
     }
 }

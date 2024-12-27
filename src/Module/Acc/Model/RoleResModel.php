@@ -116,7 +116,7 @@ class RoleResModel extends AbstractModel
         $denyOperators  = array();
         if($rows){
             foreach($rows as $row){
-                if($row->isAllow){
+                if($row->isAllow==='y'){
                     $allowOperators[] = $row->opcode;
                 }else{
                     $denyOperators[]  = $row->opcode;

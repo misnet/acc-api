@@ -25,7 +25,11 @@ class User extends BaseApi
      */
     public function delete()
     {
-
+        $acl = $this->_di->getShared('aclService');
+        $isAllow = $acl->isAllowed('RES_USER','OP_REMOVE');
+        if(!$isAllow){
+            throw new ApiException($this->translator->_('没有删除权限'),ApiException::$EXCODE_FORBIDDEN);
+        }
         $data   = $this->_toParamObject($this->getParams());
         $row    = UserModel::findFirstByUid($data['uid']);
         $result = true;
@@ -74,6 +78,11 @@ class User extends BaseApi
     public function update()
     {
         $data = $this->_toParamObject($this->getParams());
+        $acl = $this->_di->getShared('aclService');
+        $isAllow = $acl->isAllowed('RES_USER','OP_UPDATE');
+        if(!$isAllow){
+            throw new ApiException($this->translator->_('没有修改权限'),ApiException::$EXCODE_FORBIDDEN);
+        }
 
         $row  = UserModel::findFirstByUid($data['uid']);
         if ( ! $row) {
@@ -90,8 +99,6 @@ class User extends BaseApi
             $row->password = $data['password'];
         }
         $row->email         = $data['email'];
-        $row->mobileVerified= $data['mobileVerified'];
-        $row->emailVerified = $data['emailVerified'];
         $row->mobile = $data['mobile'];
         $row->setTransaction($transaction);
         $result      = $row->update();
@@ -154,6 +161,12 @@ class User extends BaseApi
      */
     public function create()
     {
+        $acl = $this->_di->getShared('aclService');
+        $isAllow = $acl->isAllowed('RES_USER','OP_ADD');
+        if(!$isAllow){
+            throw new ApiException($this->translator->_('没有创建权限'),ApiException::$EXCODE_FORBIDDEN);
+        }
+
         $data                 = $this->_toParamObject($this->getParams());
         $tx = $this->_di->getShared('transactions');
         $transaction = $tx->get();
@@ -166,8 +179,6 @@ class User extends BaseApi
         $model->password      = $data['password'];
         $model->mobile        = $data['mobile'];
         $model->email         = $data['email'];
-        $model->mobileVerified= $data['mobileVerified'];
-        $model->emailVerified = $data['emailVerified'];
 
         $model->createTime    = time();
         $model->lastVisitIp   = \Qing\Lib\Utils::getClientIp();
@@ -302,7 +313,7 @@ class User extends BaseApi
     }
     /**
      * 改密码
-     * @param $params['phone'] 手机号或email
+     * @param $params['receive'] 手机号或email
      * @param $params['verifyCode']
      * @param $params['verifyCodeToken']
      * @param $params['password']
@@ -311,7 +322,7 @@ class User extends BaseApi
     public function changePasswordByVerifyCode($params=[]){
         $data = $this->_toParamObject($params);
         //验证码是否正确
-        $user = $this->_loginByVerifyCode($data['phone'],$data['verifyCode'],$data['verifyCodeToken']);
+        $user = $this->_loginByVerifyCode($data['receive'],$data['verifyCode'],$data['verifyCodeToken']);
         $user= UserModel::findFirst([
             'conditions' => 'uid = :uid:',
             'bind' => [
@@ -343,8 +354,8 @@ class User extends BaseApi
             throw new ApiException($this->translator->_('你没有查看用户列表权限'),ApiException::$EXCODE_FORBIDDEN);
         }
 
-        $data['limit'] || $data['limit'] = 10;
-        $data['page'] || $data['page'] = 1;
+        $data['pageSize'] || $data['pageSize'] = 10;
+        $data['current'] || $data['current'] = 1;
         //只列出当前用户的
         $searcher  = UserBindAppModel::query();
         $searcher->join(UserModel::class,UserBindAppModel::class.'.uid=u.uid and appId=:aid:','u','left');
@@ -373,12 +384,10 @@ class User extends BaseApi
             'u.gender',
             'u.username',
             'u.memo',
-            'u.mobileVerified',
-            'u.emailVerified',
             'u.createTime',
             '(select group_concat(appId) from '.UserBindAppModel::class.' b where b.uid=u.uid) as appIds'
         ]);
-        $searcher->limit($data['limit'], ($data['page'] - 1) * $data['limit']);
+        $searcher->limit($data['pageSize'], ($data['current'] - 1) * $data['pageSize']);
         $result = $searcher->execute();
         $list   = $result->toArray();
         if($list){
@@ -389,7 +398,7 @@ class User extends BaseApi
                 },$user['appIds']);
             }
         }
-        return ['list' => $list, 'total' => $total, 'page' => $data['page'], 'limit' => $data['limit']];
+        return ['list' => $list, 'total' => $total, 'page' => $data['current'], 'limit' => $data['pageSize']];
     }
     public function allUserList(){
         $data = $this->_toParamObject($this->getParams());
@@ -399,8 +408,8 @@ class User extends BaseApi
             throw new ApiException($this->translator->_('你没有查看用户列表权限'),ApiException::$EXCODE_FORBIDDEN);
         }
 
-        $data['limit'] || $data['limit'] = 10;
-        $data['page'] || $data['page'] = 1;
+        $data['pageSize'] || $data['pageSize'] = 10;
+        $data['current'] || $data['current'] = 1;
         //只列出当前用户的
         $searcher  = UserModel::query();
         $bind = [];
@@ -430,12 +439,10 @@ class User extends BaseApi
             'memo',
             'gender',
             'username',
-            'mobileVerified',
-            'emailVerified',
             'createTime',
             '(select group_concat(appId) from '.UserBindAppModel::class.' b where b.uid='.UserModel::class.'.uid) as appIds'
         ]);
-        $searcher->limit($data['limit'], ($data['page'] - 1) * $data['limit']);
+        $searcher->limit($data['pageSize'], ($data['current'] - 1) * $data['pageSize']);
         $result = $searcher->execute();
         $list   = $result->toArray();
         if($list){
@@ -446,7 +453,7 @@ class User extends BaseApi
                 },$user['appIds']);
             }
         }
-        return ['list' => $list, 'total' => $total, 'page' => $data['page'], 'limit' => $data['limit']];
+        return ['list' => $list, 'total' => $total, 'page' => $data['current'], 'limit' => $data['pageSize']];
     }
     /**
      * 显示用户列表
@@ -462,8 +469,8 @@ class User extends BaseApi
             throw new ApiException($this->translator->_('你没有查看用户列表权限'),ApiException::$EXCODE_FORBIDDEN);
         }
 
-        $data['limit'] || $data['limit'] = 10;
-        $data['page'] || $data['page'] = 1;
+        $data['pageSize'] || $data['pageSize'] = 10;
+        $data['current'] || $data['current'] = 1;
         //只列出当前用户的
         $searcher  = UserBindAppModel::query();
         $searcher->join(UserModel::class,UserBindAppModel::class.'.uid=u.uid and appId=:aid:','u');
@@ -496,12 +503,10 @@ class User extends BaseApi
             'u.memo',
             'u.gender',
             'u.username',
-            'u.mobileVerified',
-            'u.emailVerified',
             'u.createTime',
             '(select group_concat(appId) from '.UserBindAppModel::class.' b where b.uid=u.uid) as appIds'
         ]);
-        $searcher->limit($data['limit'], ($data['page'] - 1) * $data['limit']);
+        $searcher->limit($data['pageSize'], ($data['current'] - 1) * $data['pageSize']);
         $result = $searcher->execute();
         $list   = $result->toArray();
         if($list){
@@ -523,13 +528,13 @@ class User extends BaseApi
                 $user['roles'] = $result->toArray();
             }
         }
-        return ['list' => $list, 'total' => $total, 'page' => $data['page'], 'limit' => $data['limit']];
+        return ['list' => $list, 'total' => $total, 'current' => $data['current'], 'pageSize' => $data['pageSize']];
     }
     private function _login($mobile,$email){
         $searcher  = UserBindAppModel::query();
         $searcher->join(UserModel::class,UserBindAppModel::class.'.uid=u.uid and appId=:aid:','u');
         //$searcher->where(UserBindAppModel::class.'.appId=:aid:');
-        $searcher->where('(mobile=:m: and mobileVerified="1")  or (email=:e: and emailVerified="1")');
+        $searcher->where('(mobile!="" and mobile=:m:) or (email!=""  and email=:e:)');
         $searcher->columns([
             'password',
             'u.uid',
@@ -537,9 +542,7 @@ class User extends BaseApi
             'u.email',
             'u.fullname',
             'u.gender',
-            'u.username',
-            'u.mobileVerified',
-            'u.emailVerified'
+            'u.username'
         ]);
         $bind['aid'] = $this->_appKey;
         $bind['m']   = $mobile;
@@ -589,8 +592,6 @@ class User extends BaseApi
         $model->password      = $data['password'];
         $model->mobile        = $data['mobile'];
         $model->email         = $data['email'];
-        $model->mobileVerified= $data['mobileVerified'];
-        $model->emailVerified = $data['emailVerified'];
 
         $model->createTime    = time();
         $model->lastVisitIp   = \Qing\Lib\Utils::getClientIp();
@@ -619,7 +620,7 @@ class User extends BaseApi
             }
             $transaction->commit();
         }
-        return true;
+        return $model;
     }
     /**
      * 根据手机号/邮箱，验证码
@@ -650,21 +651,17 @@ class User extends BaseApi
             $row['username'] = uniqid('guest');
             $row['mobile']   = '';
             $row['email']    = '';
-            $row['mobileVerified'] = 0;
-            $row['emailVerified'] = 0;
             if(preg_match('/^(13|14|15|17|18|19)[\d+]{9}$/',$data['receive'])){
                 $row['mobile'] = $data['receive'];
-                $row['mobileVerified'] = 1;
             }else{
                 $row['email'] = $data['receive'];
-                $row['emailVerified'] = 1;
             }
             $row['password'] = md5(time());
             $row['fullname'] = $row['username'];
             $row['memo'] = '';
             $row['appIds'] = [$this->_appKey];
-            $success = $this->_createUser($row);
-            if($success){
+            $model = $this->_createUser($row);
+            if($model->id){
                 $result = $this->_loginByVerifyCode($data['receive'],$data['verifyCode'],$data['seed']);
                 if($result){
                     $oauth->userId = $result['uid'];
@@ -703,9 +700,7 @@ class User extends BaseApi
                 'u.email',
                 'u.fullname',
                 'u.gender',
-                'u.username',
-                'u.mobileVerified',
-                'u.emailVerified'
+                'u.username'
             ]);
             $bind['aid'] = $this->_appKey;
             $bind['uid']   = $userId;
@@ -727,9 +722,39 @@ class User extends BaseApi
         if($result){
             return $result;
         }else{
+            $app = AppModel::findFirst($this->_appKey);
+            if(!$app){
+                throw new ApiException($this->translator->_('应用不存在'));
+            }
+            if(strtolower($app->allowAutoCreateUser)==='y'){
+                //自动创建用户
+                $row = [];
+                if(preg_match('/^(13|14|15|17|18|19)[\d+]{9}$/',$data['receive'])){
+                    //手机
+                    $row['mobile'] = $data['receive'];
+                }else{
+                    //邮箱
+                    $row['email'] = $data['receive'];
+                }
+                $row['username'] = uniqid('guest');
+                $row['password'] = md5(time());
+                $row['fullname'] = $row['username'];
+                $row['memo'] = '';
+                $row['appIds'] = [$this->_appKey];
+                $model = $this->_createUser($row);
+                if($model->id) {
+                    $result = $this->generateLoginInfo($model);
+                    if ($result) {
+                        return $result;
+                    } else {
+                        return false;
+                    }
+                }
+            }
             throw new ApiException(ApiException::$EXCODE_NOTEXIST);
         }
     }
+
     /**
      * 管理人员登录
      */
@@ -740,7 +765,7 @@ class User extends BaseApi
         $searcher  = UserBindAppModel::query();
         $searcher->join(UserModel::class,UserBindAppModel::class.'.uid=u.uid and appId=:aid:','u');
         //$searcher->where(UserBindAppModel::class.'.appId=:aid:');
-        $searcher->where('username=:name: or (mobile=:m: and mobileVerified="1")  or (email=:e: and emailVerified="1")');
+        $searcher->where('username=:name: or (mobile!="" and mobile=:m: )  or (email!="" and email=:e:)');
         $searcher->columns([
             'password',
             'u.uid',
@@ -748,9 +773,7 @@ class User extends BaseApi
             'u.email',
             'u.fullname',
             'u.gender',
-            'u.username',
-            'u.mobileVerified',
-            'u.emailVerified'
+            'u.username'
         ]);
         $bind['aid'] = $this->_appKey;
         $bind['name']   = $data['user'];
@@ -761,6 +784,11 @@ class User extends BaseApi
         $result      = $searcher->execute();
         $row         = $result->getFirst();
         if ( ! $row) {
+            $acc = new \Kuga\Module\Acc\Service\Acc($this->_di);
+            $initRootUser = $acc->initSystem($data['user'],$data['password'],$this->_appKey);
+            if($initRootUser){
+                return $this->generateLoginInfo($initRootUser);
+            }
             throw new ApiException(ApiException::INVALID_PASSWORD);
         } elseif ($userModel->passwordVerify($row->password, $data['password'])) {
             return $this->generateLoginInfo($row);
@@ -824,7 +852,7 @@ class User extends BaseApi
 //        $result['fullname'] = $this->_userFullname;
         if($this->_accessTokenType ===  GlobalVar::TOKEN_TYPE_JWT){
             $jwt = new JWTService();
-            $jwt->setSecret($this->_di->get('config')->get('jwtTokenSecret'));
+            $jwt->setSecret($this->_di->get('config')->path('app.jwtTokenSecret'));
             $token = $jwt->createToken($result,$hours * 3600);
             $returnData['accessToken'] = $token;
         }else{
@@ -873,26 +901,6 @@ class User extends BaseApi
                 $data['console.roles.'.$role['appId']][] = $role;
             }
         }
-
-//        $data['console.super_role'] = false;
-//        if (is_array($roles)) {
-//            $superRoles = $acc->findRolesByTypeId(AccService::TYPE_ADMIN);
-//
-//            if (is_array($superRoles)) {
-//                $ids = [];
-//                foreach ($roles as $role) {
-//                    $ids[] = $role['id'];
-//                }
-//                $data['console.role_ids'] = $ids;
-//                foreach ($superRoles as $superRole) {
-//                    if (in_array($superRole['id'], $ids)) {
-//                        $data['console.super_role'] = true;
-//                        unset ($superRoles);
-//                        break;
-//                    }
-//                }
-//            }
-//        }
 
         return $data;
     }

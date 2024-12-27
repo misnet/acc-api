@@ -3,7 +3,7 @@
     "name":"删除菜单",
     "description":"删除菜单，子菜单会被一起删除",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"menu.deleteMenu",
+    "method":"Menu.deleteMenu",
     "accessLevel": 1,
     "request":[
         {

@@ -15,7 +15,7 @@ class RoleObject extends AbstractObject {
 	public $priority;
 	/**
 	 * 默认是否允许
-	 * @var integer
+	 * @var string
 	 */
 	public $defaultAllow;
 	/**

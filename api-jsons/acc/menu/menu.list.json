@@ -3,7 +3,7 @@
     "name":"菜单列表",
     "description":"获取菜单列表",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"menu.listMenu",
+    "method":"Menu.listMenu",
     "accessLevel": 2,
     "request":[
         {

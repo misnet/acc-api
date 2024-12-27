@@ -57,26 +57,26 @@ class RoleUserModel extends AbstractModel
 //        return parent::joinFind($cond, $cols);
 //    }
 
-    public function beforeSave()
-    {
-        $acc     = $this->getDI()->getShared('aclService');
-        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
-        if ( ! $isAllow) {
-            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
-        }
-
-        return true;
-    }
-
-    public function beforeDelete()
-    {
-        $acc     = $this->getDI()->getShared('aclService');
-        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
-        if ( ! $isAllow) {
-            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
-        }
-
-        return true;
-
-    }
+//    public function beforeSave()
+//    {
+//        $acc     = $this->getDI()->getShared('aclService');
+//        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
+//        if ( ! $isAllow) {
+//            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
+//        }
+//
+//        return true;
+//    }
+//
+//    public function beforeDelete()
+//    {
+//        $acc     = $this->getDI()->getShared('aclService');
+//        $isAllow = $acc->isAllowed('RES_ACC', 'OP_ASSIGN');
+//        if ( ! $isAllow) {
+//            throw new ModelException($this->translator->_('对不起，您无权限进行此操作'),ModelException::$EXCODE_FORBIDDEN);
+//        }
+//
+//        return true;
+//
+//    }
 }

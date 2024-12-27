@@ -3,7 +3,7 @@
     "name":"更新应用",
     "description":"更新应用",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"app.update",
+    "method":"App.update",
     "accessLevel": 1,
     "request":[
         {
@@ -23,16 +23,23 @@
         {
             "param":"disabled",
             "required":false,
-            "default":0,
-            "type":"Integer",
-            "description":"禁用，1禁用，0启用"
+            "default":"n",
+            "type":"string",
+            "description":"禁用，y禁用，n启用"
         },
         {
             "param":"autoCreateSecret",
             "required":false,
-            "default":"0",
-            "type":"Integer",
-            "description":"自动生成secret"
+            "default":"n",
+            "type":"string",
+            "description":"自动生成secret,y是，n否"
+        },
+        {
+            "param":"allowAutoCreateUser",
+            "required":false,
+            "default":"n",
+            "type":"String",
+            "name":"是否允许自动创建用户（比如通过验证码方式自动注册），y允许，n不允许"
         },
         {
             "param":"shortDesc",

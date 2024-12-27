@@ -17,17 +17,17 @@ class ApiLog extends BaseApi{
         }
 
         $data = $this->_toParamObject($this->getParams());
-        $data['page'] || $data['page'] = 1;
-        $data['limit'] || $data['limit'] = GlobalVar::DATA_DEFAULT_LIMIT;
+        $data['current'] || $data['current'] = 1;
+        $data['pageSize'] || $data['pageSize'] = GlobalVar::DATA_DEFAULT_LIMIT;
         $model = new ApiAccessLogService($this->_di);
         $startTime = $data['startTime'];
         $endTime   = $data['endTime'];
         $total = $model->count($startTime,$endTime);
-        $list  = $model->getList($data['page'],$data['limit'],$startTime,$endTime);
+        $list  = $model->getList($data['current'],$data['pageSize'],$startTime,$endTime);
         return [
             'list'=>$list,
-            'page'=>$data['page'],
-            'limit'=>$data['limit'],
+            'current'=>$data['current'],
+            'pageSize'=>$data['pageSize'],
             'total'=>$total
         ];
     }

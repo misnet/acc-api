@@ -1,0 +1,53 @@
+{
+    "id":"acc.user.phone.change",
+    "name":"用验证码修改手机号",
+    "description":"修改当前用户的密码",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"User.changePhoneByVerifyCode",
+    "accessLevel": 1,
+    "request":[
+        {
+            "param": "newPhone",
+            "required": true,
+            "default": "",
+            "type": "string",
+            "description": "新手机号码"
+        },
+        {
+            "param": "oldVerifyCodeToken",
+            "required": false,
+            "default": "",
+            "type": "string",
+            "description": "旧手机发送验证码时返回的凭证token"
+        },
+        {
+            "param": "oldVerifyCode",
+            "required": false,
+            "default": "",
+            "type": "string",
+            "description": "旧手机的验证码"
+        },
+
+        {
+            "param": "newVerifyCodeToken",
+            "required": true,
+            "default": "",
+            "type": "string",
+            "description": "新手机发送验证码时返回的凭证token"
+        },
+        {
+            "param": "newVerifyCode",
+            "required": true,
+            "default": "",
+            "type": "string",
+            "description": "新手机的验证码"
+        }
+    ],
+    "response":{
+        "data":{
+            "type":"Boolean",
+            "sample":true,
+            "description":"成功返回true，失败返回false"
+        }
+    }
+}

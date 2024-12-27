@@ -3,7 +3,7 @@
     "name":"短信验证码",
     "description":"发送短信验证码",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"common.sendVerifyCode",
+    "method":"Common.sendVerifyCode",
     "accessLevel": 0,
     "disableFilterParams":true,
     "request":[{

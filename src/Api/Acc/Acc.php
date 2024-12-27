@@ -103,12 +103,20 @@ class Acc extends BaseApi
             }
         }
         $row = new RoleUserModel();
-        $sql = 'delete from '.RoleUserModel::class.' where uid=:uid: and rid in ({allRoles:array}) and rid not in ({ids:array})';
-        $bind = [
-            'uid'=>$data['uid'],
-            'allRoles'=>$allRoles,
-            'ids'=>$idList
-        ];
+        if(empty($idList)){
+            $sql = 'delete from '.RoleUserModel::class.' where uid=:uid: and rid in ({allRoles:array}) ';
+            $bind = [
+                'uid'=>$data['uid'],
+                'allRoles'=>$allRoles
+            ];
+        }else{
+            $sql = 'delete from '.RoleUserModel::class.' where uid=:uid: and rid in ({allRoles:array}) and rid not in ({ids:array})';
+            $bind = [
+                'uid'=>$data['uid'],
+                'allRoles'=>$allRoles,
+                'ids'=>$idList
+            ];
+        }
         $row->getModelsManager()->executeQuery($sql,$bind);
         $this->clearCache();
         return true;
@@ -130,21 +138,38 @@ class Acc extends BaseApi
         if (!$roleRow) {
             throw new ApiException($this->translator->_('指定的角色不存在'));
         }
-        $idList = explode(',', $data['uid']);
+        $idList = is_array($data['uid']) && !empty($data['uid'])?$data['uid']:[];
         $success = 0;
-        foreach ($idList as $uid) {
-            $uid = intval($uid);
-            if ($uid) {
-                $hasAssigned = RoleUserModel::count(['rid=?1 and uid=?2', 'bind' => [1 => $data['rid'], 2 => $uid]]);
-                if (!$hasAssigned) {
-                    $row = new RoleUserModel();
-                    $row->rid = $data['rid'];
-                    $row->uid = $uid;
-                    $result = $row->create();
-                    if ($result) {
-                        $success++;
+        if(sizeof($idList)>0){
+            $ruModel = new RoleUserModel();
+            $sql = 'delete from ' . RoleUserModel::class . ' where rid=:rid: and uid not in ({uid:array})';
+            $bind = [
+                'rid' => $data['rid'],
+                'uid' => $idList
+            ];
+            $ruModel->getModelsManager()->executeQuery($sql, $bind);
+            foreach ($idList as $uid) {
+                $uid = intval($uid);
+                if ($uid) {
+                    $hasAssigned = RoleUserModel::count(['rid=?1 and uid=?2', 'bind' => [1 => $data['rid'], 2 => $uid]]);
+                    if (!$hasAssigned) {
+                        $row = new RoleUserModel();
+                        $row->rid = $data['rid'];
+                        $row->uid = $uid;
+                        $result = $row->create();
+                        if ($result) {
+                            $success++;
+                        }
                     }
                 }
+            }
+        }else{
+            $assignedList = RoleUserModel::find([
+                'rid=?1',
+                'bind' => [1 => $data['rid']]
+            ]);
+            foreach($assignedList as $item){
+                $item->delete();
             }
         }
         $this->clearCache();
@@ -219,20 +244,7 @@ class Acc extends BaseApi
         $result = $searcher->execute();
         $assignedList = $result->toArray();
 
-
-        $userSearcher = UserBindAppModel::query();
-        $userSearcher->join(UserModel::class,UserBindAppModel::class.'.uid=u.uid and appId=:aid:','u');
-        $userSearcher->bind(['aid'=>$appId]);
-
-        //$userSearcher->where(UserModel::class.'.uid not in (select '.RoleUserModel::class.'.uid from '.RoleUserModel::class.' where rid=:rid:)');
-        //$userSearcher->bind($bind);
-        $userSearcher->columns(
-            ['u.uid', 'u.username','u.fullname']
-        );
-        $result = $userSearcher->execute();
-        $unassignedList = $result->toArray();
-
-        return ['role' => $roleRow->toArray(), 'assigned' => $assignedList, 'unassigned' => $unassignedList];
+        return ['role' => $roleRow->toArray(), 'assigned' => $assignedList];
     }
 
     /**
@@ -247,10 +259,10 @@ class Acc extends BaseApi
         }
 
         $data = $this->_toParamObject($this->getParams());
-        $data['page'] = intval($data['page']);
-        $data['limit'] = intval($data['limit']);
-        $data['limit'] || $data['limit'] = GlobalVar::DATA_DEFAULT_LIMIT;
-        $data['page'] || $data['page'] = 1;
+        $data['current'] = intval($data['current']);
+        $data['pageSize'] = intval($data['pageSize']);
+        $data['pageSize'] || $data['pageSize'] = GlobalVar::DATA_DEFAULT_LIMIT;
+        $data['current'] || $data['current'] = 1;
         $appId = $data['appId'];
         if (!$appId) {
             $appId = $this->_appKey;
@@ -276,7 +288,7 @@ class Acc extends BaseApi
         $result = $searcher->execute();
         $list = $result->toArray();
 
-        return ['total' => intval($total), 'list' => $list, 'page' => $data['page'], 'limit' => $data['limit']];
+        return ['total' => intval($total), 'list' => $list, 'page' => $data['current'], 'limit' => $data['pageSize']];
     }
 
     /**
@@ -406,9 +418,11 @@ class Acc extends BaseApi
         if ($resource) {
             foreach ($resource['op'] as &$op) {
                 if (in_array($op['code'], $assignOps['allow'])) {
-                    $op['allow'] = 1;
-                } else {
-                    $op['allow'] = 0;
+                    $op['allow'] = 'y';
+                } elseif(in_array($op['code'], $assignOps['deny'])) {
+                    $op['allow'] = 'n';
+                }else{
+                    $op['allow'] = '';
                 }
             }
             unset($resource['model'], $resource['idField'], $resource['nameField']);
@@ -459,7 +473,7 @@ class Acc extends BaseApi
             foreach($resources as $res){
                 $tmp = [];
                 if(isset($res['title']) && isset($res['code'])){
-                    $tmp['title'] = strval($res['title']);
+                    $tmp['text'] = strval($res['title']);
                     $tmp['code'] = strval($res['code']);
                 }
                 $opcodes = $res->xpath('op');
@@ -467,7 +481,7 @@ class Acc extends BaseApi
                 if($opcodes){
                     foreach ($opcodes as $op){
                         if(isset($op['title']) && isset($op['code'])){
-                            $t['title'] = strval($op['title']);
+                            $t['text'] = strval($op['title']);
                             $t['code'] = strval($op['code']);
                             $tmp['op'][] = $t;
                         }
@@ -480,7 +494,7 @@ class Acc extends BaseApi
             if($resList){
                 $cache = $this->_di->getShared('cache');
                 $key       = 'resourceXml-'.$appId.'-'.$this->_userMemberId;
-                $cache->set($key,$xml,7200);
+                $cache->set($key,$xml,600);
                 return [
                     'parsedKey'=>md5($key),
                     'resources'=>$resList
@@ -494,30 +508,47 @@ class Acc extends BaseApi
      * 保存resource xml
      */
     public function importResourceXml(){
-        $acc     = $this->_di->getShared('aclService');
-        $isAllow = $acc->isAllowed('RES_ACC', 'OP_IMPORT_RES');
+        $acl     = $this->_di->getShared('aclService');
+        $isAllow = $acl->isAllowed('RES_ACC', 'OP_IMPORT_RES');
         if ( ! $isAllow) {
             throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
         }
 
         $data = $this->_toParamObject($this->getParams());
-        $parsedKey  = trim($data['parsedKey']);
+        $parsedKey = trim($data['parsedKey']);
         $appId     = trim($data['appId']);
         $cache     = $this->_di->getShared('cache');
         $key       = 'resourceXml-'.$appId.'-'.$this->_userMemberId;
         if($parsedKey === md5($key)){
             $accXml= $cache->get($key);
             if(!$accXml){
-                throw new ApiException();
+                throw new ApiException($this->translator->_('没有找到解析后的XML内容'));
             }else{
+                $tx = $this->_di->getShared('transactions');
+                $transaction = $tx->get();
                 $app = AppModel::findFirstById($data['appId']);
+                $app->setTransaction($transaction);
                 $app->accResourcesXml = $accXml;
                 $result = $app->save();
                 $this->clearCache();
+                $cacheKey          = 'acc_setting_'.$appId;
+                $cache->delete($cacheKey);
+                $acc = new AccService($this->_di);
+                $resources = $acc->getResourceList($appId);
+                $resourceCodeList = array_keys($resources);
+                $tobeRemoved = RoleResModel::find([
+                    'rescode not in ({res:array}) and appId=:aid:',
+                    'bind'=>['res'=>$resourceCodeList,'aid'=>$appId]
+                ]);
+                foreach($tobeRemoved as $r){
+                    $r->setTransaction($transaction);
+                    $r->delete();
+                }
+                $transaction->commit();
                 return $result;
             }
         }else{
-            throw new ApiException();
+            throw new ApiException($this->translator->_('解析后的XML内容已过期，请重新解析'));
         }
     }
 
@@ -531,14 +562,15 @@ class Acc extends BaseApi
             throw new ApiException($this->translator->_('对不起，您无权限进行此操作'),ApiException::$EXCODE_FORBIDDEN);
         }
         $data = $this->_toParamObject($this->getParams());
-        $resource = $data['res'];
+        $rescode = $data['res'];
         $roleId   = $data['rid'];
         $opcodes  = $data['opcodes'];
         $appId    = $data['appId'];
+        $dataId   = $data['dataId'];
         if(!$roleId){
             throw new Exception($this->translator->_('没有指定角色，无法分配权限'));
         }
-        if(!$resource){
+        if(!$rescode){
             throw new Exception($this->translator->_('没有指定权限资源，无法分配权限'));
         }
         if(!$appId){
@@ -547,6 +579,31 @@ class Acc extends BaseApi
         if(!is_array($opcodes)||empty($opcodes)){
             throw new Exception($this->translator->_('没有指定权限操作，无法分配权限'));
         }
+        $acc       = new AccService($this->_di);
+        $resources = $acc->getResourceList($appId);
+        if(!isset($resources[$rescode])){
+            throw new Exception($this->translator->_('指定的权限资源不存在'));
+        }
+        $resource = $resources[$rescode];
+        if($dataId){
+            if(!$resource['model']||!$resource['idField']||!$resource['nameField']){
+                throw new Exception($this->translator->_('指定的权限资源不支持数据ID'));
+            }
+            if(class_exists($resource['model'])) {
+                $model = new $resource['model']();
+                $row = $model::findFirst([
+                    $resource['idField'] . '=:id:',
+                    'bind' => ['id' => $dataId]
+                ]);
+                if (!$row) {
+                    throw new Exception($this->translator->_('指定的资源数据不存在'));
+                }
+            }else{
+                throw new Exception($this->translator->_('指定的权限资源不支持数据ID!'));
+            }
+            $rescode = $rescode.':'.$dataId;
+        }
+
         $aclService = $this->_di->getShared('aclService');
         $aclService->removeCache();
         $tx = $this->_di->getShared('transactions');
@@ -558,9 +615,9 @@ class Acc extends BaseApi
             $isAllow= $op['allow'];
             $opRow = RoleResModel::findFirst([
                 'rid=:rid: and rescode=:rc: and opcode=:op: and appId=:aid:',
-                'bind'=>['rid'=>$roleId,'rc'=>$resource,'op'=>$opcode,'aid'=>$appId]
+                'bind'=>['rid'=>$roleId,'rc'=>$rescode,'op'=>$opcode,'aid'=>$appId]
             ]);
-            if($isAllow<0){
+            if(!$isAllow){
                 if($opRow){
                     $hasChanged = true;
                     $opRow->setTransaction($transaction);
@@ -577,7 +634,7 @@ class Acc extends BaseApi
                 }else{
                     $hasChanged = true;
                     $model = new RoleResModel();
-                    $model->rescode = $resource;
+                    $model->rescode = $rescode;
                     $model->opcode  = $opcode;
                     $model->rid     = $roleId;
                     $model->isAllow = $isAllow;

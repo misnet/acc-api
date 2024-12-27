@@ -3,7 +3,7 @@
   "name":"地区列表",
   "description":"根据上一级地区ID取得地区列表",
   "namespace":"Kuga\\Api\\Acc",
-  "method":"common.getRegionList",
+  "method":"Common.getRegionList",
   "accessLevel": 0,
   "request":[
     {

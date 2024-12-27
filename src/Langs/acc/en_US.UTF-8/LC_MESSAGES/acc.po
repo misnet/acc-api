@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Kuga-Class\n"
-"POT-Creation-Date: 2019-04-13 14:28+0800\n"
-"PO-Revision-Date: 2019-04-13 15:38+0800\n"
+"POT-Creation-Date: 2024-12-27 09:21+0800\n"
+"PO-Revision-Date: 2024-12-27 09:31+0800\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 1.8.4\n"
 "X-Poedit-Basepath: ../../../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -17,140 +17,276 @@ msgstr ""
 "X-Poedit-SearchPath-0: Langs\n"
 "X-Poedit-SearchPath-1: .\n"
 
-#: Api/Acc/Acc.php:35 Api/Acc/Acc.php:65 Api/Acc/Acc.php:97 Api/Acc/Acc.php:129
-msgid "指定的角色不存在"
-msgstr "The role does not exist"
-
-#: Api/Acc/User.php:29
-msgid "这个用户是当前用户，不可删除"
-msgstr "You can not delete yourself"
-
-#: Api/Acc/User.php:47
-msgid "用户不存在"
-msgstr "User does not exist"
-
-#: Api/Acc/User.php:50
-msgid "新密码和确认密码不一致"
-msgstr "The new password does not equal with the retype one"
-
-#: Api/Acc/User.php:58
-msgid "错误的性别值"
-msgstr "Incorrect gender value"
-
-#: Api/Acc/User.php:73
-msgid "找不到用户，可能已被删除"
-msgstr "The user does not exist, maybe be deleted"
-
-#: Api/Acc/User.php:114
-msgid "用户解绑应用失败"
-msgstr "Fail to unbind the application"
-
-#: Api/Acc/User.php:129 Api/Acc/User.php:178
-msgid "用户绑定应用失败"
-msgstr "Fail to bind the application"
-
-#: Api/Acc/User.php:194
-msgid "没设置新密码"
-msgstr "New password is required"
-
-#: Api/Acc/User.php:282 Api/Acc/User.php:310
-msgid "账户或密码错误"
-msgstr "Invalid username or password"
-
-#: Api/Common.php:51
-msgid "请入邮箱或手机号"
-msgstr "Please input your email or mobile number"
-
-#: Api/Common.php:64
-msgid "验证码发送失败"
-msgstr "Verification code failed to sent"
-
-#: Module/Acc/Model/AppModel.php:60
-msgid "请输入应用名称"
-msgstr "Please input the application name"
-
-#: Module/Acc/Model/MenuModel.php:94
-msgid "菜单名必须填写"
-msgstr "Menu name is required"
-
-#: Module/Acc/Model/MenuModel.php:99 Module/Acc/Model/RoleModel.php:96
-msgid "未指定应用"
-msgstr "Application is not figured out"
-
-#: Module/Acc/Model/MenuModel.php:132
-msgid "父级菜单不能是自己"
-msgstr "Parent menu must not be self"
-
-#: Module/Acc/Model/MenuModel.php:137
-msgid "父级菜单不能是当前菜单的子菜单"
-msgstr "Parent menu must not be child one of current menu"
-
-#: Module/Acc/Model/RoleMenuModel.php:55 Module/Acc/Model/RoleModel.php:151
-#: Module/Acc/Model/RoleModel.php:163 Module/Acc/Model/RoleResModel.php:74
-#: Module/Acc/Model/RoleUserModel.php:70 Module/Acc/Model/RoleUserModel.php:82
+#: Api/Acc/Acc.php:37 Api/Acc/Acc.php:71 Api/Acc/Acc.php:133
+#: Api/Acc/Acc.php:187 Api/Acc/Acc.php:219 Api/Acc/Acc.php:258
+#: Api/Acc/Acc.php:302 Api/Acc/Acc.php:324 Api/Acc/Acc.php:350
+#: Api/Acc/Acc.php:373 Api/Acc/Acc.php:401 Api/Acc/Acc.php:456
+#: Api/Acc/Acc.php:514 Api/Acc/Acc.php:562 Api/Acc/ApiLog.php:16
+#: Api/Acc/App.php:31 Api/Acc/App.php:56 Api/Acc/App.php:78 Api/Acc/App.php:106
+#: Module/Acc/Model/MenuModel.php:104 Module/Acc/Model/MenuModel.php:116
+#: Module/Acc/Model/RoleMenuModel.php:50 Module/Acc/Model/RoleMenuModel.php:59
+#: Module/Acc/Model/RoleResModel.php:78 Module/Acc/Model/RoleResModel.php:87
 msgid "对不起，您无权限进行此操作"
 msgstr "Sorry, you do not have permission to do this operation."
 
-#: Module/Acc/Model/RoleModel.php:100
-msgid "角色已存在"
-msgstr "The role does exist"
+#: Api/Acc/Acc.php:43 Api/Acc/Acc.php:139 Api/Acc/Acc.php:193
+#: Api/Acc/Acc.php:230
+msgid "指定的角色不存在"
+msgstr "The role does not exist"
 
-#: Module/Acc/Model/RoleModel.php:105
-msgid "优先级必须是大于0的数字"
-msgstr "The priority level must be  a number of bigger than zero"
+#: Api/Acc/Acc.php:77
+msgid "指定的用户不存在"
+msgstr "The user not exist"
 
-#: Module/Acc/Model/RoleModel.php:110
-msgid "优先级必须唯一"
-msgstr "The priority number must be unique"
+#: Api/Acc/Acc.php:504
+msgid "XML内容格式有误，无法正确识别到权限资源与其对应定义的操作码"
+msgstr "The XML content is incorrectly formatted, and the permission resource and its corresponding defined opcode cannot be correctly identified"
 
-#: Module/Acc/Model/RoleModel.php:116
-msgid "角色类型只能是超级角色或一般角色"
-msgstr "The role type must only  be the super role or the general role"
+#: Api/Acc/Acc.php:525
+msgid "没有找到解析后的XML内容"
+msgstr "No parsed XML content found"
 
-#: Module/Acc/Model/RoleModel.php:123
-msgid "分配策略值有误"
-msgstr "Incorrect assign policy"
+#: Api/Acc/Acc.php:551
+msgid "解析后的XML内容已过期，请重新解析"
+msgstr "The parsed XML content has expired, please re-parse it"
 
-#: Module/Acc/Model/RoleResModel.php:90 Module/Acc/Service/Acc.php:234
-#: Module/Acc/Service/Acc.php:380 Module/Acc/Service/Acc.php:418
-#: Module/Acc/Service/Acc.php:446
+#: Api/Acc/Acc.php:571 Module/Acc/Model/RoleResModel.php:102
+#: Module/Acc/Service/Acc.php:244 Module/Acc/Service/Acc.php:396
+#: Module/Acc/Service/Acc.php:434 Module/Acc/Service/Acc.php:462
 msgid "没有指定角色，无法分配权限"
 msgstr "System can not assign privilege with a none role"
 
-#: Module/Acc/Model/RoleResModel.php:93 Module/Acc/Service/Acc.php:383
-#: Module/Acc/Service/Acc.php:421 Module/Acc/Service/Acc.php:449
+#: Api/Acc/Acc.php:574 Module/Acc/Model/RoleResModel.php:105
+#: Module/Acc/Service/Acc.php:399 Module/Acc/Service/Acc.php:437
+#: Module/Acc/Service/Acc.php:465
 msgid "没有指定权限资源，无法分配权限"
 msgstr "System can not assign privilege with none resource"
 
-#: Module/Acc/Model/SysParamsModel.php:77
-msgid "配置名称不能为空"
-msgstr "The name of configure is required"
+#: Api/Acc/Acc.php:577 Module/Acc/Model/RoleResModel.php:108
+msgid "没有指定应用，无法分配权限"
+msgstr "If you don't specify an app, you can't assign permissions"
 
-#: Module/Acc/Model/SysParamsModel.php:81
-msgid "配置KEY名称不能为空"
-msgstr "The key of configure is required"
+#: Api/Acc/Acc.php:580
+msgid "没有指定权限操作，无法分配权限"
+msgstr "Permissions cannot be assigned without a specified permission operation"
 
-#: Module/Acc/Model/SysParamsModel.php:85
-msgid "配置描述不能为空"
-msgstr "The description of configure is required"
+#: Api/Acc/Acc.php:585
+msgid "指定的权限资源不存在"
+msgstr "The specified permission resource does not exist"
 
-#: Module/Acc/Model/SysParamsModel.php:89
-msgid "KEY已存在"
-msgstr "The key of configure does exist"
+#: Api/Acc/Acc.php:590
+msgid "指定的权限资源不支持数据ID"
+msgstr "The specified permission resource does not support data-id"
 
-#: Module/Acc/Model/SysParamsModel.php:93
-msgid "配置名称已存在"
-msgstr "The name of configure is required"
+#: Api/Acc/Acc.php:599
+msgid "指定的资源数据不存在"
+msgstr "The specified resource data does not exist"
 
-#: Module/Acc/Model/SysParamsModel.php:98
-msgid "值类型不正确"
-msgstr "Incorrect type of value"
+#: Api/Acc/Acc.php:602
+msgid "指定的权限资源不支持数据ID!"
+msgstr "The specified permission resource does not support data-id!"
 
-#: Module/Acc/Model/UserModel.php:133
+#: Api/Acc/App.php:114
+msgid "不能删除当前应用"
+msgstr "You can't delete the current app"
+
+#: Api/Acc/App.php:117
+msgid "应用秘钥不正确，无法删除"
+msgstr "The appsecret is incorrect and cannot be deleted"
+
+#: Api/Acc/Common.php:53
+msgid "请入邮箱或手机号"
+msgstr "Please input your email or mobile number"
+
+#: Api/Acc/Common.php:66
+msgid "验证码发送失败"
+msgstr "Verification code failed to sent"
+
+#: Api/Acc/Common.php:122
+msgid "请配置阿里云STS信息"
+msgstr "Configure the STS information of Aliyun"
+
+#: Api/Acc/Common.php:125
+msgid "请配置阿里云OSS信息"
+msgstr "Configure OSS for Aliyun"
+
+#: Api/Acc/Exception.php:22 Module/Acc/Exception.php:20
+msgid "账户密码错误"
+msgstr "The account password is incorrect"
+
+#: Api/Acc/User.php:31
+msgid "没有删除权限"
+msgstr "No permission to delete"
+
+#: Api/Acc/User.php:38
+msgid "这个用户是当前用户，不可删除"
+msgstr "You can not delete yourself"
+
+#: Api/Acc/User.php:58
+msgid "用户不存在"
+msgstr "User does not exist"
+
+#: Api/Acc/User.php:61
+msgid "新密码和确认密码不一致"
+msgstr "The new password does not equal with the retype one"
+
+#: Api/Acc/User.php:69
+msgid "错误的性别值"
+msgstr "Incorrect gender value"
+
+#: Api/Acc/User.php:84
+msgid "没有修改权限"
+msgstr ""
+
+#: Api/Acc/User.php:89
+msgid "找不到用户，可能已被删除"
+msgstr "The user does not exist, maybe be deleted"
+
+#: Api/Acc/User.php:131
+msgid "用户解绑应用失败"
+msgstr "Fail to unbind the application"
+
+#: Api/Acc/User.php:146 Api/Acc/User.php:203 Api/Acc/User.php:616
+msgid "用户绑定应用失败"
+msgstr "Fail to bind the application"
+
+#: Api/Acc/User.php:167
+msgid "没有创建权限"
+msgstr "No create permissions"
+
+#: Api/Acc/User.php:237
+msgid "分配角色失败"
+msgstr "Role assignment failed"
+
+#: Api/Acc/User.php:249
+msgid "没设置新密码"
+msgstr "New password is required"
+
+#: Api/Acc/User.php:275
+msgid "验证码错误"
+msgstr "The verification code is incorrect"
+
+#: Api/Acc/User.php:295 Api/Acc/User.php:333
+msgid "账号不存在"
+msgstr "The account does not exist"
+
+#: Api/Acc/User.php:309
+msgid "手机号修改失败，原因%s%"
+msgstr "Failed to modify the mobile phone number due to %s%"
+
+#: Api/Acc/User.php:338
+msgid "密码修改失败，原因%s%"
+msgstr "Password change failed due %s%"
+
+#: Api/Acc/User.php:354 Api/Acc/User.php:408 Api/Acc/User.php:469
+msgid "你没有查看用户列表权限"
+msgstr "You do not have the permission to view the user list"
+
+#: Api/Acc/User.php:563
+msgid "验证码已过期"
+msgstr "The verification code has expired"
+
+#: Api/Acc/User.php:566
+msgid "验证码不正确"
+msgstr "Incorrect verification code"
+
+#: Api/Acc/User.php:636
+msgid "未在第三方平台登陆"
+msgstr "Not logged in on a third-party platform"
+
+#: Api/Acc/User.php:639
+msgid "已绑定过用户"
+msgstr "The user has been bound"
+
+#: Api/Acc/User.php:646 Api/Acc/User.php:727
+msgid "应用不存在"
+msgstr "The app not exist"
+
+#: Api/Acc/User.php:649
+msgid "用户不存在，不能绑定"
+msgstr "If the user does not exist, it cannot be bound"
+
+#: Api/Acc/User.php:689
+msgid "错误的code"
+msgstr "Wrong code"
+
+#: Api/Acc/User.php:816
+msgid "refreshToken参数没传值"
+msgstr "The refreshToken parameter does not have a value"
+
+#: Module/Acc/Model/AppModel.php:95
+msgid "请输入应用名称"
+msgstr "Please input the application name"
+
+#: Module/Acc/Model/ConfigurationModel.php:105
+msgid "参数名称不能为空"
+msgstr "The configuration name cannot be empty"
+
+#: Module/Acc/Model/ConfigurationModel.php:108
+msgid "参数值不能为空"
+msgstr "The configuration value cannot be empty"
+
+#: Module/Acc/Model/ConfigurationModel.php:111
+msgid "参数Key不能为空"
+msgstr "The configuration key cannot be empty"
+
+#: Module/Acc/Model/ConfigurationModel.php:114
+msgid "参数Key不能重复"
+msgstr "The configuration key cannot be repeated"
+
+#: Module/Acc/Model/ConfigurationModel.php:117
+msgid "参数值必须是Y或N"
+msgstr "The configuration value must be y or n"
+
+#: Module/Acc/Model/ConfigurationModel.php:121
+msgid "未指定应用，appId不能为空"
+msgstr "If the app is not specified, the appId cannot be empty"
+
+#: Module/Acc/Model/MenuModel.php:90
+msgid "菜单名必须填写"
+msgstr "Menu name is required"
+
+#: Module/Acc/Model/MenuModel.php:95 Module/Acc/Model/RoleModel.php:92
+msgid "未指定应用"
+msgstr "Application is not figured out"
+
+#: Module/Acc/Model/MenuModel.php:140
+msgid "父级菜单不能是自己"
+msgstr "Parent menu must not be self"
+
+#: Module/Acc/Model/MenuModel.php:145
+msgid "父级菜单不能是当前菜单的子菜单"
+msgstr "Parent menu must not be child one of current menu"
+
+#: Module/Acc/Model/Oauth2Model.php:80
+msgid "应用已绑定授权"
+msgstr "The app is bound with a authorization"
+
+#: Module/Acc/Model/RoleModel.php:112
+msgid "角色已存在"
+msgstr "The role does exist"
+
+#: Module/Acc/Model/RoleModel.php:117
+msgid "优先级必须是大于0的数字"
+msgstr "The priority level must be  a number of bigger than zero"
+
+#: Module/Acc/Model/RoleModel.php:122
+msgid "优先级必须唯一"
+msgstr "The priority number must be unique"
+
+#: Module/Acc/Model/RoleModel.php:128
+msgid "角色类型只能是超级角色或一般角色"
+msgstr "The role type must only  be the super role or the general role"
+
+#: Module/Acc/Model/RoleModel.php:135
+msgid "分配策略值有误"
+msgstr "Incorrect assign policy"
+
+#: Module/Acc/Model/UserModel.php:131
 msgid "用户名必须填写"
 msgstr "Please type your username"
 
-#: Module/Acc/Model/UserModel.php:137
+#: Module/Acc/Model/UserModel.php:135
 msgid "用户名已存在"
 msgstr "The username already exists"
 
@@ -158,31 +294,64 @@ msgstr "The username already exists"
 msgid "手机号已存在"
 msgstr "Cellphone number already exists"
 
-#: Module/Acc/Model/UserModel.php:146
+#: Module/Acc/Model/UserModel.php:147
 msgid "Email格式错误"
 msgstr "Incorrect email format"
 
-#: Module/Acc/Model/UserModel.php:151
+#: Module/Acc/Model/UserModel.php:152
 msgid "Email已存在"
 msgstr "Email already exists"
 
-#: Module/Acc/Model/UserModel.php:222
+#: Module/Acc/Model/UserModel.php:218
 msgid "密码至少要有%s%位"
 msgid_plural "密码至少要有%s%位"
 msgstr[0] "Password length muse have at least %s%"
 msgstr[1] "Password length muse have at least %s%"
 
-#: Module/Acc/Model/UserModel.php:242
+#: Module/Acc/Model/UserModel.php:240
+msgid "你没有添加权限"
+msgstr "No permission to add"
+
+#: Module/Acc/Model/UserModel.php:245
 msgid "请设置好密码"
 msgstr "Please type your password"
 
-#: Module/Acc/Service/Acc.php:151
+#: Module/Acc/Model/UserModel.php:255
+msgid "你没有删除权限"
+msgstr "No permission to delete"
+
+#: Module/Acc/Model/UserModel.php:266
+msgid "你没有修改权限"
+msgstr "No permission to update"
+
+#: Module/Acc/Service/Acc.php:161
 msgid "要修改的角色不存在"
 msgstr "The role  which be updated does not exist"
 
-#: Module/Acc/Service/Acc.php:498
+#: Module/Acc/Service/Acc.php:514
 msgid "findRolesByTypeId()传入的参数不正确"
 msgstr "Incorrect parameter for findRolesByTypeId"
+
+#~ msgid "账户或密码错误"
+#~ msgstr "Invalid username or password"
+
+#~ msgid "配置名称不能为空"
+#~ msgstr "The name of configure is required"
+
+#~ msgid "配置KEY名称不能为空"
+#~ msgstr "The key of configure is required"
+
+#~ msgid "配置描述不能为空"
+#~ msgstr "The description of configure is required"
+
+#~ msgid "KEY已存在"
+#~ msgstr "The key of configure does exist"
+
+#~ msgid "配置名称已存在"
+#~ msgstr "The name of configure is required"
+
+#~ msgid "值类型不正确"
+#~ msgstr "Incorrect type of value"
 
 #~ msgid "手机号不正确"
 #~ msgstr "Incorrect phone number"
@@ -446,9 +615,6 @@ msgstr "Incorrect parameter for findRolesByTypeId"
 
 #~ msgid "请确认有新的手机号"
 #~ msgstr "Please confirm the new cellphone number"
-
-#~ msgid "验证码不正确"
-#~ msgstr "Incorrect verification code"
 
 #~ msgid "用户资料不存在"
 #~ msgstr "User data does not exist"

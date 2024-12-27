@@ -3,7 +3,7 @@
     "name":"角色分配权限资源",
     "description":"指定操作表的ID列表，分配给指定的角色",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"acc.assignResToRole",
+    "method":"Acc.assignResToRole",
     "accessLevel": 1,
     "request":[
         {

@@ -1,0 +1,38 @@
+{
+    "id":"acc.user.assignrole",
+    "name":"用户分配指定角色",
+    "description":"指定用户，分配角色",
+    "namespace":"Kuga\\Api\\Acc",
+    "method":"Acc.assignRolesToUser",
+    "accessLevel": 1,
+    "request":[
+        {
+            "param":"appId",
+            "required":true,
+            "default":"",
+            "type":"Integer",
+            "description":"应用ID"
+        },
+        {
+            "param":"uid",
+            "required":true,
+            "default":"",
+            "type":"Integer",
+            "description":"用户ID"
+        },
+        {
+            "param":"rids",
+            "required":false,
+            "default":"",
+            "type":"Array",
+            "description":"角色ID数组，例[1,221,32]"
+        }
+    ],
+    "response":{
+        "data":{
+            "type":"Boolean",
+            "sample":true,
+            "description":"成功返回true，失败返回false"
+        }
+    }
+}

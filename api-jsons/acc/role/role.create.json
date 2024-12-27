@@ -3,7 +3,7 @@
     "name":"创建角色",
     "description":"创建角色",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"acc.createRole",
+    "method":"Acc.createRole",
     "accessLevel": 1,
     "request":[
         {
@@ -30,8 +30,8 @@
         {
             "param":"defaultAllow",
             "required":false,
-            "default":0,
-            "description":"是否允许",
+            "default":"n",
+            "description":"是否允许,y允许，n不允许",
             "type":"Integer"
         },
         {

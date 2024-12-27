@@ -3,11 +3,11 @@
     "name":"获取应用列表",
     "description":"列出所有应用",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"app.appList",
+    "method":"App.appList",
     "accessLevel": 1,
     "request":[
         {
-            "param":"page",
+            "param":"current",
             "required":false,
             "default":1,
             "name":"页码",
@@ -15,7 +15,7 @@
             "description":"页码"
         },
         {
-            "param":"limit",
+            "param":"pageSize",
             "required":false,
             "default":10,
             "type":"Integer",

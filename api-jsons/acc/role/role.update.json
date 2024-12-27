@@ -3,7 +3,7 @@
     "name":"修改角色",
     "description":"修改角色",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"acc.updateRole",
+    "method":"Acc.updateRole",
     "accessLevel": 1,
     "request":[
         {
@@ -30,9 +30,9 @@
         {
             "param":"defaultAllow",
             "required":false,
-            "default":0,
-            "description":"是否允许",
-            "type":"Integer"
+            "default":"n",
+            "description":"是否允许,y允许，n不允许",
+            "type":"string"
         },
         {
             "param":"priority",

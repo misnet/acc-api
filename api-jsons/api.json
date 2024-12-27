@@ -29,6 +29,16 @@
                 "name": "APP相关API",
                 "apiFiles": "acc/app/*.json",
                 "summary": "APP相关API"
+            },
+            {
+                "name": "APILOG相关API",
+                "apiFiles": "acc/apilog/*.json",
+                "summary": "APILOG相关API"
+            },
+            {
+                "name": "配置API",
+                "apiFiles": "acc/configuration/*.json",
+                "summary": "配置相关API"
             }
         ]
     }

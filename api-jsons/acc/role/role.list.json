@@ -3,11 +3,11 @@
     "name":"角色列表",
     "description":"获取角色列表",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"acc.listRole",
+    "method":"Acc.listRole",
     "accessLevel": 2,
     "request":[
         {
-            "param":"page",
+            "param":"current",
             "required":false,
             "default":1,
             "name":"页码",
@@ -15,7 +15,7 @@
             "description":"页码"
         },
         {
-            "param":"limit",
+            "param":"pageSize",
             "required":false,
             "default":10,
             "type":"Integer",
@@ -59,9 +59,9 @@
                             "description":"分配策略，0不自动分配，1自动分配给已登陆用户，2自动分配给未登陆用户"
                         },
                         "defaultAllow":{
-                            "type":"Integer",
-                            "sample":0,
-                            "description":"默认权限，0禁止，1允许"
+                            "type":"String",
+                            "sample":"n",
+                            "description":"默认权限，n禁止，y允许"
                         },
                         "priority":{
                             "type":"Integer",

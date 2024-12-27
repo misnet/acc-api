@@ -1,0 +1,45 @@
+{
+  "id":"acc.privileges",
+  "name":"权限判断",
+  "description":"根据权限资源代码与权限操作代码，判断当前用户是否有权限",
+  "namespace":"Kuga\\Api\\Acc",
+  "method":"Acc.getPrivileges",
+  "accessLevel": 0,
+  "request":[
+
+    {
+      "param":"uid",
+      "required": true,
+      "default": "",
+      "type": "String",
+      "description": "用户ID"
+    },
+    {
+      "param":"appId",
+      "required": true,
+      "default": "",
+      "type": "String",
+      "description": "应用ID"
+    }
+  ],
+  "response":{
+    "data":{
+      "type":"Object",
+      "sample":false,
+      "description":"返回可以访问的权限资源与操作",
+      "responseItem": {
+        "资源代码": {
+          "type": "Array",
+          "sample": "RES_PRODUCT",
+          "responseItem": {
+            "操作代码": {
+              "type": "Array",
+              "sample": "['OP_EDIT','OP_ADD']",
+              "description": "权限操作的代码数组，多个以逗号分隔"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "acc.configuration.items",
+  "name": "配置项列表",
+  "description": "配置项列表",
+  "namespace": "Kuga\\Api\\Acc",
+  "method": "ConfigurationApi.items",
+  "accessLevel":0,
+  "request":[
+    {
+      "param":"current",
+      "required":false,
+      "default":"1",
+      "name":"页码",
+      "type":"integer"
+    },
+    {
+      "param":"pageSize",
+      "required":false,
+      "default":"20",
+      "name":"每页条数",
+      "type":"integer"
+    },{
+      "param":"isEnabled",
+      "required":false,
+      "name":"是否启用，y或n",
+      "type":"string"
+    },
+    {
+      "param":"appId",
+      "required":true,
+      "name":"所属应用ID",
+      "type":"integer"
+    }
+  ],
+  "response":{
+    "data":{
+      "type":"string",
+      "description":"凭证码"
+    }
+  }
+}

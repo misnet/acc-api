@@ -1,24 +1,24 @@
 {
-    "id":"acc.role.unassignuser",
-    "name":"取消角色分配用户",
-    "description":"指定角色，取消分配指定的用户",
+    "id":"acc.app.delete",
+    "name":"删除应用",
+    "description":"删除应用",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"acc.unassignRoleToUsers",
+    "method":"App.delete",
     "accessLevel": 1,
     "request":[
         {
-            "param":"rid",
+            "param":"id",
             "required":true,
             "default":"",
-            "type":"Integer",
-            "description":"角色ID"
+            "type":"integer",
+            "description":"应用id"
         },
         {
-            "param":"uid",
+            "param":"secret",
             "required":false,
             "default":"",
-            "type":"String",
-            "description":"多个用户ID以逗号分隔"
+            "type":"string",
+            "description":"应用的secret"
         }
     ],
     "response":{

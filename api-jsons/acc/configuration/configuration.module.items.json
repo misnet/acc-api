@@ -1,0 +1,33 @@
+{
+  "id": "acc.configuration.module.items",
+  "name": "模块的所有配置项",
+  "description": "按模块key获取模块的所有配置项",
+  "namespace": "Kuga\\Api\\Acc",
+  "method": "ConfigurationApi.getItemsByModule",
+  "accessLevel":0,
+  "request":[
+    {
+      "param":"module",
+      "required":true,
+      "default":"",
+      "type":"Array",
+      "description":"模块Key值"
+    },{
+      "param":"appId",
+      "required":true,
+      "name":"应用id",
+      "type":"integer"
+    },{
+      "param":"isEnabled",
+      "required":false,
+      "name":"是否启用，y或n",
+      "type":"string"
+    }
+  ],
+  "response":{
+    "data":{
+      "type":"object",
+      "description":"模块的所有配置项列表"
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "id":"acc.user.refresh.token",
+  "name":"刷新accessToken",
+  "description":"刷新accessToken，客户端如检测到accessToken过期，系统返回的status为99004时，请用本接口刷新一下accessToken",
+  "namespace":"Kuga\\Api\\Acc",
+  "method":"User.refreshAccessToken",
+  "accessLevel": 0,
+  "request":[
+    {
+      "param":"refreshToken",
+      "required":true,
+      "default":"",
+      "type":"String",
+      "description":"refreshToken，用于刷新accessToken"
+    }
+  ],
+  "response":{
+    "data":{
+      "type":"Object",
+      "description":"用户信息",
+      "responseItem":{
+        "menuList":{
+          "type": "Array",
+          "description": "可访问的菜单列表，数组，菜单的层级关系由客户端自行决定，这里只返回当前用户可以访问的菜单列表清单",
+          "responseItem":{
+            "id": {
+              "type": "Integer",
+              "sample": 1,
+              "description": "菜单ID"
+            },
+            "name": {
+              "type": "String",
+              "sample": "",
+              "description": "菜单名称"
+            },
+            "url": {
+              "type": "String",
+              "sample": "",
+              "description": "菜单网址"
+            }
+          }
+        },
+
+        "accessToken":{
+          "type":"String",
+          "description":"accessToken",
+          "sample":"160L7JKaarwL8Wc/nxnbOhL2DWAf2sK1tl56w2zcxzuHb3gAxsVqjc3bmNZ+lHhYzft"
+        },
+        "accessTokenExpiredIn":{
+          "type":"Integer",
+          "description":"秒为单位，多少秒后这个accessToken过期",
+          "sample":"76200"
+        },
+        "refreshToken":{
+          "type":"String",
+          "description":"刷新Token",
+          "sample":"160L7JKaarwL8Wc"
+        },
+        "refreshTokenExpiredIn":{
+          "type":"Integer",
+          "description":"多少秒后这个刷新token过期",
+          "sample":"7200"
+        },
+        "uid":{
+          "type":"Integer",
+          "description":"用户ID",
+          "sample":98
+        },
+        "username":{
+          "type":"String",
+          "description":"用户名",
+          "sample":"donny"
+        },
+        "realname":{
+          "type":"String",
+          "description":"姓名",
+          "sample":"张三"
+        },
+        "mobile":{
+          "type":"String",
+          "description":"手机号",
+          "sample":"13900000000"
+        },
+        "gender":{
+          "type":"Integer",
+          "description":"性别，0表示保密，1表示男性，2表示女性",
+          "sample":"0"
+        }
+      }
+    }
+  }
+}

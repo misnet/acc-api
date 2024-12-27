@@ -179,7 +179,7 @@ class Acl extends AbstractService
                     if ($privilegeList) {
                         foreach ($privilegeList as $priv) {
                             $key                = $this->_createRuleKey($role['id'], $priv->rescode, $priv->opcode);
-                            $this->_rules[$key] = boolval($priv->isAllow);
+                            $this->_rules[$key] = strtolower($priv->isAllow)==='y';
                         }
                     }
                 }
@@ -254,7 +254,7 @@ class Acl extends AbstractService
             reset($this->_currentRole);
             $firstRole = current($this->_currentRole);
 
-            return (boolean)$firstRole['defaultAllow'];
+            return strtolower($firstRole['defaultAllow'])==='y';
         } else {
             return false;
         }
@@ -266,7 +266,8 @@ class Acl extends AbstractService
     public function removeCache()
     {
         $cache = $this->_di->getShared('cache');
-        $cache->deleteKeys($this->_cachePrefix);
+        $keys = $cache->getAdapter()->getKeys($this->_cachePrefix);
+        $cache->getAdapter()->getAdapter()->delete($keys);
     }
 
     /*

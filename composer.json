@@ -1,12 +1,13 @@
 {
     "name":"kuga/acc-api",
-    "description":"Application Control Center API",
+    "description":"多应用权限控制系统服务端API",
     "type":"library",
     "license": "LGPL-3.0",
+    "version": "2.0.0",
     "require":{
-        "php":">=7.4",
+        "php":">=8.0",
         "kuga/qing":">=1.1.0",
-        "kuga/openapi-core":">=2.1.2",
+        "kuga/openapi-core":">=2.3.2",
         "alibabacloud/client":">=1.5.30"
     },
     "autoload": {

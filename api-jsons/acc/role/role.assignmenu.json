@@ -3,7 +3,7 @@
     "name":"角色分配菜单",
     "description":"指定菜单ID列表，分配给指定的角色",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"acc.assignMenusToRole",
+    "method":"Acc.assignMenusToRole",
     "accessLevel": 1,
     "request":[
         {

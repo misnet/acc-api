@@ -1,0 +1,67 @@
+{
+  "id": "acc.configuration.create",
+  "name": "创建配置项",
+  "description": "创建配置项",
+  "namespace": "Kuga\\Api\\Acc",
+  "method": "ConfigurationApi.create",
+  "accessLevel":1,
+  "request":[
+    {
+      "param":"configKey",
+      "required":true,
+      "name":"配置项",
+      "type":"string"
+    },
+    {
+      "param":"configName",
+      "required":true,
+      "name":"配置项名称",
+      "type":"string"
+    },
+    {
+      "param":"configValue",
+      "required":true,
+      "name":"配置项值",
+      "type":"string"
+    },
+    {
+      "param":"appId",
+      "required":true,
+      "name":"所属应用ID",
+      "type":"integer"
+    },
+    {
+      "param":"module",
+      "required":true,
+      "name":"配置模块",
+      "type":"string"
+    },{
+      "param":"isEnabled",
+      "required":true,
+      "name":"是否启用，y或n",
+      "type":"string"
+    },
+    {
+      "param":"readonly",
+      "required":true,
+      "name":"只读属性，y或n",
+      "type":"string"
+    },{
+      "param":"remark",
+      "required":false,
+      "name":"备注",
+      "type":"string"
+    },{
+      "param":"itemType",
+      "required":true,
+      "name":"配置项类型，text,number,booleanstring",
+      "type":"string"
+    }
+  ],
+  "response":{
+    "data":{
+      "type":"boolean",
+      "description":"是否成功"
+    }
+  }
+}

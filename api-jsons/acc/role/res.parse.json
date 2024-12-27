@@ -1,0 +1,70 @@
+{
+  "id":"acc.role.resourcesxml.parse",
+  "name":"解析权限资源",
+  "description":"指定XML文本内容，服务端解析，判断是否符合要求格式",
+  "namespace":"Kuga\\Api\\Acc",
+  "method":"Acc.parseResourceXml",
+  "accessLevel": 1,
+  "request":[
+    {
+      "param":"xml",
+      "required":true,
+      "default":"",
+      "type":"String",
+      "description":"XML格式内容"
+    },
+
+    {
+      "param":"appId",
+      "required":true,
+      "default":"",
+      "type":"String",
+      "description":"应用ID"
+    }
+  ],
+  "response":{
+    "data":{
+      "type":"Object",
+      "description":"成功返回true，失败返回false",
+      "responseItem": {
+        "parsedKey": {
+          "type": "String",
+          "sample": "rewqoiruewqior392032032",
+          "description": "本次解析xml内容的Key，在保存时要用到，有效时长7200秒，超过后将失效"
+        },
+        "resources": {
+          "type": "Array",
+          "description": "权限资源",
+          "responseItem": {
+            "code": {
+              "description":"资源代码",
+              "type": "String",
+              "sample": "RES_USER"
+            },
+            "text": {
+              "description":"资源名称",
+              "type": "String",
+              "sample": "用户"
+            },
+            "op": {
+              "type": "Array",
+              "description": "资源操作数组",
+              "responseItem": {
+                "code": {
+                  "description":"操作代码",
+                  "type": "String",
+                  "sample": "OP_ADD"
+                },
+                "text": {
+                  "description":"操作名称",
+                  "type": "String",
+                  "sample": "添加"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

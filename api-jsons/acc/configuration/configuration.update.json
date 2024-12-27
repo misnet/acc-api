@@ -1,0 +1,61 @@
+{
+  "id": "acc.configuration.update",
+  "name": "更新配置项",
+  "description": "更新配置项",
+  "namespace": "Kuga\\Api\\Acc",
+  "method": "ConfigurationApi.update",
+  "accessLevel":1,
+  "request":[
+    {
+      "param":"id",
+      "required":true,
+      "name":"配置项id",
+      "type":"integer"
+    },
+    {
+      "param":"configName",
+      "required":true,
+      "name":"配置项名称",
+      "type":"string"
+    },{
+      "param":"isEnabled",
+      "required":true,
+      "name":"是否启用，y或n",
+      "type":"string"
+    },
+    {
+      "param":"configValue",
+      "required":true,
+      "name":"配置项值",
+      "type":"string"
+    },{
+      "param":"remark",
+      "required":false,
+      "name":"备注",
+      "type":"string"
+    },{
+      "param":"itemType",
+      "required":true,
+      "name":"配置项类型，text,number,booleanstring",
+      "type":"string"
+    },
+    {
+      "param":"readonly",
+      "required":true,
+      "name":"只读属性，y或n",
+      "type":"string"
+    },
+    {
+      "param":"module",
+      "required":true,
+      "name":"配置模块",
+      "type":"string"
+    }
+  ],
+  "response":{
+    "data":{
+      "type":"boolean",
+      "description":"是否成功"
+    }
+  }
+}

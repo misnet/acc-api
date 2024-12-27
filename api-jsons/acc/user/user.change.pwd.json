@@ -3,7 +3,7 @@
     "name":"修改密码",
     "description":"修改当前用户的密码",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"user.changePassword",
+    "method":"User.changePassword",
     "accessLevel": 1,
     "request":[
         {

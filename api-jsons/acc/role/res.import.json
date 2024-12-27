@@ -1,0 +1,30 @@
+{
+  "id":"acc.role.resourcesxml.import",
+  "name":"权限资源解析后的导入",
+  "description":"将解析后的权限资源导入系统",
+  "namespace":"Kuga\\Api\\Acc",
+  "method":"Acc.importResourceXml",
+  "accessLevel": 1,
+  "request":[
+    {
+      "param":"parsedKey",
+      "required":true,
+      "default":"",
+      "type":"String",
+      "description":"acc.role.resourcesxml.parse接口调用后返回的parsedKey"
+    },
+    {
+      "param":"appId",
+      "required":true,
+      "default":"",
+      "type":"String",
+      "description":"应用ID"
+    }
+  ],
+  "response":{
+    "data":{
+      "type":"Boolean",
+      "description":"成功返回true，失败返回false"
+    }
+  }
+}

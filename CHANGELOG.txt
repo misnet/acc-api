@@ -1,4 +1,13 @@
-#
+2024.12.24
+update: openapi-core版本升级至2.3.2
+add: 增加ConfigurationApi
+update: t_role表的default_allow字段从tinyint改为enum('y,'n')
+update: t_role_res的is_allow字段tinyint改为enum('y,'n')
+update: t_user表删除mobile_verified和email_verified字段
+update: t_menu表的display字段tinyint改为enum('y,'n')
+add: 增加Common.test 接口
+add: 在空应用空用户情况，首位登录的用户自动成为超级管理员
+
 2019.5.4
 feat: t_apps表增加acc_resources_xml字段，用于存放各应用的权限资源；
 feat: 增加权限资源的解析接口Acc.parseResourceXml

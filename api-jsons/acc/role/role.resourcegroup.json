@@ -3,9 +3,16 @@
     "name":"列出权限资源组",
     "description":"列出权限资源组",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"acc.listResourcesGroup",
+    "method":"Acc.listResourcesGroup",
     "accessLevel": 1,
     "request":[
+        {
+            "param":"appId",
+            "required":false,
+            "default":1,
+            "type":"Integer",
+            "description":"应用ID"
+        }
     ],
     "response":{
         "data":{

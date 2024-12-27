@@ -76,7 +76,8 @@ class Menu extends AbstractService {
 	 */
 	public function clearMenuAccessCache(){
 	    $cacheEngine = $this->_di->get('cache');
-	    $cacheEngine->deleteKeys(self::PREFIX_MENULIST);
+        $keys = $cacheEngine->getAdapter()->getKeys(self::PREFIX_MENULIST);
+        $cacheEngine->getAdapter()->getAdapter()->delete($keys);
 	}
 	/**
 	 * 登陆判断过滤

@@ -3,11 +3,11 @@
     "name":"获取用户列表",
     "description":"后台用户账号列表",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"user.userList",
+    "method":"User.userList",
     "accessLevel": 1,
     "request":[
         {
-            "param":"page",
+            "param":"current",
             "required":false,
             "default":1,
             "name":"页码",
@@ -15,7 +15,7 @@
             "description":"页码"
         },
         {
-            "param":"limit",
+            "param":"pageSize",
             "required":false,
             "default":10,
             "type":"Integer",
@@ -27,6 +27,12 @@
             "required":false,
             "type":"Integer",
             "description":"指定应用ID，未指定时，以当前appKey为准"
+        },
+        {
+            "param":"q",
+            "required":false,
+            "type":"String",
+            "description":"关键词，可以是用户名、姓名、手机、Email"
         }
     ],
     "response":{
@@ -76,6 +82,16 @@
                             "type": "Integer",
                             "sample": 1,
                             "description": "手机是否验证过，0或1，1表示认证过，0表示未认证"
+                        },
+                        "fullname": {
+                            "type": "String",
+                            "sample": "张三",
+                            "description": "姓名"
+                        },
+                        "memo": {
+                            "type": "String",
+                            "sample": "",
+                            "description": "备注"
                         }
                     },
                     "description":"数据列表"

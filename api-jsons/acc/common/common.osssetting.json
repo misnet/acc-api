@@ -3,7 +3,7 @@
     "name":"取得OSS的配置",
     "description":"取得OSS的配置",
     "namespace":"Kuga\\Api\\Acc",
-    "method":"common.ossSetting",
+    "method":"Common.ossSetting",
     "accessLevel": 0,
     "request":[],
     "response":{
