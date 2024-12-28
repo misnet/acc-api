@@ -267,7 +267,15 @@ class Acl extends AbstractService
     {
         $cache = $this->_di->getShared('cache');
         $keys = $cache->getAdapter()->getKeys($this->_cachePrefix);
-        $cache->getAdapter()->getAdapter()->delete($keys);
+        $prefix = $cache->getAdapter()->getPrefix();
+        if(!empty($keys)){
+            $list = [];
+            foreach($keys as $k){
+                $list[] = str_replace($prefix,'',$k);
+            }
+            $cache->deleteMultiple($list);
+        }
+//        $cache->getAdapter()->getAdapter()->delete($keys);
     }
 
     /*

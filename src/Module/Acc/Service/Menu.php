@@ -76,8 +76,15 @@ class Menu extends AbstractService {
 	 */
 	public function clearMenuAccessCache(){
 	    $cacheEngine = $this->_di->get('cache');
+        $prefix = $cacheEngine->getAdapter()->getPrefix();
         $keys = $cacheEngine->getAdapter()->getKeys(self::PREFIX_MENULIST);
-        $cacheEngine->getAdapter()->getAdapter()->delete($keys);
+        if(!empty($keys)){
+            $list = [];
+            foreach($keys as $k){
+                $list[] = str_replace($prefix,'',$k);
+            }
+            $cacheEngine->deleteMultiple($list);
+        }
 	}
 	/**
 	 * 登陆判断过滤

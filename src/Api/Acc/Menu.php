@@ -118,6 +118,9 @@ class Menu extends BaseApi{
         if(!$result){
             throw new ApiException($menu->getMessages()[0]->getMessage());
         }
+
+        $menuService = new \Kuga\Module\Acc\Service\Menu($this->_di);
+        $menuService->clearMenuAccessCache();
         return $result;
     }
 
@@ -133,6 +136,8 @@ class Menu extends BaseApi{
             if(!$result){
                 throw new ApiException($menu->getMessages()[0]->getMessage());
             }
+            $menuService = new \Kuga\Module\Acc\Service\Menu($this->_di);
+            $menuService->clearMenuAccessCache();
         }else{
             throw new ApiException(ApiException::$EXCODE_NOTEXIST);
         }
@@ -153,6 +158,9 @@ class Menu extends BaseApi{
         if(!$result){
             throw new ApiException($menu->getMessages()[0]->getMessage());
         }
+
+        $menuService = new \Kuga\Module\Acc\Service\Menu($this->_di);
+        $menuService->clearMenuAccessCache();
         return $result;
     }
 
