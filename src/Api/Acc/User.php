@@ -742,7 +742,7 @@ class User extends BaseApi
                 $row['memo'] = '';
                 $row['appIds'] = [$this->_appKey];
                 $model = $this->_createUser($row);
-                if($model->id) {
+                if($model->uid) {
                     $result = $this->generateLoginInfo($model);
                     if ($result) {
                         return $result;
