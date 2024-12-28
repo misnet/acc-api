@@ -534,7 +534,7 @@ class Acc extends BaseApi
                 $cacheKey          = 'acc_setting_'.$appId;
                 $cache->delete($cacheKey);
                 $acc = new AccService($this->_di);
-                $resources = $acc->getResourceList($appId);
+                $resources = $acc->getResourceList($appId,$accXml);
                 $resourceCodeList = array_keys($resources);
                 $tobeRemoved = RoleResModel::find([
                     'rescode not in ({res:array}) and appId=:aid:',

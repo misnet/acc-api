@@ -272,23 +272,27 @@ class Acc extends AbstractService
     /**
      * 取得权限资源列表
      */
-    public function getResourceList($appId)
+    public function getResourceList($appId,$defaultXml=null)
     {
         $cache             = $this->_di->get('cache');
         $cacheKey          = 'acc_setting_'.$appId;
-        $this->setAccXmlContent($appId);
         $resourceList      = $cache->get($cacheKey);
         if(!$resourceList){
+            $this->setAccXmlContent($appId,$defaultXml);
             $resourceList = $this->parsePrivilegeSetting();
+            $cache->set($cacheKey,$resourceList,86400);
         }
         return $resourceList;
     }
-    public function setAccXmlContent($appId){
+    public function setAccXmlContent($appId,$defaultXml){
         $app = AppModel::findFirstById($appId);
         if($app){
             $this->accXmlContent = $app->accResourcesXml;
         }else{
             $this->accXmlContent = null;
+        }
+        if(!$this->accXmlContent){
+            $this->accXmlContent = $defaultXml;
         }
     }
     /**
