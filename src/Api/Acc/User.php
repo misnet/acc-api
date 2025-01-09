@@ -851,9 +851,14 @@ class User extends BaseApi
         $result['acc'] = $acc->getPrivileges();
 //        $result['fullname'] = $this->_userFullname;
         if($this->_accessTokenType ===  GlobalVar::TOKEN_TYPE_JWT){
+            $payload = [
+                'username'=>$row->username,
+                'fullname'=>$row->fullname,
+            ];
+            $payload[$this->_accessTokenUserIdKey] = $row->uid;
             $jwt = new JWTService();
             $jwt->setSecret($this->_di->get('config')->path('app.jwtTokenSecret'));
-            $token = $jwt->createToken($result,$hours * 3600);
+            $token = $jwt->createToken($payload,$hours * 3600);
             $returnData['accessToken'] = $token;
         }else{
             $returnData['accessToken'] = $accessToken;
